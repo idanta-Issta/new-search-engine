@@ -1,0 +1,43 @@
+<div class="flights-container">
+   <app-section-title title="חיפוש טיסות זולות לחו&quot;ל"></app-section-title>
+
+  <div class="flight-options">
+    <button class="selected">הכי משתלם</button>
+    <div class="flight-type">
+      <button class="active">טיסה בלבד</button>
+      <button>טיסה + מלון</button>
+    </div>
+  </div>
+
+  <div class="flight-tabs">
+    <button class="tab active">הלוך ושוב</button>
+    <button class="tab">מחלוקת תיירים ▾</button>
+  </div>
+
+<div class="flights-box">
+<div class="inputs-row">
+  <app-shared-options-input
+    [type]="EInputType.DESTINATIONS_FLIGHTS"
+    [(value)]="destination"
+  ></app-shared-options-input>
+
+
+</div>
+
+
+</div>
+
+
+
+  <div class="flight-footer">
+    <div class="left">
+      <span>✔ כל סוג של נופש</span>
+      <span>✔ פריסת תשלומים נוחה</span>
+      <span>✔ דילים גמישים בשבלכם</span>
+    </div>
+    <div class="right">
+      <label><input type="checkbox" /> טיסות ישירות</label>
+      <label><input type="checkbox" /> חיפוש גמיש ±3 ימים</label>
+    </div>
+  </div>
+</div>

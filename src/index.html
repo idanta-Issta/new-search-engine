@@ -3,11 +3,49 @@
 <head>
   <meta charset="utf-8">
   <title>IsstaEngine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link
+  href="https://cdn.issta.co.il/icons/issta-cms-icons/style.css"
+  rel="stylesheet"
+  type="text/css"
+/>
+<link
+  href="https://cdn.issta.co.il/icons/issta-icons/style.css"
+  rel="stylesheet"
+  type="text/css"
+/>
+<link
+  href="https://cdn.issta.co.il/icons/bynd-icons/style.css"
+  rel="stylesheet"
+  type="text/css"
+/>
+
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
+  
+<script>
+  window.SearchEngineConfig = {
+    showTabs: true,
+    defaultTab: { typeTravel: 'FLIGHTS', isPartial: false },
+    tabs: [
+      {
+        title: "טיסות",
+        icon: 'fas fa-plane',
+        hasIcon: true,
+        searchEngine: { typeTravel: 'FLIGHTS', isPartial: false }
+      },
+      { 
+        title: "מלונות בחו\"ל",
+       icon: 'fas fa-hotel',
+        hasIcon: true,
+         searchEngine: { typeTravel: 'HOTELS_ABROAD', isPartial: false } }
+    ]
+  };
+</script>
   <app-root></app-root>
 </body>
+
 </html>

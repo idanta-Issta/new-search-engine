@@ -1,0 +1,33 @@
+<div class="shared-input" [class.open]="isOpen">
+  <div class="input-box" (click)="isOpen = true">
+    <i *ngIf="config?.icon" [class]="config.icon"></i>
+
+    <input
+      *ngIf="config?.allowAutoComplete"
+      type="text"
+      [placeholder]="config?.placeholder"
+      [(ngModel)]="searchTerm"
+      (focus)="onFocusInput()"
+      (blur)="onBlurInput()"
+      (input)="onSearchChange($event)"
+    />
+
+    <i class="issta-icon-chevron-down arrow"></i>
+  </div>
+
+  <div class="dropdown" *ngIf="isOpen">
+    <h4 *ngIf="config?.titleMenuOptions">{{ config.titleMenuOptions }}</h4>
+
+    <ul *ngIf="!noResults">
+      <li *ngFor="let option of filteredOptions" (click)="selectOption(option)">
+        <i *ngIf="option.icon" [class]="option.icon"></i>
+        <div class="text">
+          <span class="label" [innerHTML]="highlightMatch(option.label)"></span>
+          <small *ngIf="option.note">{{ option.note }}</small>
+        </div>
+      </li>
+    </ul>
+
+    <div class="no-results" *ngIf="noResults">לא נמצאו תוצאות</div>
+  </div>
+</div>

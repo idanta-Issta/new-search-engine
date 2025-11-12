@@ -1,0 +1,24 @@
+<div class="search-engine">
+  <div class="tabs" *ngIf="options?.showTabs">
+    <div
+      class="tab"
+      *ngFor="let tab of options?.tabs"
+      (click)="selectTab(tab)"
+      [class.active]="tab === activeTab"
+    >
+      <i *ngIf="tab.hasIcon" [class]="tab.icon"></i>
+      <span>{{ tab.title }}</span>
+    </div>
+  </div>
+
+  <!-- אזור התוכן עם האנימציה -->
+ <div class="tab-content">
+    <app-flights
+      *ngIf="getActiveType() === ETypeTravel.FLIGHTS"
+    ></app-flights>
+
+    <app-hotel-abroad
+      *ngIf="getActiveType() === ETypeTravel.HOTELS_ABROAD"
+    ></app-hotel-abroad>
+  </div>
+</div>
