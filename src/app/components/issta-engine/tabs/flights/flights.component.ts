@@ -4,12 +4,14 @@ import { SectionTitleComponent } from '../../shared/section-title/section-title.
 import { SharedOptionsInputComponent } from '../../shared/inputs/shared-options-input/shared-options-input.component';
 import { MenuOption } from '../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../models/shared-input-type.enum';
+import { SharedCalendarInputComponent } from
+  '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
 
 
 @Component({
   selector: 'app-flights',
   standalone: true,
-  imports: [CommonModule, SectionTitleComponent, SharedOptionsInputComponent],
+  imports: [CommonModule, SectionTitleComponent, SharedOptionsInputComponent, SharedCalendarInputComponent],
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.scss']
 })

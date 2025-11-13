@@ -1,0 +1,40 @@
+.calendar-input {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  input[type="date"],
+  input[type="time"] {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .suggested-container {
+    margin-top: 10px;
+
+    h4 {
+      margin: 0 0 8px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .suggested-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .suggested-item {
+        border: 1px solid #ddd;
+        padding: 8px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: right;
+
+        &:hover {
+          background: #f7f7f7;
+        }
+      }
+    }
+  }
+}

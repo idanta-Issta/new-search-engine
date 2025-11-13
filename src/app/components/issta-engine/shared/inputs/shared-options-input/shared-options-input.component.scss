@@ -4,6 +4,30 @@
   width: 100%;
   font-family: inherit;
 
+  /* תצוגת כותרת + ערך */
+  .input-display {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    cursor: pointer;
+  }
+
+  .input-title {
+    font-size: 0.75rem;
+    color: #7a7a7a;
+    margin-bottom: 2px;
+  }
+
+  .input-value {
+    font-size: 1rem;
+    color: #222;
+    font-weight: 400;
+  }
+
+  .input-field{
+    font-family: var(--main-font-family);
+  }
+
   .input-box {
     display: flex;
     align-items: center;
@@ -13,6 +37,11 @@
     border-radius: 12px;
     background: #fff;
     transition: all 0.2s ease;
+
+    i::before {
+      font-size: 20px;
+      color: gray;
+    }
 
     &:hover,
     &:focus-within {
@@ -39,22 +68,39 @@
     transform: rotate(180deg);
   }
 
+  /* תפריט ירידה */
   .dropdown {
     position: absolute;
     top: calc(100% + 6px);
     left: 0;
     width: 100%;
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-    z-index: 9999;
-    padding: 0.4rem 0;
+
+    /* מסגרת */
+    border: 1px solid var(--search-engine-border-menu);
+    border-radius: 20px;
+
+    /* צל */
+    box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.14);
+
+    padding: 16px 11px;
     max-height: 260px;
     overflow-y: auto;
-    opacity: 0;
-    transform: translateY(-5px);
+
+    /* אנימציית פתיחה */
+    opacity: 1;
+    transform: translateY(0);
     transition: all 0.2s ease;
+
+    z-index: 9999;
+
+    /* הסתרת scrollbar בכל הדפדפנים */
+    scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* Edge/IE */
+
+    &::-webkit-scrollbar {
+      display: none;            /* Chrome/Safari */
+    }
 
     .dropdown-title {
       font-size: 0.85rem;
@@ -117,8 +163,9 @@
   }
 }
 
-
+/* סימון תוצאות בחיפוש */
 ::ng-deep .mark-autocomplete {
   background: transparent;
+  color: var(--search-engine-bold-text-dropdown-color);
   font-weight: 700;
 }

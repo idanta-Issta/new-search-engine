@@ -2,15 +2,23 @@
   <div class="input-box" (click)="isOpen = true">
     <i *ngIf="config?.icon" [class]="config.icon"></i>
 
-    <input
-      *ngIf="config?.allowAutoComplete"
-      type="text"
-      [placeholder]="config?.placeholder"
-      [(ngModel)]="searchTerm"
-      (focus)="onFocusInput()"
-      (blur)="onBlurInput()"
-      (input)="onSearchChange($event)"
-    />
+    <div class="input-meta">
+      <div class="input-title" *ngIf="config?.title">
+        {{ config.title }}
+      </div>
+
+      <input
+        #inputRef
+        *ngIf="config?.allowAutoComplete"
+        class="input-field"
+        type="text"
+        [placeholder]="config?.placeholder"
+        [(ngModel)]="searchTerm"
+          (focus)="onFocusInput(inputRef)"
+        (blur)="onBlurInput()"
+        (input)="onSearchChange($event)"
+      />
+    </div>
 
     <i class="issta-icon-chevron-down arrow"></i>
   </div>

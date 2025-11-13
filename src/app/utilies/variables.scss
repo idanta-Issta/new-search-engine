@@ -1,0 +1,9 @@
+$search-engine-main-color: #098137;
+$search-engine-secondary-color: #2AAE54;
+$main-font-family: 'Rubik';
+
+:root {
+  --search-engine-border-menu: #{$search-engine-secondary-color};   
+  --search-engine-bold-text-dropdown-color: #{$search-engine-main-color}; 
+  --main-font-family: #{$main-font-family};  
+}

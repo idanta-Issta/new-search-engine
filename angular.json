@@ -30,7 +30,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+         "src/app/utilies/variables.scss",
+      "src/styles.scss"
             ]
           },
           "configurations": {
