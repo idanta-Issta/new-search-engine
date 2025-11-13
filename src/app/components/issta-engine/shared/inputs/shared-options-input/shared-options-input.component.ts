@@ -16,11 +16,14 @@ import { SharedInputRegistry } from '../../../../../config/shared-input.registry
 import { SharedInputUIConfig } from '../../../../../models/shared-input-config.models';
 import { debounceTime, distinctUntilChanged, Subject, switchMap, of } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { InputBoxComponent } from '../../../shared/inputs/input-box/input-box.component';
 
+
+ 
 @Component({
   selector: 'app-shared-options-input',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,InputBoxComponent ],
   templateUrl: './shared-options-input.component.html',
   styleUrls: ['./shared-options-input.component.scss']
 })
@@ -108,10 +111,10 @@ if (this.config.defaultValue && !this.value) {
     return this.sanitizer.bypassSecurityTrustHtml(highlighted);
   }
 
-  onSearchChange(event: Event) {
-    const term = (event.target as HTMLInputElement).value.trim();
-    this.search$.next(term);
-  }
+onSearchChange(value: string) {
+  this.search$.next(value.trim());
+}
+
 
   selectOption(option: MenuOption) {
     this.value = option;
@@ -120,22 +123,7 @@ if (this.config.defaultValue && !this.value) {
     this.isOpen = false;
   }
 
-onFocusInput(inputEl: HTMLInputElement) {
-  this.isOpen = true;
 
-  setTimeout(() => {
-    inputEl.select();
-  });
-}
-
-
-  onBlurInput() {
-    setTimeout(() => {
-      const active = document.activeElement;
-      const clickedInside = this.el.nativeElement.contains(active);
-      if (!clickedInside) this.isOpen = false;
-    }, 100);
-  }
 
   @HostListener('document:mousedown', ['$event'])
   onDocumentMouseDown(event: MouseEvent) {

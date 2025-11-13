@@ -4,70 +4,6 @@
   width: 100%;
   font-family: inherit;
 
-  /* תצוגת כותרת + ערך */
-  .input-display {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    cursor: pointer;
-  }
-
-  .input-title {
-    font-size: 0.75rem;
-    color: #7a7a7a;
-    margin-bottom: 2px;
-  }
-
-  .input-value {
-    font-size: 1rem;
-    color: #222;
-    font-weight: 400;
-  }
-
-  .input-field{
-    font-family: var(--main-font-family);
-  }
-
-  .input-box {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    background: #fff;
-    transition: all 0.2s ease;
-
-    i::before {
-      font-size: 20px;
-      color: gray;
-    }
-
-    &:hover,
-    &:focus-within {
-      border-color: #00a4e4;
-      box-shadow: 0 0 0 3px rgba(0, 164, 228, 0.1);
-    }
-
-    input {
-      border: none;
-      outline: none;
-      flex: 1;
-      font-size: 0.95rem;
-      background: transparent;
-    }
-
-    .arrow {
-      margin-left: auto;
-      color: #777;
-      transition: transform 0.2s ease;
-    }
-  }
-
-  &.open .arrow {
-    transform: rotate(180deg);
-  }
-
   /* תפריט ירידה */
   .dropdown {
     position: absolute;
@@ -94,12 +30,12 @@
 
     z-index: 9999;
 
-    /* הסתרת scrollbar בכל הדפדפנים */
-    scrollbar-width: none;      /* Firefox */
-    -ms-overflow-style: none;   /* Edge/IE */
+    /* הסתרת scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 
     &::-webkit-scrollbar {
-      display: none;            /* Chrome/Safari */
+      display: none;
     }
 
     .dropdown-title {
