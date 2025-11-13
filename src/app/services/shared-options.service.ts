@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { ESharedInputType } from '../models/shared-input-type.enum';
+import { ESharedInputType } from '../enums/ESharedInputType';
 import { SharedInputRegistry } from '../config/shared-input.registry';
 import { MenuOption } from '../models/shared-options-input.models';
 

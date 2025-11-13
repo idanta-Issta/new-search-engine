@@ -11,9 +11,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedOptionsService } from '../../../../../services/shared-options.service';
 import { MenuOption } from '../../../../../models/shared-options-input.models';
-import { ESharedInputType } from '../../../../../models/shared-input-type.enum';
+import { ESharedInputType } from '../../../../../enums/ESharedInputType';
 import { SharedInputRegistry } from '../../../../../config/shared-input.registry';
-import { SharedInputUIConfig } from '../../../../../interfaces/shared-input-config.interface';
+import { SharedInputUIConfig } from '../../../../../models/shared-input-config.models';
 import { debounceTime, distinctUntilChanged, Subject, switchMap, of } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 

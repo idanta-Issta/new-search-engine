@@ -1,4 +1,4 @@
-import { MenuOption } from '../models/shared-options-input.models';
+import { MenuOption } from './shared-options-input.models';
 
 
 export interface SharedInputConfig {

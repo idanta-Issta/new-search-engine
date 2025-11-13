@@ -2,7 +2,7 @@ import { Component, Input, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlightsComponent } from '../tabs/flights/flights.component';
 import { HotelAbroadComponent } from '../tabs/hotel-abroad/hotel-abroad.component';
-import { ETypeTravel } from '../../../models/search-engine.models';
+import { ETypeSearchEngine } from '../../../enums/ETypeSearchEngine';
 
 @Component({
   selector: 'app-search-engine',
@@ -14,7 +14,7 @@ import { ETypeTravel } from '../../../models/search-engine.models';
 export class SearchEngineComponent implements AfterViewInit {
   @Input() options: any;
   activeTab: any = null;
-  ETypeTravel = ETypeTravel;
+  ETypeSearchEngine = ETypeSearchEngine;
 
   ngAfterViewInit() {
     // נוודא שנטען אחרי שהסקריפט של window.SearchEngineConfig מוכן
@@ -41,7 +41,7 @@ export class SearchEngineComponent implements AfterViewInit {
     this.activeTab = tab;
   }
 
-  getActiveType(): ETypeTravel | undefined {
+  getActiveType(): ETypeSearchEngine | undefined {
     return this.activeTab?.searchEngine?.typeTravel;
   }
 }

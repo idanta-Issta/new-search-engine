@@ -3,25 +3,41 @@ import { CommonModule } from '@angular/common';
 import { SectionTitleComponent } from '../../shared/section-title/section-title.component';
 import { SharedOptionsInputComponent } from '../../shared/inputs/shared-options-input/shared-options-input.component';
 import { MenuOption } from '../../../../models/shared-options-input.models';
-import { ESharedInputType } from '../../../../models/shared-input-type.enum';
-import { SharedCalendarInputComponent } from
-  '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
-
+import { ESharedInputType } from '../../../../enums/ESharedInputType';
+import { SharedCalendarInputComponent } from '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
+import { SharedCalendarInputConfig } from '../../../../models/shared-calendar-input.models';
 
 @Component({
   selector: 'app-flights',
   standalone: true,
-  imports: [CommonModule, SectionTitleComponent, SharedOptionsInputComponent, SharedCalendarInputComponent],
+  imports: [
+    CommonModule,
+    SectionTitleComponent,
+    SharedOptionsInputComponent,
+    SharedCalendarInputComponent
+  ],
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.scss']
 })
 export class FlightsComponent {
+
+  EInputType = ESharedInputType;
+
   selectedOrigin: MenuOption | null = null;
   selectedDestination: MenuOption | null = null;
-  EInputType = ESharedInputType; 
- origin?: MenuOption;
-destination?: MenuOption;
 
+  origin?: MenuOption;
+  destination?: MenuOption;
+
+  // ⭐ הוספנו את זה — חובה כדי שהקלנדר יעבוד
+  selectedDate: Date | null = null;
+
+calendarConfig: SharedCalendarInputConfig = {
+  suggestedDates: [],                  //  ✔️ תואם למודל
+  minDate: new Date(),
+  maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+  allowPickHours: false
+};
 
 
   onOriginSelected(option: MenuOption) {

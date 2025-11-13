@@ -4,8 +4,8 @@ export interface SuggestedDate {
   currency?: string;
 }
 
-export interface CalendarConfig {
-  suggestedDates?: SuggestedDate[];
+export interface SharedCalendarInputConfig {
+  suggestedDates: SuggestedDate[];
   minDate?: Date;
   maxDate?: Date;
   allowPickHours?: boolean;

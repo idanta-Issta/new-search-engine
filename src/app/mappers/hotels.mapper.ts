@@ -1,5 +1,5 @@
 import { MenuOption } from '../models/shared-options-input.models';
-import { ESharedInputType } from '../models/shared-input-type.enum';
+import { ESharedInputType } from '../enums/ESharedInputType';
 
 export class HotelsMapper {
   static mapDestinations(data: any[]): MenuOption[] {

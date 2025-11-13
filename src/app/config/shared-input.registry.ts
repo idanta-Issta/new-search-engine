@@ -1,8 +1,8 @@
-import { ESharedInputType } from '../models/shared-input-type.enum';
+import { ESharedInputType } from '../enums/ESharedInputType';
 import { FlightsMapper } from '../mappers/flights.mapper';
 import { HotelsMapper } from '../mappers/hotels.mapper';
 import { AppExternalConfig } from '../config/app.external.config';
-import { SharedInputConfig } from '../interfaces/shared-input-config.interface';
+import { SharedInputConfig } from '../models/shared-input-config.models';
 
 export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = {
   

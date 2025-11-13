@@ -14,11 +14,11 @@
   <!-- אזור התוכן עם האנימציה -->
  <div class="tab-content">
     <app-flights
-      *ngIf="getActiveType() === ETypeTravel.FLIGHTS"
+      *ngIf="getActiveType() === ETypeSearchEngine.FLIGHTS"
     ></app-flights>
 
     <app-hotel-abroad
-      *ngIf="getActiveType() === ETypeTravel.HOTELS_ABROAD"
+      *ngIf="getActiveType() === ETypeSearchEngine.HOTELS_ABROAD"
     ></app-hotel-abroad>
   </div>
 </div>

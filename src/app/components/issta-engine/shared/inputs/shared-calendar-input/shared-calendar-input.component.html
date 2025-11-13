@@ -1,32 +1,104 @@
-<div class="calendar-input">
+<div class="calendar-input-wrapper">
 
-  <!-- Input date -->
-  <input
-    type="date"
-    [min]="config.minDate | date:'yyyy-MM-dd'"
-    [max]="config.maxDate | date:'yyyy-MM-dd'"
-    (change)="onDatePick($event)"
-  />
+  <!-- אינפוט שמציג את הערכים -->
+  <div class="calendar-input-display" (click)="toggleDropdown()">
 
-  <!-- שעות -->
-  <div *ngIf="config.allowPickHours" class="hour-picker">
-    <input type="time" (change)="onHourPick($event)">
-  </div>
+    <div class="label">תאריכים</div>
 
-  <!-- Suggested Dates -->
-  <div class="suggested-container" *ngIf="config.suggestedDates?.length">
-    <h4>תאריכים מוצעים</h4>
-
-    <div class="suggested-list">
-      <button
-        *ngFor="let s of config.suggestedDates"
-        class="suggested-item"
-        (click)="selectedDate = s.date; emitValue()"
-      >
-        <div>{{ s.date | date:'dd/MM/yyyy' }}</div>
-        <div>{{ s.price }} {{ s.currency }}</div>
-      </button>
+    <div class="value">
+      {{ departureDate ? (departureDate | date:'dd.MM.yy') : '–––' }}
+      -
+      {{ returnDate ? (returnDate | date:'dd.MM.yy') : '–––' }}
     </div>
+
+    <i class="issta-icon-calendar"></i>
+  </div>
+ 
+  <!-- דרופדאון -->
+  <div class="dropdown-panel" *ngIf="isOpen">
+
+    <div class="calendar-wrapper">
+
+      <!-- Header -->
+      <div class="calendar-header">
+        <div class="calendar-title">
+          <span class="label">יציאה</span>
+          <span class="value">{{ departureDate | date:'d בMMMM yyyy' }}</span>
+        </div>
+
+        <div class="calendar-title">
+          <span class="label">חזרה</span>
+          <span class="value">{{ returnDate | date:'d בMMMM yyyy' }}</span>
+        </div>
+      </div>
+
+      <div class="calendar-body">
+
+        <!-- חודש שמאל -->
+        <div class="calendar-month">
+
+          <div class="month-header">
+            <button class="nav-btn" (click)="prevMonth()">‹</button>
+            <span class="month-name">{{ leftMonthName }} {{ leftYear }}</span>
+          </div>
+
+          <div class="weekday-row">
+            <span *ngFor="let d of hebrewWeekdays">{{ d }}</span>
+          </div>
+
+          <div class="days-grid">
+            <div
+              *ngFor="let day of leftMonthDays"
+              class="day"
+              [class.other-month]="day.other"
+              [class.selected]="isSelected(day.date)"
+              [class.range]="isInRange(day.date)"
+              (click)="selectDate(day.date)"
+            >
+              {{ day.date.getDate() }}
+
+              <span *ngIf="day.suggested" class="suggest-badge">
+                {{ day.suggested.price }} {{ day.suggested.currency }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- חודש ימין -->
+        <div class="calendar-month">
+
+          <div class="month-header">
+            <button class="nav-btn" (click)="nextMonth()">›</button>
+            <span class="month-name">{{ rightMonthName }} {{ rightYear }}</span>
+          </div>
+
+          <div class="weekday-row">
+            <span *ngFor="let d of hebrewWeekdays">{{ d }}</span>
+          </div>
+
+          <div class="days-grid">
+            <div
+              *ngFor="let day of rightMonthDays"
+              class="day"
+              [class.other-month]="day.other"
+              [class.selected]="isSelected(day.date)"
+              [class.range]="isInRange(day.date)"
+              (click)="selectDate(day.date)"
+            >
+              {{ day.date.getDate() }}
+
+              <span *ngIf="day.suggested" class="suggest-badge">
+                {{ day.suggested.price }} {{ day.suggested.currency }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
 </div>
