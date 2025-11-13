@@ -1,55 +1,37 @@
-.shared-input {
-  width: 100%;
-  font-family: inherit;
+.input-box {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  height: 40px;
+  gap: 6px;       /* מרחק קטן כמו בתמונה */
+  direction: rtl;
+}
 
-  .input-title {
-    font-size: 0.75rem;
-    color: #7a7a7a;
-    margin-bottom: 2px;
-  }
+.input-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
 
-  .input-field {
-    font-family: var(--main-font-family);
-  }
+.input-title {
+  font-size: 12px;
+  color: #6b7280; /* אפור בהיר */
+  margin: 0;
+}
 
-  .input-box {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    background: #fff;
-    transition: all 0.2s ease;
-    cursor: text;
+.input-field {
+  font-size: 14px;
+  font-family: var(--main-font-family);
+  font-weight: 400;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  direction: rtl;
+}
 
-    i::before {
-      font-size: 20px;
-      color: gray;
-    }
-
-    &:hover,
-    &:focus-within {
-      border-color: #00a4e4;
-      box-shadow: 0 0 0 3px rgba(0, 164, 228, 0.1);
-    }
-
-    input {
-      border: none;
-      outline: none;
-      flex: 1;
-      font-size: 0.95rem;
-      background: transparent;
-    }
-
-    .arrow {
-      margin-left: auto;
-      color: #777;
-      transition: transform 0.2s ease;
-    }
-  }
-
-  &.open .arrow {
-    transform: rotate(180deg);
-  }
+.airplane-icon {
+  font-size: 18px;
+  color: #6b7280;
+  margin-top: 4px;  /* ליישור מדויק לגובה השורה */
 }
