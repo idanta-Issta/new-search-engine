@@ -17,34 +17,13 @@ import { InputBoxComponent } from '../input-box/input-box.component';
 import { ESharedInputType } from '../../../../../enums/ESharedInputType';
 import { SharedInputRegistry } from '../../../../../config/shared-input.registry';
 import { SharedInputUIConfig } from '../../../../../models/shared-input-config.models';
-
+import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component'; 
 @Component({
   selector: 'app-shared-calendar-input',
   standalone: true,
-  imports: [CommonModule, InputBoxComponent],
+  imports: [CommonModule, InputBoxComponent, SharedDropdownComponent  ],
   templateUrl: './shared-calendar-input.component.html',
   styleUrls: ['./shared-calendar-input.component.scss'],
-  animations: [
-    trigger('dropdown', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'scale(0.98)' }),
-        animate('140ms cubic-bezier(0.2,0,0,1)', style({ opacity: 1, transform: 'scale(1)' }))
-      ]),
-      transition(':leave', [
-        animate('120ms cubic-bezier(0.4,0,1,1)', style({ opacity: 0, transform: 'scale(0.98)' }))
-      ])
-    ]),
-    trigger('expand', [
-      transition(':enter', [
-        style({ height: 0, overflow: 'hidden' }),
-        animate('160ms ease-out', style({ height: '*' }))
-      ]),
-      transition(':leave', [
-        style({ height: '*', overflow: 'hidden' }),
-        animate('130ms ease-in', style({ height: 0 }))
-      ])
-    ])
-  ]
 })
 export class SharedCalendarInputComponent implements OnInit {
   @Input() type!: ESharedInputType;

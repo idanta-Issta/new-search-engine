@@ -1,4 +1,4 @@
-<div class="calendar-input-wrapper">
+<div class="calendar-input-wrapper" #anchor>
   <app-input-box
     [icon]="uiConfig?.icon ?? 'ng-icon-calendar'"
     [title]="uiConfig?.title || 'תאריכים'"
@@ -11,10 +11,14 @@
     (click)="onInputOpened()"
   ></app-input-box>
 
-  <!-- מעטפת עם אנימציית כניסה/יציאה -->
-  <div *ngIf="isOpen" @dropdown class="dropdown-anim" (mousedown)="$event.stopPropagation()">
-    <!-- פנל שמתרחב בגובה -->
-    <div class="dropdown-panel" @expand (mousedown)="$event.stopPropagation()">
+  <!-- שימוש ב-dropdown המשותף -->
+  <app-shared-dropdown
+    [isOpen]="isOpen"
+    (closed)="onInputClosed()"
+    [anchor]="anchor"
+    [scrollable]="false"   
+  >
+    <div class="dropdown-panel calendar-dropdown">
       <div class="calendar-wrapper">
         <div class="calendar-header">
           <div class="calendar-pill">
@@ -28,6 +32,7 @@
         </div>
 
         <div class="calendar-body">
+          <!-- חודש שמאל -->
           <div class="calendar-month">
             <div class="month-header">
               <button class="nav-btn" (click)="prevMonth()">‹</button>
@@ -59,6 +64,7 @@
             </div>
           </div>
 
+          <!-- חודש ימין -->
           <div class="calendar-month">
             <div class="month-header return">
               <button class="nav-btn" (click)="nextMonth()">›</button>
@@ -91,6 +97,6 @@
           </div>
         </div><!-- /calendar-body -->
       </div><!-- /calendar-wrapper -->
-    </div><!-- /dropdown-panel -->
-  </div><!-- /dropdown-anim -->
+    </div>
+  </app-shared-dropdown>
 </div>

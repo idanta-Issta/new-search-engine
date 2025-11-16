@@ -1,30 +1,26 @@
-
-
-<div class="shared-input" [class.open]="isOpen" #anchorE2>
-
-<app-input-box
-  [icon]="config.icon ?? ''"
-  [title]="config.title ?? ''"
-  [placeholder]="config.placeholder ?? ''"
-  [(model)]="searchTerm"
-
-  (opened)="isOpen = true"
-  (closed)="isOpen = false"
-  (inputChange)="onSearchChange($event)"
-></app-input-box>
+<div class="shared-input" [class.open]="isOpen" #anchor>
+  <app-input-box
+    [icon]="config.icon ?? ''"
+    [title]="config.title ?? ''"
+    [placeholder]="config.placeholder ?? ''"
+    [(model)]="searchTerm"
+    (opened)="isOpen = true"
+    (closed)="isOpen = false"
+    (inputChange)="onSearchChange($event)"
+  ></app-input-box>
 
   <app-shared-dropdown
     [isOpen]="isOpen"
     (closed)="isOpen = false"
-    [contentTemplate]="dropdownContent"
-    [anchor]="anchorE2"   
-  ></app-shared-dropdown>
-
-
-  <ng-template #dropdownContent>
+    [anchor]="anchor"
+    [scrollable]="true"
+     
+  >
     <div class="dropdown-container">
-      <h4 *ngIf="config?.titleMenuOptions">{{ config.titleMenuOptions }}</h4>
-  
+      <h4 *ngIf="config?.titleMenuOptions" class="dropdown-title">
+        {{ config.titleMenuOptions }}
+      </h4>
+
       <ul *ngIf="!noResults">
         <li *ngFor="let option of filteredOptions" (click)="selectOption(option)">
           <i *ngIf="option.icon" [class]="option.icon"></i>
@@ -34,10 +30,8 @@
           </div>
         </li>
       </ul>
-  
+
       <div class="no-results" *ngIf="noResults">לא נמצאו תוצאות</div>
-
     </div>
-   </ng-template>
-
+  </app-shared-dropdown>
 </div>

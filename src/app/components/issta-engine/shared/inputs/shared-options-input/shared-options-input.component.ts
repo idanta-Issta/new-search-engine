@@ -5,10 +5,12 @@ import {
   EventEmitter,
   OnInit,
   HostListener,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { SharedOptionsService } from '../../../../../services/shared-options.service';
 import { MenuOption } from '../../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../../enums/ESharedInputType';
@@ -34,7 +36,6 @@ export class SharedOptionsInputComponent implements OnInit {
   @Input() value?: MenuOption;
   @Output() valueChange = new EventEmitter<MenuOption>();
 @Output() optionPicked = new EventEmitter<MenuOption>();
-
   // ⬅️ אחרי התיקון — עכשיו זה הטייפ הנכון
   config!: SharedInputUIConfig;
 

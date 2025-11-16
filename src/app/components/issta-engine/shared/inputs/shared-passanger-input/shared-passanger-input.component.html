@@ -10,28 +10,27 @@
   <app-shared-dropdown
     [isOpen]="isOpen"
     (closed)="isOpen = false"
-    [contentTemplate]="dropdownContent"
-    [anchor]="anchorEl"   
-  ></app-shared-dropdown>
+    [anchor]="anchorEl"
+    [scrollable]="false"
+  >
+    <div class="dropdown passenger-dropdown">
+      <h4 class="title">{{ config.titleMenuOptions || 'קבוצות גיל' }}</h4>
 
-  <!-- תבנית dropdown -->
-  <ng-template #dropdownContent>
-    <h4 class="title">{{ config.titleMenuOptions || 'קבוצות גיל' }}</h4>
-
-    <div *ngFor="let group of value.optionsAge" class="age-group">
-      <div *ngFor="let age of group.options" class="age-row">
-        <div class="buttons">
-          <button (click)="decrement(age)" [disabled]="age.minCount === 0">−</button>
-          <span class="count">{{ age.minCount }}</span>
-          <button (click)="increment(age)" [disabled]="age.minCount === age.maxCount">+</button>
-        </div>
-        <div class="label">
-          {{ age.label }}
-          <small class="note">{{ age.note }}</small>
+      <div *ngFor="let group of value.optionsAge" class="age-group">
+        <div *ngFor="let age of group.options" class="age-row">
+          <div class="buttons">
+            <button (click)="decrement(age)" [disabled]="age.minCount === 0">−</button>
+            <span class="count">{{ age.minCount }}</span>
+            <button (click)="increment(age)" [disabled]="age.minCount === age.maxCount">+</button>
+          </div>
+          <div class="label">
+            {{ age.label }}
+            <small class="note">{{ age.note }}</small>
+          </div>
         </div>
       </div>
-    </div>
 
-    <button class="confirm" (click)="isOpen = false">בחירה</button>
-  </ng-template>
+      <button class="confirm" (click)="isOpen = false">בחירה</button>
+    </div>
+  </app-shared-dropdown>
 </div>

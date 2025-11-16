@@ -7,25 +7,9 @@
   /* תפריט ירידה */
  
 
-.dropdown-container {
+ .dropdown-container {
   max-height: 250px;
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  /* הסתרת הגלילה אבל שמירת האפשרות לגלול */
-
-  /* Firefox */
-  scrollbar-width: none;
-
-  /* IE / Edge ישן */
-  -ms-overflow-style: none;
-
-  /* Chrome, Safari, Edge חדשים */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
-
 
 
     .dropdown-title {
