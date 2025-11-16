@@ -22,16 +22,16 @@
   ></app-shared-options-input>
 
    <app-shared-options-input
-    [type]="EInputType.ORIGINS_FLIGHTS"
+    [type]="EInputType.ORIGINS_FLIGHTS" 
     [(value)]="destination"
   ></app-shared-options-input>
 
-    <!-- ⭐ חדש — קומפוננט קלנדר -->
-  <!-- <app-shared-calendar-input
-    *ngIf="true"
-    [config]="calendarConfig"
-    [(value)]="selectedDate"
-  ></app-shared-calendar-input> -->
+<app-shared-calendar-input
+  [type]="EInputType.PICKER_DATES"
+  [(value)]="selectedDate">
+</app-shared-calendar-input>
+
+
 
 </div>
 

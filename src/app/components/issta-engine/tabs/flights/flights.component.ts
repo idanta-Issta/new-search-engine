@@ -29,11 +29,13 @@ export class FlightsComponent {
   origin?: MenuOption;
   destination?: MenuOption;
 
-  // ⭐ הוספנו את זה — חובה כדי שהקלנדר יעבוד
-  selectedDate: Date | null = null;
+selectedDate = {
+  start: null,
+  end: null
+};
 
 calendarConfig: SharedCalendarInputConfig = {
-  suggestedDates: [],                  //  ✔️ תואם למודל
+  suggestedDates: [],
   minDate: new Date(),
   maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
   allowPickHours: false

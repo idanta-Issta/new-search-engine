@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-input-box',
@@ -15,6 +16,7 @@ export class InputBoxComponent {
   @Input() title?: string;
   @Input() placeholder: string = '';
   @Input() allowAutoComplete = true;
+@ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
 
   @Input() model: string = '';
   @Output() modelChange = new EventEmitter<string>();
@@ -47,9 +49,15 @@ export class InputBoxComponent {
     this.open();
   }
 
-  onFocus() {
-    this.open();
-  }
+onFocus(event: FocusEvent) {
+  this.open();
+
+  // מסמן את כל הטקסט
+  setTimeout(() => {
+    this.inputRef.nativeElement.select();
+  });
+}
+
 
   onBlur() {
     // כדי לא לרדת מייד - נותן זמן לקליק בדפדפן

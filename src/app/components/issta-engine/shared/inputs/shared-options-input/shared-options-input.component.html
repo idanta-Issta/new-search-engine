@@ -4,8 +4,8 @@
 
 <app-input-box
   [icon]="config.icon ?? ''"
-  [title]="config.title"
-  [placeholder]="config.placeholder"
+  [title]="config.title ?? ''"
+  [placeholder]="config.placeholder ?? ''"
   [(model)]="searchTerm"
 
   (opened)="isOpen = true"
@@ -15,8 +15,6 @@
 
 
 
-
-  <!-- dropdown כמקודם -->
   <div class="dropdown" *ngIf="isOpen">
     <h4 *ngIf="config?.titleMenuOptions">{{ config.titleMenuOptions }}</h4>
 

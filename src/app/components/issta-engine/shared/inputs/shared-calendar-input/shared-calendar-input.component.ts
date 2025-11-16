@@ -11,20 +11,30 @@ import {
 import { CommonModule } from '@angular/common';
 import { SharedCalendarInputConfig } from '../../../../../models/shared-calendar-input.models';
 import { SharedCalendarService, CalendarDay } from '../../../../../services/shared-calendar.service';
+import { InputBoxComponent } from '../input-box/input-box.component';
+import { ESharedInputType } from '../../../../../enums/ESharedInputType';
+import { SharedInputRegistry } from '../../../../../config/shared-input.registry';
+import { SharedInputUIConfig } from '../../../../../models/shared-input-config.models';
 
 @Component({
   selector: 'app-shared-calendar-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, InputBoxComponent],
   templateUrl: './shared-calendar-input.component.html',
   styleUrls: ['./shared-calendar-input.component.scss']
 })
 export class SharedCalendarInputComponent implements OnInit {
 
-  @Input() config!: SharedCalendarInputConfig;
+  @Input() type!: ESharedInputType;
 
-  @Input() value?: { start?: Date; end?: Date };
-  @Output() valueChange = new EventEmitter<{ start?: Date; end?: Date }>();
+  uiConfig!: SharedInputUIConfig;
+
+  dataConfig!: SharedCalendarInputConfig;
+
+  @Input() value: { start?: Date | null; end?: Date | null } | null = null;
+
+  @Output() valueChange =
+    new EventEmitter<{ start?: Date | null; end?: Date | null } | null>();
 
   isOpen = false;
 
@@ -39,6 +49,17 @@ export class SharedCalendarInputComponent implements OnInit {
     "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"
   ];
 
+  formatFullHebrewDate(d: Date | null): string {
+  if (!d) return '---';
+
+  return new Intl.DateTimeFormat('he-IL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(d);
+}
+
+
   hebrewWeekdays = ["א", "ב", "ג", "ד", "ה", "ו", "ש"];
 
   constructor(
@@ -47,6 +68,15 @@ export class SharedCalendarInputComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const registryEntry = SharedInputRegistry[this.type];
+    if (!registryEntry) {
+      console.error('SharedCalendarInput: invalid type', this.type);
+      return;
+    }
+
+    this.uiConfig = registryEntry.uiConfig;
+    this.dataConfig = registryEntry.dataConfig;
+
     this.displayedMonthLeft = new Date();
     this.displayedMonthLeft.setDate(1);
 
@@ -77,33 +107,31 @@ export class SharedCalendarInputComponent implements OnInit {
     this.leftMonthDays = this.calendarSrv.generateMonthDays(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth(),
-      this.config.suggestedDates
+      this.dataConfig.suggestedDates
     );
 
     this.rightMonthDays = this.calendarSrv.generateMonthDays(
       this.displayedMonthRight.getFullYear(),
       this.displayedMonthRight.getMonth(),
-      this.config.suggestedDates
+      this.dataConfig.suggestedDates
     );
   }
 
-  /* --- MONTH NAME GETTERS --- */
-get leftMonthName() {
-  return this.monthsNames[this.displayedMonthLeft.getMonth()];
-}
+  get leftMonthName() {
+    return this.monthsNames[this.displayedMonthLeft.getMonth()];
+  }
 
-get leftYear() {
-  return this.displayedMonthLeft.getFullYear();
-}
+  get leftYear() {
+    return this.displayedMonthLeft.getFullYear();
+  }
 
-get rightMonthName() {
-  return this.monthsNames[this.displayedMonthRight.getMonth()];
-}
+  get rightMonthName() {
+    return this.monthsNames[this.displayedMonthRight.getMonth()];
+  }
 
-get rightYear() {
-  return this.displayedMonthRight.getFullYear();
-}
-
+  get rightYear() {
+    return this.displayedMonthRight.getFullYear();
+  }
 
   selectDate(date: Date) {
     if (!this.value?.start) {
@@ -117,16 +145,44 @@ get rightYear() {
     } else {
       this.value = { start: date, end: undefined };
     }
+
     this.valueChange.emit(this.value);
   }
 
   isSelected(date: Date): boolean {
-    return this.calendarSrv.isSameDate(this.value?.start, date) ||
-           this.calendarSrv.isSameDate(this.value?.end, date);
+    return this.calendarSrv.isSameDate(this.value?.start ?? undefined, date) ||
+           this.calendarSrv.isSameDate(this.value?.end ?? undefined, date);
   }
 
   isInRange(date: Date): boolean {
-    return this.calendarSrv.isInRange(date, this.value?.start, this.value?.end);
+    return this.calendarSrv.isInRange(
+      date,
+      this.value?.start ?? undefined,
+      this.value?.end ?? undefined
+    );
+  }
+
+  get valueAsString(): string {
+    const s = this.value?.start ?? null;
+    const e = this.value?.end ?? null;
+
+    if (s && e) {
+      return `${this.formatDate(s)} - ${this.formatDate(e)}`;
+    }
+
+    if (s) {
+      return `${this.formatDate(s)} - ---`;
+    }
+
+    return '---';
+  }
+
+  private formatDate(d: Date): string {
+    return new Intl.DateTimeFormat('he-IL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit'
+    }).format(d);
   }
 
   nextMonth() {
@@ -135,11 +191,13 @@ get rightYear() {
       this.displayedMonthLeft.getMonth() + 1,
       1
     );
+
     this.displayedMonthRight = new Date(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth() + 1,
       1
     );
+
     this.renderCalendars();
   }
 
@@ -149,11 +207,13 @@ get rightYear() {
       this.displayedMonthLeft.getMonth() - 1,
       1
     );
+
     this.displayedMonthRight = new Date(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth() + 1,
       1
     );
+
     this.renderCalendars();
   }
 }

@@ -1,36 +1,42 @@
 <div class="calendar-input-wrapper">
 
-  <!-- אינפוט שמציג את הערכים -->
-  <div class="calendar-input-display" (click)="toggleDropdown()">
+  <!-- אינפוט גנרי שמפעיל את הדרופדאון -->
+  <app-input-box
+    [icon]="uiConfig?.icon ?? 'ng-icon-calendar'"
+    [title]="uiConfig?.title || 'תאריכים'"
+    [placeholder]="uiConfig?.placeholder || 'בחר תאריך'"
+    [model]="valueAsString"
 
-    <div class="label">תאריכים</div>
+     (opened)="isOpen = true"
+  (closed)="isOpen = false"
 
-    <div class="value">
-      {{ departureDate ? (departureDate | date:'dd.MM.yy') : '–––' }}
-      -
-      {{ returnDate ? (returnDate | date:'dd.MM.yy') : '–––' }}
-    </div>
+  ></app-input-box>
 
-    <i class="issta-icon-calendar"></i>
-  </div>
- 
   <!-- דרופדאון -->
   <div class="dropdown-panel" *ngIf="isOpen">
 
     <div class="calendar-wrapper">
 
       <!-- Header -->
-      <div class="calendar-header">
-        <div class="calendar-title">
-          <span class="label">יציאה</span>
-          <span class="value">{{ departureDate | date:'d בMMMM yyyy' }}</span>
-        </div>
+     <div class="calendar-header">
 
-        <div class="calendar-title">
-          <span class="label">חזרה</span>
-          <span class="value">{{ returnDate | date:'d בMMMM yyyy' }}</span>
-        </div>
-      </div>
+<div class="calendar-pill">
+  <span class="label">יציאה</span>
+  <span class="date">
+    {{ formatFullHebrewDate(departureDate) }}
+  </span>
+</div>
+
+<div class="calendar-pill">
+  <span class="label">חזרה</span>
+  <span class="date">
+    {{ formatFullHebrewDate(returnDate) }}
+  </span>
+</div>
+
+
+</div>
+
 
       <div class="calendar-body">
 
@@ -39,7 +45,12 @@
 
           <div class="month-header">
             <button class="nav-btn" (click)="prevMonth()">‹</button>
-            <span class="month-name">{{ leftMonthName }} {{ leftYear }}</span>
+       <span class="month-name">
+  <span class="month">{{ leftMonthName }}</span>
+  <span class="year">{{ leftYear }}</span>
+</span>
+
+
           </div>
 
           <div class="weekday-row">
@@ -55,21 +66,32 @@
               [class.range]="isInRange(day.date)"
               (click)="selectDate(day.date)"
             >
-              {{ day.date.getDate() }}
+         
+              <span>
+                {{ day.date.getDate() }}
+              </span>
+
+      
+                
 
               <span *ngIf="day.suggested" class="suggest-badge">
                 {{ day.suggested.price }} {{ day.suggested.currency }}
               </span>
             </div>
           </div>
+
         </div>
 
         <!-- חודש ימין -->
         <div class="calendar-month">
 
-          <div class="month-header">
+          <div class="month-header return">
             <button class="nav-btn" (click)="nextMonth()">›</button>
-            <span class="month-name">{{ rightMonthName }} {{ rightYear }}</span>
+         <span class="month-name">
+  <span class="month">{{ rightMonthName }}</span>
+  <span class="year">{{ rightYear }}</span>
+</span>
+
           </div>
 
           <div class="weekday-row">
@@ -85,7 +107,13 @@
               [class.range]="isInRange(day.date)"
               (click)="selectDate(day.date)"
             >
-              {{ day.date.getDate() }}
+         
+              <span>
+                {{ day.date.getDate() }}
+              </span>
+
+      
+                
 
               <span *ngIf="day.suggested" class="suggest-badge">
                 {{ day.suggested.price }} {{ day.suggested.currency }}

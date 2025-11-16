@@ -3,6 +3,7 @@ import { FlightsMapper } from '../mappers/flights.mapper';
 import { HotelsMapper } from '../mappers/hotels.mapper';
 import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
+import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
 
 export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = {
   
@@ -41,7 +42,7 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     autocompleteUrl: `${AppExternalConfig.baseUrl}hotels/autocomplete`,
     mapper: HotelsMapper.mapDestinations,
     uiConfig: {
-      title: 'יעד',
+      title: 'אל',
       icon: 'icon-hotel',
       placeholder: 'לאן נוסעים?',
       titleMenuOptions: 'ערים פופולריות',
@@ -51,17 +52,24 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     }
   },
 
-    [ESharedInputType.PICKER_DATES]: {
-    requestUrl: '',         
-    mapper: () => [],          // לא רלוונטי לקלנדר
-    uiConfig: {
-      icon: 'icon-calendar',
-      placeholder: 'בחר תאריך',
-      titleMenuOptions: '',
-      allowAutoComplete: false,
-      title: 'תאריך יציאה',
-    }
-  }
+[ESharedInputType.PICKER_DATES]: {
+  requestUrl: '',
+  mapper: () => [],
+  uiConfig: {
+    icon: 'ist-icon-calendar-2',
+    placeholder: 'בחר תאריך',
+    titleMenuOptions: '',
+    allowAutoComplete: false,
+    title: 'מתי',
+  },
+  dataConfig: new SharedCalendarInputConfig({
+    suggestedDates: [],
+    minDate: new Date(),
+    maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+    allowPickHours: false
+  })
+} as SharedInputConfig<SharedCalendarInputConfig>
 
-  
-};
+
+
+}

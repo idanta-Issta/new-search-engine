@@ -4,15 +4,17 @@
   <div class="input-meta">
     <div class="input-title" *ngIf="title">{{ title }}</div>
 
-    <input
-      class="input-field"
-      type="text"
-      [placeholder]="placeholder"
-      [(ngModel)]="model"
-      (focus)="onFocus()"
-      (blur)="onBlur()"
-      (input)="onInput($event.target.value)"
-    />
+  <input
+  #inputRef
+  class="input-field"
+  type="text"
+  [placeholder]="placeholder"
+  [(ngModel)]="model"
+  (focus)="onFocus($event)"
+  (blur)="onBlur()"
+  (input)="onInput($event.target.value)"
+/>
+
   </div>
 
   <i class="issta-icon-chevron-down arrow" [class.open]="isOpen"></i>

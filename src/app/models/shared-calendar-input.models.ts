@@ -4,9 +4,21 @@ export interface SuggestedDate {
   currency?: string;
 }
 
-export interface SharedCalendarInputConfig {
-  suggestedDates: SuggestedDate[];
-  minDate?: Date;
-  maxDate?: Date;
+export interface ISharedCalendarInputConfig {
+  suggestedDates?: any[];
+  minDate?: Date | null;
+  maxDate?: Date | null;
   allowPickHours?: boolean;
+}
+
+export class SharedCalendarInputConfig implements ISharedCalendarInputConfig {
+
+  suggestedDates: any[] = [];
+  minDate: Date | null = null;
+  maxDate: Date | null = null;
+  allowPickHours: boolean = false;
+
+  constructor(data?: Partial<ISharedCalendarInputConfig>) {
+    Object.assign(this, data);
+  }
 }
