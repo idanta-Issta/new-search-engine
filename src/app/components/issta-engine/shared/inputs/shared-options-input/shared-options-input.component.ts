@@ -32,6 +32,7 @@ export class SharedOptionsInputComponent implements OnInit {
   @Input() type!: ESharedInputType;
   @Input() value?: MenuOption;
   @Output() valueChange = new EventEmitter<MenuOption>();
+@Output() optionPicked = new EventEmitter<MenuOption>();
 
   // ⬅️ אחרי התיקון — עכשיו זה הטייפ הנכון
   config!: SharedInputUIConfig;
@@ -119,6 +120,7 @@ onSearchChange(value: string) {
   selectOption(option: MenuOption) {
     this.value = option;
     this.valueChange.emit(option);
+    this.optionPicked.emit(option);
     this.searchTerm = option.label;
     this.isOpen = false;
   }

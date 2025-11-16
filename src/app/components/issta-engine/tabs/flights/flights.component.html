@@ -24,12 +24,21 @@
    <app-shared-options-input
     [type]="EInputType.ORIGINS_FLIGHTS" 
     [(value)]="destination"
+    (optionPicked)="onDestinationPicked($event)" 
   ></app-shared-options-input>
 
 <app-shared-calendar-input
+  #calendarRef
   [type]="EInputType.PICKER_DATES"
-  [(value)]="selectedDate">
-</app-shared-calendar-input>
+  [(value)]="selectedDate"
+></app-shared-calendar-input>
+
+<app-shared-passanger-input
+  [type]="EInputType.PASSANGERS_FLIGHTS"
+  [(value)]="passangers"
+></app-shared-passanger-input>
+
+
 
 
 

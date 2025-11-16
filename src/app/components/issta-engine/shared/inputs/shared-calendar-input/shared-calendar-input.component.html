@@ -1,132 +1,96 @@
 <div class="calendar-input-wrapper">
-
-  <!-- אינפוט גנרי שמפעיל את הדרופדאון -->
   <app-input-box
     [icon]="uiConfig?.icon ?? 'ng-icon-calendar'"
     [title]="uiConfig?.title || 'תאריכים'"
     [placeholder]="uiConfig?.placeholder || 'בחר תאריך'"
     [model]="valueAsString"
-
-     (opened)="isOpen = true"
-  (closed)="isOpen = false"
-
+    (opened)="onInputOpened()"
+    (closed)="onInputClosed()"
+    (select)="onInputOpened()"
+    (focusin)="onInputOpened()"
+    (click)="onInputOpened()"
   ></app-input-box>
 
-  <!-- דרופדאון -->
-  <div class="dropdown-panel" *ngIf="isOpen">
-
-    <div class="calendar-wrapper">
-
-      <!-- Header -->
-     <div class="calendar-header">
-
-<div class="calendar-pill">
-  <span class="label">יציאה</span>
-  <span class="date">
-    {{ formatFullHebrewDate(departureDate) }}
-  </span>
-</div>
-
-<div class="calendar-pill">
-  <span class="label">חזרה</span>
-  <span class="date">
-    {{ formatFullHebrewDate(returnDate) }}
-  </span>
-</div>
-
-
-</div>
-
-
-      <div class="calendar-body">
-
-        <!-- חודש שמאל -->
-        <div class="calendar-month">
-
-          <div class="month-header">
-            <button class="nav-btn" (click)="prevMonth()">‹</button>
-       <span class="month-name">
-  <span class="month">{{ leftMonthName }}</span>
-  <span class="year">{{ leftYear }}</span>
-</span>
-
-
+  <!-- מעטפת עם אנימציית כניסה/יציאה -->
+  <div *ngIf="isOpen" @dropdown class="dropdown-anim" (mousedown)="$event.stopPropagation()">
+    <!-- פנל שמתרחב בגובה -->
+    <div class="dropdown-panel" @expand (mousedown)="$event.stopPropagation()">
+      <div class="calendar-wrapper">
+        <div class="calendar-header">
+          <div class="calendar-pill">
+            <span class="label">יציאה</span>
+            <span class="date">{{ formatFullHebrewDate(departureDate) }}</span>
           </div>
-
-          <div class="weekday-row">
-            <span *ngFor="let d of hebrewWeekdays">{{ d }}</span>
+          <div class="calendar-pill">
+            <span class="label">חזרה</span>
+            <span class="date">{{ formatFullHebrewDate(returnDate) }}</span>
           </div>
+        </div>
 
-          <div class="days-grid">
-            <div
-              *ngFor="let day of leftMonthDays"
-              class="day"
-              [class.other-month]="day.other"
-              [class.selected]="isSelected(day.date)"
-              [class.range]="isInRange(day.date)"
-              (click)="selectDate(day.date)"
-            >
-         
-              <span>
-                {{ day.date.getDate() }}
+        <div class="calendar-body">
+          <div class="calendar-month">
+            <div class="month-header">
+              <button class="nav-btn" (click)="prevMonth()">‹</button>
+              <span class="month-name">
+                <span class="month">{{ leftMonthName }}</span>
+                <span class="year">{{ leftYear }}</span>
               </span>
+            </div>
 
-      
-                
+            <div class="weekday-row">
+              <span *ngFor="let d of hebrewWeekdays">{{ d }}</span>
+            </div>
 
-              <span *ngIf="day.suggested" class="suggest-badge">
-                {{ day.suggested.price }} {{ day.suggested.currency }}
-              </span>
+            <div class="days-grid">
+              <div
+                *ngFor="let day of leftMonthDays"
+                class="day"
+                [class.other-month]="day.other"
+                [class.selected]="isSelected(day.date)"
+                [class.range]="isInRange(day.date)"
+                (click)="selectDate(day.date)"
+                (mousedown)="$event.stopPropagation()"
+              >
+                <span>{{ day.date.getDate() }}</span>
+                <span *ngIf="day.suggested" class="suggest-badge">
+                  {{ day.suggested.price }} {{ day.suggested.currency }}
+                </span>
+              </div>
             </div>
           </div>
 
-        </div>
-
-        <!-- חודש ימין -->
-        <div class="calendar-month">
-
-          <div class="month-header return">
-            <button class="nav-btn" (click)="nextMonth()">›</button>
-         <span class="month-name">
-  <span class="month">{{ rightMonthName }}</span>
-  <span class="year">{{ rightYear }}</span>
-</span>
-
-          </div>
-
-          <div class="weekday-row">
-            <span *ngFor="let d of hebrewWeekdays">{{ d }}</span>
-          </div>
-
-          <div class="days-grid">
-            <div
-              *ngFor="let day of rightMonthDays"
-              class="day"
-              [class.other-month]="day.other"
-              [class.selected]="isSelected(day.date)"
-              [class.range]="isInRange(day.date)"
-              (click)="selectDate(day.date)"
-            >
-         
-              <span>
-                {{ day.date.getDate() }}
-              </span>
-
-      
-                
-
-              <span *ngIf="day.suggested" class="suggest-badge">
-                {{ day.suggested.price }} {{ day.suggested.currency }}
+          <div class="calendar-month">
+            <div class="month-header return">
+              <button class="nav-btn" (click)="nextMonth()">›</button>
+              <span class="month-name">
+                <span class="month">{{ rightMonthName }}</span>
+                <span class="year">{{ rightYear }}</span>
               </span>
             </div>
+
+            <div class="weekday-row">
+              <span *ngFor="let d of hebrewWeekdays">{{ d }}</span>
+            </div>
+
+            <div class="days-grid">
+              <div
+                *ngFor="let day of rightMonthDays"
+                class="day"
+                [class.other-month]="day.other"
+                [class.selected]="isSelected(day.date)"
+                [class.range]="isInRange(day.date)"
+                (click)="selectDate(day.date)"
+                (mousedown)="$event.stopPropagation()"
+              >
+                <span>{{ day.date.getDate() }}</span>
+                <span *ngIf="day.suggested" class="suggest-badge">
+                  {{ day.suggested.price }} {{ day.suggested.currency }}
+                </span>
+              </div>
+            </div>
           </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
+        </div><!-- /calendar-body -->
+      </div><!-- /calendar-wrapper -->
+    </div><!-- /dropdown-panel -->
+  </div><!-- /dropdown-anim -->
 </div>

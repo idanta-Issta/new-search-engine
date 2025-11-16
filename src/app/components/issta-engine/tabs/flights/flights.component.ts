@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionTitleComponent } from '../../shared/section-title/section-title.component';
 import { SharedOptionsInputComponent } from '../../shared/inputs/shared-options-input/shared-options-input.component';
@@ -6,6 +6,8 @@ import { MenuOption } from '../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../enums/ESharedInputType';
 import { SharedCalendarInputComponent } from '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
 import { SharedCalendarInputConfig } from '../../../../models/shared-calendar-input.models';
+import { SharedPassangerInputComponent } from '../../shared/inputs/shared-passanger-input/shared-passanger-input.component';
+import { PassangersInput } from '../../../../models/shared-passanger-input.models';
 
 @Component({
   selector: 'app-flights',
@@ -14,13 +16,14 @@ import { SharedCalendarInputConfig } from '../../../../models/shared-calendar-in
     CommonModule,
     SectionTitleComponent,
     SharedOptionsInputComponent,
-    SharedCalendarInputComponent
+    SharedCalendarInputComponent,
+    SharedPassangerInputComponent
   ],
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.scss']
 })
 export class FlightsComponent {
-
+  @ViewChild('calendarRef') calendarRef!: SharedCalendarInputComponent;
   EInputType = ESharedInputType;
 
   selectedOrigin: MenuOption | null = null;
@@ -41,6 +44,23 @@ calendarConfig: SharedCalendarInputConfig = {
   allowPickHours: false
 };
 
+passangers: PassangersInput = {
+  allowPickRoom: false,
+  optionsAge: [
+    {
+      title: 'קבוצות גיל',
+      options: [
+        { label: 'מבוגר', value: 'adult', minAge: 24, maxAge: 64, minCount: 2, maxCount: 9 },
+        { label: 'צעיר', value: 'teen', minAge: 12, maxAge: 23, minCount: 0, maxCount: 9 },
+        { label: 'ילד', value: 'child', minAge: 2, maxAge: 11, minCount: 0, maxCount: 9 },
+        { label: 'תינוק', value: 'infant', minAge: 0, maxAge: 2, minCount: 0, maxCount: 9 },
+        { label: 'פנסיונר', value: 'senior', minAge: 65, maxAge: 120, minCount: 0, maxCount: 9 }
+      ]
+    }
+  ]
+};
+
+
 
   onOriginSelected(option: MenuOption) {
     this.selectedOrigin = option;
@@ -48,5 +68,14 @@ calendarConfig: SharedCalendarInputConfig = {
 
   onDestinationSelected(option: MenuOption) {
     this.selectedDestination = option;
+  }
+
+    onDestinationPicked(option: MenuOption) {
+    console.log('נבחר יעד:', option);
+    if (this.calendarRef) {
+    this.calendarRef.isOpen = true;
+  } else {
+    setTimeout(() => this.calendarRef.isOpen = true, 0);
+  }
   }
 }

@@ -7,8 +7,10 @@ import {
   HostListener,
   ElementRef
 } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
+import {
+  trigger, transition, style, animate
+} from '@angular/animations'; // למה: טריגרי אנימציה
 import { SharedCalendarInputConfig } from '../../../../../models/shared-calendar-input.models';
 import { SharedCalendarService, CalendarDay } from '../../../../../services/shared-calendar.service';
 import { InputBoxComponent } from '../input-box/input-box.component';
@@ -21,14 +23,33 @@ import { SharedInputUIConfig } from '../../../../../models/shared-input-config.m
   standalone: true,
   imports: [CommonModule, InputBoxComponent],
   templateUrl: './shared-calendar-input.component.html',
-  styleUrls: ['./shared-calendar-input.component.scss']
+  styleUrls: ['./shared-calendar-input.component.scss'],
+  animations: [
+    trigger('dropdown', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.98)' }),
+        animate('140ms cubic-bezier(0.2,0,0,1)', style({ opacity: 1, transform: 'scale(1)' }))
+      ]),
+      transition(':leave', [
+        animate('120ms cubic-bezier(0.4,0,1,1)', style({ opacity: 0, transform: 'scale(0.98)' }))
+      ])
+    ]),
+    trigger('expand', [
+      transition(':enter', [
+        style({ height: 0, overflow: 'hidden' }),
+        animate('160ms ease-out', style({ height: '*' }))
+      ]),
+      transition(':leave', [
+        style({ height: '*', overflow: 'hidden' }),
+        animate('130ms ease-in', style({ height: 0 }))
+      ])
+    ])
+  ]
 })
 export class SharedCalendarInputComponent implements OnInit {
-
   @Input() type!: ESharedInputType;
 
   uiConfig!: SharedInputUIConfig;
-
   dataConfig!: SharedCalendarInputConfig;
 
   @Input() value: { start?: Date | null; end?: Date | null } | null = null;
@@ -40,31 +61,19 @@ export class SharedCalendarInputComponent implements OnInit {
 
   displayedMonthLeft!: Date;
   displayedMonthRight!: Date;
-
+  isSelectingRange = false;
   leftMonthDays: CalendarDay[] = [];
   rightMonthDays: CalendarDay[] = [];
 
   monthsNames = [
-    "ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני",
-    "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"
+    'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
+    'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'
   ];
-
-  formatFullHebrewDate(d: Date | null): string {
-  if (!d) return '---';
-
-  return new Intl.DateTimeFormat('he-IL', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  }).format(d);
-}
-
-
-  hebrewWeekdays = ["א", "ב", "ג", "ד", "ה", "ו", "ש"];
+  hebrewWeekdays = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
 
   constructor(
     private calendarSrv: SharedCalendarService,
-    private el: ElementRef
+    private el: ElementRef<HTMLElement>
   ) {}
 
   ngOnInit() {
@@ -92,13 +101,11 @@ export class SharedCalendarInputComponent implements OnInit {
   get departureDate() { return this.value?.start ?? null; }
   get returnDate() { return this.value?.end ?? null; }
 
-  toggleDropdown() {
-    this.isOpen = !this.isOpen;
-  }
+  toggleDropdown() { this.isOpen = !this.isOpen; }
 
   @HostListener('document:mousedown', ['$event'])
   onOutsideClick(event: MouseEvent) {
-    if (!this.el.nativeElement.contains(event.target)) {
+    if (!this.el.nativeElement.contains(event.target as Node)) {
       this.isOpen = false;
     }
   }
@@ -117,36 +124,42 @@ export class SharedCalendarInputComponent implements OnInit {
     );
   }
 
-  get leftMonthName() {
-    return this.monthsNames[this.displayedMonthLeft.getMonth()];
-  }
+  get leftMonthName() { return this.monthsNames[this.displayedMonthLeft.getMonth()]; }
+  get leftYear() { return this.displayedMonthLeft.getFullYear(); }
+  get rightMonthName() { return this.monthsNames[this.displayedMonthRight.getMonth()]; }
+  get rightYear() { return this.displayedMonthRight.getFullYear(); }
 
-  get leftYear() {
-    return this.displayedMonthLeft.getFullYear();
-  }
+  onInputOpened() { this.isOpen = true; }
 
-  get rightMonthName() {
-    return this.monthsNames[this.displayedMonthRight.getMonth()];
-  }
-
-  get rightYear() {
-    return this.displayedMonthRight.getFullYear();
+  onInputClosed() {
+    setTimeout(() => { // למה: מונע סגירה לפני קליק פנימי
+      if (!this.value?.start || this.value?.end) {
+        this.isOpen = false;
+      }
+    }, 0);
   }
 
   selectDate(date: Date) {
-    if (!this.value?.start) {
-      this.value = { start: date };
+    if (!this.value || !this.value.start) {
+      this.value = { start: date, end: undefined };
     } else if (!this.value.end) {
       if (date < this.value.start) {
-        this.value = { start: date };
+        this.value = { start: date, end: undefined };
       } else {
-        this.value.end = date;
+        this.value = { start: this.value.start, end: date };
+        this.isOpen = false;
       }
     } else {
       this.value = { start: date, end: undefined };
     }
-
     this.valueChange.emit(this.value);
+  }
+
+  formatFullHebrewDate(d: Date | null): string {
+    if (!d) return '---';
+    return new Intl.DateTimeFormat('he-IL', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    }).format(d);
   }
 
   isSelected(date: Date): boolean {
@@ -156,32 +169,21 @@ export class SharedCalendarInputComponent implements OnInit {
 
   isInRange(date: Date): boolean {
     return this.calendarSrv.isInRange(
-      date,
-      this.value?.start ?? undefined,
-      this.value?.end ?? undefined
+      date, this.value?.start ?? undefined, this.value?.end ?? undefined
     );
   }
 
   get valueAsString(): string {
     const s = this.value?.start ?? null;
     const e = this.value?.end ?? null;
-
-    if (s && e) {
-      return `${this.formatDate(s)} - ${this.formatDate(e)}`;
-    }
-
-    if (s) {
-      return `${this.formatDate(s)} - ---`;
-    }
-
+    if (s && e) return `${this.formatDate(s)} - ${this.formatDate(e)}`;
+    if (s) return `${this.formatDate(s)} - ---`;
     return '---';
   }
 
   private formatDate(d: Date): string {
     return new Intl.DateTimeFormat('he-IL', {
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit'
+      day: '2-digit', month: '2-digit', year: '2-digit'
     }).format(d);
   }
 
@@ -191,13 +193,11 @@ export class SharedCalendarInputComponent implements OnInit {
       this.displayedMonthLeft.getMonth() + 1,
       1
     );
-
     this.displayedMonthRight = new Date(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth() + 1,
       1
     );
-
     this.renderCalendars();
   }
 
@@ -207,13 +207,11 @@ export class SharedCalendarInputComponent implements OnInit {
       this.displayedMonthLeft.getMonth() - 1,
       1
     );
-
     this.displayedMonthRight = new Date(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth() + 1,
       1
     );
-
     this.renderCalendars();
   }
 }

@@ -52,6 +52,20 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     }
   },
 
+[ESharedInputType.PASSANGERS_FLIGHTS]: {
+  requestUrl: ``,
+  autocompleteUrl: ``,
+  mapper: () => [],
+  uiConfig: {
+    title: 'נוסעים',
+    icon: 'icon-count-man',
+    placeholder: 'בחר מספר נוסעים',
+    titleMenuOptions: 'נוסעים לפי קבוצת גיל',
+    allowAutoComplete: false
+  }
+},
+
+
 [ESharedInputType.PICKER_DATES]: {
   requestUrl: '',
   mapper: () => [],

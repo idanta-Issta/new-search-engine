@@ -1,0 +1,31 @@
+<div class="passenger-input">
+  <app-input-box
+    [icon]="config.icon ?? 'icon-user'"
+    [title]="config.title ?? 'נוסעים'"
+    [placeholder]="config.placeholder ?? 'בחר נוסעים'"
+    [model]="totalPassengers + ' נוסעים'"
+    (click)="toggleDropdown()"
+  ></app-input-box>
+
+  <div class="dropdown" *ngIf="isOpen">
+    <h4 class="title">{{ config.titleMenuOptions || 'קבוצות גיל' }}</h4>
+
+    <div *ngFor="let group of value.optionsAge" class="age-group">
+      <div *ngFor="let age of group.options" class="age-row">
+        <div class="buttons">
+          <button (click)="decrement(age)" [disabled]="age.minCount === 0">−</button>
+          <span class="count">{{ age.minCount }}</span>
+          <button (click)="increment(age)" [disabled]="age.minCount === age.maxCount">+</button>
+        </div>
+        <div class="label">
+          {{ age.label }}
+          <span class="range">(
+            גיל {{ age.minAge }}{{ age.maxAge ? '–' + age.maxAge : '+' }}
+          )</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="confirm" (click)="isOpen = false">בחירה</button>
+  </div>
+</div>
