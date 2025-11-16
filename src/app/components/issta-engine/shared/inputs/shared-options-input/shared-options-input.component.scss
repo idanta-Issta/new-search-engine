@@ -6,32 +6,26 @@
 
   /* תפריט ירידה */
  
-  .dropdown {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  width: 100%;
-  background: #fff;
 
-  border: 1px solid var(--search-engine-border-menu);
-  border-radius: 20px;
-
-  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.14);
-
-  padding: 16px 11px;
-  max-height: 260px;
+.dropdown-container {
+  max-height: 250px;
   overflow-y: auto;
+  overflow-x: hidden;
 
-  z-index: 9999;
+  /* הסתרת הגלילה אבל שמירת האפשרות לגלול */
 
-  /* הסתרת scrollbar */
+  /* Firefox */
   scrollbar-width: none;
+
+  /* IE / Edge ישן */
   -ms-overflow-style: none;
 
+  /* Chrome, Safari, Edge חדשים */
   &::-webkit-scrollbar {
     display: none;
-  
+  }
 }
+
 
 
     .dropdown-title {
@@ -89,11 +83,7 @@
     }
   }
 
-  &.open .dropdown {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+
 
 /* סימון תוצאות בחיפוש */
 ::ng-deep .mark-autocomplete {

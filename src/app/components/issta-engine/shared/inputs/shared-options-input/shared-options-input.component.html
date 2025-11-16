@@ -1,6 +1,6 @@
 
 
-<div class="shared-input" [class.open]="isOpen">
+<div class="shared-input" [class.open]="isOpen" #anchorE2>
 
 <app-input-box
   [icon]="config.icon ?? ''"
@@ -13,22 +13,31 @@
   (inputChange)="onSearchChange($event)"
 ></app-input-box>
 
+  <app-shared-dropdown
+    [isOpen]="isOpen"
+    (closed)="isOpen = false"
+    [contentTemplate]="dropdownContent"
+    [anchor]="anchorE2"   
+  ></app-shared-dropdown>
 
 
-  <div class="dropdown" *ngIf="isOpen">
-    <h4 *ngIf="config?.titleMenuOptions">{{ config.titleMenuOptions }}</h4>
+  <ng-template #dropdownContent>
+    <div class="dropdown-container">
+      <h4 *ngIf="config?.titleMenuOptions">{{ config.titleMenuOptions }}</h4>
+  
+      <ul *ngIf="!noResults">
+        <li *ngFor="let option of filteredOptions" (click)="selectOption(option)">
+          <i *ngIf="option.icon" [class]="option.icon"></i>
+          <div class="text">
+            <span class="label" [innerHTML]="highlightMatch(option.label)"></span>
+            <small *ngIf="option.note">{{ option.note }}</small>
+          </div>
+        </li>
+      </ul>
+  
+      <div class="no-results" *ngIf="noResults">לא נמצאו תוצאות</div>
 
-    <ul *ngIf="!noResults">
-      <li *ngFor="let option of filteredOptions" (click)="selectOption(option)">
-        <i *ngIf="option.icon" [class]="option.icon"></i>
-        <div class="text">
-          <span class="label" [innerHTML]="highlightMatch(option.label)"></span>
-          <small *ngIf="option.note">{{ option.note }}</small>
-        </div>
-      </li>
-    </ul>
-
-    <div class="no-results" *ngIf="noResults">לא נמצאו תוצאות</div>
-  </div>
+    </div>
+   </ng-template>
 
 </div>

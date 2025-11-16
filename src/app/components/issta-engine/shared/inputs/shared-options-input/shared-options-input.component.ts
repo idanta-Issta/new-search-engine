@@ -17,13 +17,14 @@ import { SharedInputUIConfig } from '../../../../../models/shared-input-config.m
 import { debounceTime, distinctUntilChanged, Subject, switchMap, of } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { InputBoxComponent } from '../../../shared/inputs/input-box/input-box.component';
+import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component'; 
 
 
  
 @Component({
   selector: 'app-shared-options-input',
   standalone: true,
-  imports: [CommonModule, FormsModule,InputBoxComponent ],
+  imports: [CommonModule, FormsModule,InputBoxComponent, SharedDropdownComponent ],
   templateUrl: './shared-options-input.component.html',
   styleUrls: ['./shared-options-input.component.scss']
 })

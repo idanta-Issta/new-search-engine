@@ -15,11 +15,12 @@ import { SharedInputUIConfig } from '../../../../../models/shared-input-config.m
 import { InputBoxComponent } from '../input-box/input-box.component';
 import { PassangersInput, OptionAge, AgeGroup } from '../../../../../models/shared-passanger-input.models';
 import { SharedPassengersService } from '../../../../../services/shared-passengers.service';
+import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component';
 
 @Component({
   selector: 'app-shared-passanger-input',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputBoxComponent],
+  imports: [CommonModule, FormsModule, InputBoxComponent, SharedDropdownComponent],
   templateUrl: './shared-passanger-input.component.html',
   styleUrls: ['./shared-passanger-input.component.scss']
 })

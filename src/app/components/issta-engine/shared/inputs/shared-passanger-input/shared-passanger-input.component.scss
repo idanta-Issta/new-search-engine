@@ -3,6 +3,7 @@
   width: 100%;
   font-family: inherit;
 
+
   .dropdown {
     position: absolute;
     top: calc(100% + 6px);
@@ -12,7 +13,7 @@
     border: 1px solid #dcdcdc;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 14px;
+    padding: 15px 14px 11px 33px;
     z-index: 9999;
 
     h4.title {
@@ -33,6 +34,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 6px 0;
+          min-width: 236px;
+        flex-direction: row-reverse;
 
       .buttons {
         display: flex;

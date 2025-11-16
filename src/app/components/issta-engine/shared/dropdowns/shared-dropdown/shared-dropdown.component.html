@@ -1,0 +1,9 @@
+<!-- src/app/shared/components/shared-dropdown/shared-dropdown.component.html -->
+<div
+  class="dropdown-wrapper"
+  [@dropdownAnimation]="isOpen ? 'open' : 'closed'"
+  #dropdownContainer
+  (mousedown)="$event.stopPropagation()"
+>
+  <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+</div>

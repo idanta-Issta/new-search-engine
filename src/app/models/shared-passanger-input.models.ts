@@ -13,8 +13,9 @@ export interface OptionAge {
 export interface AgeGroup {
   label: string;
   value: string;
-  minAge: number;
-  maxAge: number;
+  note: string; // 👈 חדש
   minCount: number;
   maxCount: number;
 }
+
+

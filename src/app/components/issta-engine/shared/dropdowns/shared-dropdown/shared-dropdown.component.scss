@@ -1,0 +1,49 @@
+// .dropdown {
+//   position: absolute;
+//   top: calc(100% + 6px);
+//   left: 0;
+//   width: 100%;
+//   background: #fff;
+
+//   border: 1px solid var(--search-engine-border-menu);
+//   border-radius: 20px;
+
+//   box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.14);
+
+//   padding: 16px 11px;
+//   max-height: 260px;
+//   overflow-y: auto;
+
+//   z-index: 9999;
+
+//   /* הסתרת scrollbar */
+//   scrollbar-width: none;
+//   -ms-overflow-style: none;
+
+//   &::-webkit-scrollbar {
+//     display: none;
+//   }
+// }
+
+/* src/app/shared/components/shared-dropdown/shared-dropdown.component.scss */
+:host {
+  display: block;          /* שלא יהיה inline עם רוחב 0 */
+  width: 100%;
+  position: relative;      /* בסיס טוב למיקום מוחלט פנימי אם צריך */
+}
+
+.dropdown-wrapper {
+  width: 100%;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  z-index: 9999;
+  transform-origin: top center;
+  overflow: hidden;
+}
+
+

@@ -1,4 +1,4 @@
-<div class="passenger-input">
+<div class="passenger-input" #anchorEl>
   <app-input-box
     [icon]="config.icon ?? 'icon-user'"
     [title]="config.title ?? 'נוסעים'"
@@ -7,7 +7,15 @@
     (click)="toggleDropdown()"
   ></app-input-box>
 
-  <div class="dropdown" *ngIf="isOpen">
+  <app-shared-dropdown
+    [isOpen]="isOpen"
+    (closed)="isOpen = false"
+    [contentTemplate]="dropdownContent"
+    [anchor]="anchorEl"   
+  ></app-shared-dropdown>
+
+  <!-- תבנית dropdown -->
+  <ng-template #dropdownContent>
     <h4 class="title">{{ config.titleMenuOptions || 'קבוצות גיל' }}</h4>
 
     <div *ngFor="let group of value.optionsAge" class="age-group">
@@ -19,13 +27,11 @@
         </div>
         <div class="label">
           {{ age.label }}
-          <span class="range">(
-            גיל {{ age.minAge }}{{ age.maxAge ? '–' + age.maxAge : '+' }}
-          )</span>
+          <small class="note">{{ age.note }}</small>
         </div>
       </div>
     </div>
 
     <button class="confirm" (click)="isOpen = false">בחירה</button>
-  </div>
+  </ng-template>
 </div>
