@@ -9,37 +9,6 @@
   margin: 0 auto;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 
-  .flights-box {
-  background: #f4fdf8;
-  border: 1.5px solid #00a651;
-  border-radius: 14px;
-  padding: 0.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .inputs-row {
-   
-  display: flex;
-  width: 100%;
-  gap: 0;
-  border-radius: 12px;
-  overflow: visible; // 👈 זה מה שחוסם כרגע את התפריט
-  background: white;
-  border: 1px solid #00a651;
-
-
-
-    app-shared-options-input {
-      flex: 1;
-      border-right: 1px solid #e5e5e5;
-
-      &:last-child {
-        border-right: none;
-      }
-    }
-  }
-}
 
 
   .header {

@@ -12,47 +12,57 @@ export class SharedOptionsService {
 
   constructor(private http: HttpClient) {}
 
-  /** 🧭 טעינה רגילה של רשימת אפשרויות לפי סוג */
-  getOptionsByType(type: ESharedInputType): Observable<MenuOption[]> {
-    const config = SharedInputRegistry[type];
-    if (!config) throw new Error(`❌ Unknown input type: ${type}`);
-
-    return this.http.get<any[]>(config.requestUrl).pipe(map(config.mapper));
+getOptionsByType(type: ESharedInputType): Observable<MenuOption[]> {
+  const config = SharedInputRegistry[type];
+  if (!config?.requestUrl) {
+    console.warn(`⚠️ Missing requestUrl for input type: ${type}`);
+    return of([]);
   }
 
-  /** 🪄 AutoComplete חכם עם cache ומיזוג */
-  searchAutocomplete(type: ESharedInputType, term: string): Observable<MenuOption[]> {
-    const config = SharedInputRegistry[type];
-    if (!config?.autocompleteUrl) return of([]);
+return this.http
+  .get<any[]>(config.requestUrl!)
+  .pipe(map(config.mapper ?? ((data: any) => data)));
 
-    const normalizedTerm = this.normalizeTerm(term);
-    const url = `${config.autocompleteUrl}?term=${encodeURIComponent(term)}`;
-    const cacheKey = `${type}_${normalizedTerm}`;
+}
 
-    // אם יש cache מלא למונח המדויק – נחזיר אותו מיד
-    if (this.cache[cacheKey]?.length) {
-      return of(this.cache[cacheKey]);
-    }
 
-    // אם אין cache מדויק – ננסה למצוא prefix קרוב
-    const prefixKey = this.findClosestCacheKey(type, normalizedTerm);
+/** 🪄 AutoComplete חכם עם cache ומיזוג */
+searchAutocomplete(type: ESharedInputType, term: string): Observable<MenuOption[]> {
+  const config = SharedInputRegistry[type];
+  if (!config?.autocompleteUrl) return of([]);
 
-    if (prefixKey) {
-      const cachedSubset = this.filterCachedForTerm(this.cache[prefixKey], normalizedTerm);
-      // מחזירים את subset מיד, ומריצים קריאה ברקע לעדכן
-      this.fetchAndMerge(type, url, normalizedTerm, config.mapper);
-      return of(cachedSubset);
-    }
+  const normalizedTerm = this.normalizeTerm(term);
+  const url = `${config.autocompleteUrl}?term=${encodeURIComponent(term)}`;
+  const cacheKey = `${type}_${normalizedTerm}`;
 
-    // אם אין בכלל cache — נשלח בקשה רגילה
-    return this.http.get<any[]>(url).pipe(
-      map(data => {
-        const mapped = config.mapper(data || []);
-        this.cache[cacheKey] = mapped;
-        return mapped;
-      })
-    );
+  // fallback mapper — תמיד פונקציה אמיתית
+  const mapper = config.mapper ?? ((data: any[]) => data);
+
+  // אם יש cache מלא למונח המדויק – נחזיר אותו מיד
+  if (this.cache[cacheKey]?.length) {
+    return of(this.cache[cacheKey]);
   }
+
+  // אם אין cache מדויק – ננסה למצוא prefix קרוב
+  const prefixKey = this.findClosestCacheKey(type, normalizedTerm);
+
+  if (prefixKey) {
+    const cachedSubset = this.filterCachedForTerm(this.cache[prefixKey], normalizedTerm);
+    // מחזירים את subset מיד, ומריצים קריאה ברקע לעדכן
+    this.fetchAndMerge(type, url, normalizedTerm, mapper);
+    return of(cachedSubset);
+  }
+
+  // אם אין בכלל cache — נשלח בקשה רגילה
+  return this.http.get<any[]>(url).pipe(
+    map(data => {
+      const mapped = mapper(data || []);
+      this.cache[cacheKey] = mapped;
+      return mapped;
+    })
+  );
+}
+
 
   /** 🔍 מחפש key קרוב בקאש (prefix) */
   private findClosestCacheKey(type: ESharedInputType, term: string): string | null {

@@ -1,21 +1,30 @@
 import { MenuOption } from './shared-options-input.models';
+import { Type } from '@angular/core';
 
-
-export interface SharedInputConfig<TData = any> {
-  requestUrl: string;
+export interface SharedInputConfig<T = any> {
+  requestUrl?: string;
   autocompleteUrl?: string;
-  mapper: (data: any[]) => MenuOption[];
-  uiConfig: SharedInputUIConfig;
-  dataConfig?: TData;
+  mapper?: (data: any) => any;
+  uiConfig: {
+    title: string;
+    placeholder?: string;
+    titleMenuOptions?: string;
+    icon?: string;
+    allowAutoComplete?: boolean;
+    defaultValue?: any;
+  };
+  dataConfig?: T;
+  component?: Type<any>;
 }
 
 
 
+
 export interface SharedInputUIConfig {
-icon?: string | null;
-    placeholder: string | null;
-    titleMenuOptions: string |null;
-    allowAutoComplete: boolean | false;
-  defaultValue?: MenuOption;
-    title?: string | null;
+  title: string;
+  placeholder?: string | null;
+  titleMenuOptions?: string | null;
+  icon?: string | null;
+  allowAutoComplete?: boolean;
+  defaultValue?: any;
 }

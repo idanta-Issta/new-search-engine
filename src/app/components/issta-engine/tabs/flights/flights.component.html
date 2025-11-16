@@ -15,33 +15,19 @@
   </div>
 
 <div class="flights-box">
-<div class="inputs-row">
-  <app-shared-options-input
-    [type]="EInputType.DESTINATIONS_FLIGHTS"
-    [(value)]="destination"
-  ></app-shared-options-input>
-
-   <app-shared-options-input
-    [type]="EInputType.ORIGINS_FLIGHTS" 
-    [(value)]="destination"
-    (optionPicked)="onDestinationPicked($event)" 
-  ></app-shared-options-input>
-
-<app-shared-calendar-input
-  #calendarRef
-  [type]="EInputType.PICKER_DATES"
-  [(value)]="selectedDate"
-></app-shared-calendar-input>
-
-<app-shared-passanger-input
-  [type]="EInputType.PASSANGERS_FLIGHTS"
-></app-shared-passanger-input>
+<app-shared-input-row
+  [inputs]="[
+    ESharedInputType.DESTINATIONS_FLIGHTS,
+    ESharedInputType.ORIGINS_FLIGHTS,
+    ESharedInputType.PICKER_DATES,
+    ESharedInputType.PASSANGERS_FLIGHTS
+  ]"
+  [values]="valuesMap"
+  buttonText="חיפוש">
+</app-shared-input-row>
 
 
 
-
-
-</div>
 
 
 </div>

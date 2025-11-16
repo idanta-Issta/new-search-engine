@@ -1,23 +1,18 @@
 import { Component,ViewChild  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionTitleComponent } from '../../shared/section-title/section-title.component';
-import { SharedOptionsInputComponent } from '../../shared/inputs/shared-options-input/shared-options-input.component';
 import { MenuOption } from '../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../enums/ESharedInputType';
 import { SharedCalendarInputComponent } from '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
 import { SharedCalendarInputConfig } from '../../../../models/shared-calendar-input.models';
-import { SharedPassangerInputComponent } from '../../shared/inputs/shared-passanger-input/shared-passanger-input.component';
-import { PassangersInput } from '../../../../models/shared-passanger-input.models';
-
+import {  SharedInputRowComponent } from '../../shared/inputs/input-row/shared-input-row/shared-input-row.component';
 @Component({
   selector: 'app-flights',
   standalone: true,
   imports: [
     CommonModule,
     SectionTitleComponent,
-    SharedOptionsInputComponent,
-    SharedCalendarInputComponent,
-    SharedPassangerInputComponent
+    SharedInputRowComponent
   ],
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.scss']
@@ -28,7 +23,7 @@ export class FlightsComponent {
 
   selectedOrigin: MenuOption | null = null;
   selectedDestination: MenuOption | null = null;
-
+  ESharedInputType = ESharedInputType;
   origin?: MenuOption;
   destination?: MenuOption;
 
@@ -43,6 +38,15 @@ calendarConfig: SharedCalendarInputConfig = {
   maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
   allowPickHours: false
 };
+
+
+valuesMap = {
+  [ESharedInputType.DESTINATIONS_FLIGHTS]: this.destination,
+  [ESharedInputType.ORIGINS_FLIGHTS]: this.origin,
+  [ESharedInputType.PICKER_DATES]: this.selectedDate,
+  [ESharedInputType.PASSANGERS_FLIGHTS]: null, // 👈 הוסף ערך ריק
+};
+
 
 
 

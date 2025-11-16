@@ -4,10 +4,24 @@ import { HotelsMapper } from '../mappers/hotels.mapper';
 import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
 import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
+import { SharedOptionsInputComponent } from '../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component';
+import { SharedCalendarInputComponent } from '../components/issta-engine/shared/inputs/shared-calendar-input/shared-calendar-input.component';
+import { SharedPassangerInputComponent } from '../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component';
 
 export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = {
-  
-  // ✈ יעד טיסה
+  [ESharedInputType.ORIGINS_FLIGHTS]: {
+    requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.flights.origins}`,
+    autocompleteUrl: `${AppExternalConfig.baseUrl}flights/autocomplete`,
+    mapper: FlightsMapper.mapOrigins,
+    uiConfig: {
+      title: 'אל',
+      placeholder: 'בחר יעד בארץ או בחו"ל',
+      titleMenuOptions: 'יעדים פופולריים',
+      allowAutoComplete: true,
+    },
+    component: SharedOptionsInputComponent, // 👈 זה האינפוט המתאים
+  },
+
   [ESharedInputType.DESTINATIONS_FLIGHTS]: {
     requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.flights.destinations}`,
     autocompleteUrl: `${AppExternalConfig.baseUrl}flights/autocomplete`,
@@ -18,72 +32,38 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       placeholder: 'לאן טסים?',
       titleMenuOptions: 'יעדים פופולריים',
       allowAutoComplete: true,
-    defaultValue: { label: "תל אביב", key: "TLV" }
-
-    }
+    },
+    component: SharedOptionsInputComponent,
   },
 
-  // 🛫 מוצא טיסה
-  [ESharedInputType.ORIGINS_FLIGHTS]: {
-    requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.flights.origins}`,
-    autocompleteUrl: `${AppExternalConfig.baseUrl}flights/autocomplete`,
-    mapper: FlightsMapper.mapOrigins,
+  [ESharedInputType.PICKER_DATES]: {
+    mapper: () => [],
     uiConfig: {
-      title: 'אל',
-      placeholder: 'בחירת יעד בארץ או בחו"ל',
-      titleMenuOptions: 'יעדים פופולריים',
-      allowAutoComplete: true,
-
-    }
+      title: 'מתי',
+      icon: 'ist-icon-calendar-2',
+      placeholder: 'בחר תאריך',
+      titleMenuOptions: '',
+      allowAutoComplete: false,
+    },
+    dataConfig: new SharedCalendarInputConfig({
+      suggestedDates: [],
+      minDate: new Date(),
+      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      allowPickHours: false,
+    }),
+    component: SharedCalendarInputComponent, // 👈 קישור ברור לקומפוננטת הקלנדר
   },
 
-  [ESharedInputType.DESTINATIONS_HOTELS]: {
-    requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.hotels.destinations}`,
-    autocompleteUrl: `${AppExternalConfig.baseUrl}hotels/autocomplete`,
-    mapper: HotelsMapper.mapDestinations,
+  [ESharedInputType.PASSANGERS_FLIGHTS]: {
+    mapper: () => [],
     uiConfig: {
-      title: 'אל',
-      icon: 'icon-hotel',
-      placeholder: 'לאן נוסעים?',
-      titleMenuOptions: 'ערים פופולריות',
-      allowAutoComplete: true,
-    defaultValue: { label: "תל אביב", key: "TLV" }
-
-    }
+      title: 'נוסעים',
+      icon: 'icon-count-man',
+      placeholder: 'בחר נוסעים',
+      titleMenuOptions: 'נוסעים לפי קבוצת גיל',
+      allowAutoComplete: false,
+    },
+    component: SharedPassangerInputComponent,
   },
-
-[ESharedInputType.PASSANGERS_FLIGHTS]: {
-  requestUrl: ``,
-  autocompleteUrl: ``,
-  mapper: () => [],
-  uiConfig: {
-    title: 'נוסעים',
-    icon: 'icon-count-man',
-    placeholder: 'בחר מספר נוסעים',
-    titleMenuOptions: 'נוסעים לפי קבוצת גיל',
-    allowAutoComplete: false
-  }
-},
-
-
-[ESharedInputType.PICKER_DATES]: {
-  requestUrl: '',
-  mapper: () => [],
-  uiConfig: {
-    icon: 'ist-icon-calendar-2',
-    placeholder: 'בחר תאריך',
-    titleMenuOptions: '',
-    allowAutoComplete: false,
-    title: 'מתי',
-  },
-  dataConfig: new SharedCalendarInputConfig({
-    suggestedDates: [],
-    minDate: new Date(),
-    maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-    allowPickHours: false
-  })
-} as SharedInputConfig<SharedCalendarInputConfig>
-
-
 
 }
