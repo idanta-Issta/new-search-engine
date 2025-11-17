@@ -3,6 +3,7 @@
     [icon]="config.icon ?? ''"
     [title]="config.title ?? ''"
     [placeholder]="config.placeholder ?? ''"
+    [isOpen]="isOpen"
     [(model)]="searchTerm"
     (opened)="isOpen = true"
     (closed)="isOpen = false"
@@ -22,7 +23,9 @@
       </h4>
 
       <ul *ngIf="!noResults">
-        <li *ngFor="let option of filteredOptions" (click)="selectOption(option)">
+        <li *ngFor="let option of filteredOptions" 
+            (click)="selectOption(option)"
+            [class.selected]="value?.label === option.label">
           <i *ngIf="option.icon" [class]="option.icon"></i>
           <div class="text">
             <span class="label" [innerHTML]="highlightMatch(option.label)"></span>

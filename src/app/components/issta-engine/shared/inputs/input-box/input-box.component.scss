@@ -3,15 +3,42 @@
   align-items: center;
   padding: 8px 12px;
   height: 40px;
-  gap: 6px;       /* מרחק קטן כמו בתמונה */
+  gap: 6px;
   direction: rtl;
-  background-color: white;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    bottom: 4px;
+    left: 4px;
+    background-color: white;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    z-index: 0;
+  }
+
+  &.open::before {
+    background-color: #ECF8F0;
+    border-radius: 8px;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .input-meta {
   display: flex;
   flex-direction: column;
   line-height: 1.1;
+}
+
+i::before {
+  font-size: 22px;
 }
 
 .input-title {
@@ -22,6 +49,7 @@
 
 .input-field {
   font-size: 16px;
+      background: transparent;
   font-family: var(--main-font-family);
   font-weight: 400;
   border: none;

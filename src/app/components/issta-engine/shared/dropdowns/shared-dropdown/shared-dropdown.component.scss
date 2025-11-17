@@ -8,7 +8,7 @@
 .dropdown-wrapper {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
+  right: 0px;
   background: #fff;
   border: 1px solid var(--search-engine-border-menu);
   border-radius: 16px;
@@ -23,16 +23,31 @@
 }
 
 .dropdown-wrapper.scrollable {
-  max-height: 300px; /* או כמה שתרצה */
+  max-height: 300px;
   overflow-y: auto;
 
-  /* הסתרת scrollbar */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE ו־Edge ישנים */
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #BFCACD transparent;
+}
 
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
-  }
+/* Chrome, Edge, Safari */
+dropdown-wrapper.scrollable::-webkit-scrollbar {
+  width: 6px; /* עובי */
+}
+
+dropdown-wrapper.scrollable::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+dropdown-wrapper.scrollable::-webkit-scrollbar-thumb {
+  background-color: #BFCACD;
+  border-radius: 10px;
+}
+
+/* הסרת החצים */
+dropdown-wrapper.scrollable::-webkit-scrollbar-button {
+  display: none;
 }
 
 

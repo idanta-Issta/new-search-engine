@@ -3,12 +3,13 @@
     [icon]="config.icon ?? 'icon-user'"
     [title]="config.title ?? 'נוסעים'"
     [placeholder]="config.placeholder ?? 'בחר נוסעים'"
+    [isOpen]="isOpen"
     [model]="totalPassengers + ' נוסעים'"
     (click)="toggleDropdown()"
   ></app-input-box>
 
   <app-shared-dropdown
-    [isOpen]="true"
+    [isOpen]="isOpen"
     (closed)="isOpen = false"
     [anchor]="anchorEl"
     [scrollable]="false"

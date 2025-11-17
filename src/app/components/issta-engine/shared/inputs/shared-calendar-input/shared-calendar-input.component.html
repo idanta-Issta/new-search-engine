@@ -3,6 +3,7 @@
     [icon]="uiConfig?.icon ?? 'ng-icon-calendar'"
     [title]="uiConfig?.title || 'תאריכים'"
     [placeholder]="uiConfig?.placeholder || 'בחר תאריך'"
+    [isOpen]="isOpen"
     [model]="valueAsString"
     (opened)="onInputOpened()"
     (closed)="onInputClosed()"

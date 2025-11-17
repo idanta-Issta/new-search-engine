@@ -31,6 +31,7 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   @Input() values: ValuesMap = {};
 
   @Output() inputPicked = new EventEmitter<{ type: ESharedInputType; value: any }>();
+  @Output() searchClicked = new EventEmitter<void>();
 
   @ViewChild('inputsContainer', { read: ViewContainerRef, static: true })
   container!: ViewContainerRef;

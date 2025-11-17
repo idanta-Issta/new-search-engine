@@ -130,10 +130,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges {
     this.search$.next(value.trim());
   }
 
-// src/app/shared/inputs/shared-options-input/shared-options-input.component.ts
-// שינוי מרכזי: פולט רק optionPicked בעת בחירה, לא משנה את this.value
 selectOption(option: MenuOption) {
-  // לא משנים this.value כי זה @Input - נותנים לסבא לנהל
   this.optionPicked.emit(option);
   this.searchTerm = option.label;
   this.isOpen = false;

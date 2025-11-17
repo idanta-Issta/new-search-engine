@@ -10,9 +10,9 @@ import { SharedPassangerInputComponent } from '../components/issta-engine/shared
 
 export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = {
   [ESharedInputType.ORIGINS_FLIGHTS]: {
-    requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.flights.origins}`,
+    requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.flights.destinations}`,
     autocompleteUrl: `${AppExternalConfig.baseUrl}flights/autocomplete`,
-    mapper: FlightsMapper.mapOrigins,
+    mapper: FlightsMapper.mapDestinations,
     uiConfig: {
       title: 'אל',
       placeholder: 'בחר יעד בארץ או בחו"ל',

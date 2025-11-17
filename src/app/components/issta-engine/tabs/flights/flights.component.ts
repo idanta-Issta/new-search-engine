@@ -9,6 +9,7 @@ import { SharedCalendarInputConfig } from '../../../../models/shared-calendar-in
 import { SharedInputRowComponent } from '../../shared/inputs/input-row/shared-input-row/shared-input-row.component';
 import { SharedInputRegistry } from '../../../../config/shared-input.registry';
 import { PassangersInput } from '../../../../models/shared-passanger-input.models';
+import { FlightUrlBuilderService } from '../../../../services/flight-url-builder.service';
 
 @Component({
   selector: 'app-flights',
@@ -24,7 +25,8 @@ export class FlightsComponent {
   EInputType = ESharedInputType;
   ESharedInputType = ESharedInputType;
 
-  // 1) הגדר מערך פעם אחת – לא inline בטמפלייט
+  constructor(private flightUrlBuilder: FlightUrlBuilderService) {}
+
   readonly inputsOrder: ESharedInputType[] = [
     ESharedInputType.DESTINATIONS_FLIGHTS,
     ESharedInputType.ORIGINS_FLIGHTS,
@@ -89,5 +91,17 @@ export class FlightsComponent {
   openInput(type: ESharedInputType) {
     this.inputsRow?.openInput(type);
   }
-}
 
+  onSearch() {
+    const url = this.flightUrlBuilder.buildFlightUrl({
+      origin: this.selectedOrigin,
+      destination: this.selectedDestination,
+      dates: this.selectedDate,
+      passengers: this.selectedPassengers
+    });
+
+    console.log('Generated URL:', url);
+
+    window.open(url, '_blank');
+  }
+}

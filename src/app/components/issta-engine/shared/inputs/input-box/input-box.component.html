@@ -1,4 +1,4 @@
-<div class="input-box" (click)="onBoxClick()">
+<div class="input-box" [class.open]="isOpen" (click)="onBoxClick()">
   <i *ngIf="icon" [class]="icon"></i>
 
   <div class="input-meta">

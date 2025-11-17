@@ -16,14 +16,13 @@ export class InputBoxComponent {
   @Input() title?: string;
   @Input() placeholder: string = '';
   @Input() allowAutoComplete = true;
-@ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
+  @Input() isOpen = false; // קבלת מצב isOpen מהאב
+  
+  @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
 
   @Input() model: string = '';
   @Output() modelChange = new EventEmitter<string>();
   @Output() inputChange = new EventEmitter<string>();
-
-  /** מצב פנימי של פתיחה/סגירה */
-  isOpen = false;
 
   /** האבא יקבל את זה */
   @Output() opened = new EventEmitter<void>();

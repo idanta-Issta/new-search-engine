@@ -46,8 +46,12 @@
 
 .inputs-container{
     min-width: 90%;
-    justify-content: space-around;
     flex: 1;
+}
+
+:host ::ng-deep .inputs-container > * {
+  flex: 1;
+  min-width: 0;
 }
 
 .action-btn {
@@ -60,6 +64,7 @@ font-size: 16px;
 padding-left: 20px;
 gap: 10px;
 opacity: 1;
+cursor: pointer;
 background-color: #2AAE54;
   border: none;
   color: white;
