@@ -26,10 +26,10 @@ import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-
 })
 export class SharedPassangerInputComponent implements OnInit {
   @Input() type!: ESharedInputType;
+  @Input() value?: PassangersInput;
   @Output() valueChange = new EventEmitter<PassangersInput>();
 
   config!: SharedInputUIConfig;
-  value!: PassangersInput;
   isOpen = false;
   totalPassengers = 0;
 
@@ -47,16 +47,25 @@ export class SharedPassangerInputComponent implements OnInit {
 
     this.config = registryEntry.uiConfig;
 
-    this.passengersSrv.getPassengersByType(this.type).subscribe({
-      next: (data) => {
-        this.value = data;
-        this.updateTotal();
-      },
-      error: (err) => console.error('Error fetching passengers data:', err)
-    });
+    // טען נתונים רק אם לא קיבלנו value מהסבא
+    if (!this.value) {
+      this.passengersSrv.getPassengersByType(this.type).subscribe({
+        next: (data) => {
+          this.value = data;
+          this.updateTotal();
+        },
+        error: (err) => console.error('Error fetching passengers data:', err)
+      });
+    } else {
+      this.updateTotal();
+    }
   }
 
   updateTotal() {
+    if (!this.value?.optionsAge) {
+      this.totalPassengers = 0;
+      return;
+    }
     this.totalPassengers = this.value.optionsAge
       .flatMap((g) => g.options)
       .reduce((sum, age) => sum + (age.minCount || 0), 0);

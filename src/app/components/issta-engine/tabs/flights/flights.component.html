@@ -16,15 +16,14 @@
 
 <div class="flights-box">
 <app-shared-input-row
-  [inputs]="[
-    ESharedInputType.DESTINATIONS_FLIGHTS,
-    ESharedInputType.ORIGINS_FLIGHTS,
-    ESharedInputType.PICKER_DATES,
-    ESharedInputType.PASSANGERS_FLIGHTS
-  ]"
+  #inputsRow
+  [inputs]="inputsOrder"
   [values]="valuesMap"
-  buttonText="חיפוש">
+  buttonText="חיפוש"
+  (inputPicked)="onInputPicked($event)">
 </app-shared-input-row>
+
+
 
 
 

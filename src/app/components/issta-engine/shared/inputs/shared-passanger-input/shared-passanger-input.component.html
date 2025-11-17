@@ -16,7 +16,7 @@
     <div class="dropdown passenger-dropdown">
       <h4 class="title">{{ config.titleMenuOptions || 'קבוצות גיל' }}</h4>
 
-      <div *ngFor="let group of value.optionsAge" class="age-group">
+      <div *ngFor="let group of value?.optionsAge" class="age-group">
         <div *ngFor="let age of group.options" class="age-row">
           <div class="buttons">
             <button (click)="decrement(age)" [disabled]="age.minCount === 0">−</button>

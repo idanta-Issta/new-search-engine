@@ -1,58 +1,120 @@
+// src/app/shared/inputs/input-row/shared-input-row/shared-input-row.component.ts
 import {
   Component,
   Input,
   ViewChild,
   ViewContainerRef,
   AfterViewInit,
+  Output,
+  EventEmitter,
+  ComponentRef,
+  ChangeDetectionStrategy,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { ESharedInputType } from '../../../../../../enums/ESharedInputType';
 import { SharedInputRegistry } from '../../../../../../config/shared-input.registry';
 
+type ValuesMap = Partial<Record<ESharedInputType, any>>;
 
 @Component({
   selector: 'app-shared-input-row',
   templateUrl: './shared-input-row.component.html',
   styleUrls: ['./shared-input-row.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SharedInputRowComponent implements AfterViewInit {
+export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   @Input() inputs: ESharedInputType[] = [];
   @Input() buttonText = 'חיפוש';
 
-  // כאן נוכל להעביר ערכים לפי טייפ
-@Input() values: Partial<Record<ESharedInputType, any>> = {};
+  // למה: נעדכן ערכים לתוך אינסטנסים בלי להרוס ולבנות
+  @Input() values: ValuesMap = {};
 
+  @Output() inputPicked = new EventEmitter<{ type: ESharedInputType; value: any }>();
 
   @ViewChild('inputsContainer', { read: ViewContainerRef, static: true })
   container!: ViewContainerRef;
 
+  private componentRefs = new Map<ESharedInputType, ComponentRef<any>>();
+  private didInit = false;
+
   ngAfterViewInit(): void {
-    this.renderInputs();
+    this.renderInputs(); // פעם אחת
+    this.didInit = true;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // למה: אם רק values השתנה → לעדכן ערכים בלי להרוס קומפוננטות
+    if (this.didInit && changes['values'] && !changes['inputs']) {
+      this.applyValuesToInstances();
+    }
+    // למה: בונים מחדש רק אם רשימת ה-inputs עצמה השתנתה (by reference)
+    if (this.didInit && changes['inputs']) {
+      this.renderInputs();
+    }
   }
 
   private renderInputs(): void {
     this.container.clear();
+    this.componentRefs.clear();
 
     this.inputs.forEach((inputType) => {
       const config = SharedInputRegistry[inputType];
       if (!config?.component) return;
 
       const componentRef = this.container.createComponent(config.component);
+      const instance = componentRef.instance as any;
 
-      // העברת type
-      (componentRef.instance as any).type = inputType;
+      instance.type = inputType;
 
-      // העברת value (אם הוגדר ע"י האב)
       if (this.values[inputType] !== undefined) {
-        (componentRef.instance as any).value = this.values[inputType];
+        instance.value = this.values[inputType];
       }
 
-      // אם יש לך Outputs — אפשר גם להאזין להם כאן:
-      // componentRef.instance.optionPicked?.subscribe(ev => this.onPicked(ev));
+      // הרשמה לאירוע אחד בלבד כדי למנוע כפילות
+      if (instance.optionPicked?.subscribe) {
+        instance.optionPicked.subscribe((value: any) =>
+          this.inputPicked.emit({ type: inputType, value })
+        );
+      } else if (instance.valueChange?.subscribe) {
+        instance.valueChange.subscribe((value: any) =>
+          this.inputPicked.emit({ type: inputType, value })
+        );
+      }
+
+      this.componentRefs.set(inputType, componentRef);
     });
   }
 
-  // דוגמה ל־Output
-  onPicked(ev: any) {
-    console.log('Option picked:', ev);
+  private applyValuesToInstances(): void {
+    for (const [type, ref] of this.componentRefs.entries()) {
+      const inst = ref.instance as any;
+      if (this.values[type] !== undefined) {
+        inst.value = this.values[type];
+        ref.changeDetectorRef.detectChanges();
+      }
+    }
+  }
+
+  /** פתיחה מתוכנתית מהסבא */
+  openInput(type: ESharedInputType) {
+    const ref = this.componentRefs.get(type);
+    if (!ref) {
+      console.warn(`לא נמצא רכיב מסוג ${type}`);
+      return;
+    }
+    const inst = ref.instance as any;
+
+    if (typeof inst.open === 'function') {
+      inst.open();               // עדיפות ל־API מפורש
+      ref.changeDetectorRef.detectChanges();
+      return;
+    }
+    if ('isOpen' in inst) {
+      inst.isOpen = true;        // fallback
+      ref.changeDetectorRef.detectChanges();
+      return;
+    }
+    console.warn(`הרכיב מסוג ${type} לא תומך בפתיחה מתוכנתית`);
   }
 }
