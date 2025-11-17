@@ -8,29 +8,50 @@
   ></app-input-box>
 
   <app-shared-dropdown
-    [isOpen]="isOpen"
+    [isOpen]="true"
     (closed)="isOpen = false"
     [anchor]="anchorEl"
     [scrollable]="false"
   >
     <div class="dropdown passenger-dropdown">
-      <h4 class="title">{{ config.titleMenuOptions || 'קבוצות גיל' }}</h4>
+      <h4 class="title" *ngIf="config.titleMenuOptions">{{ config.titleMenuOptions }}</h4>
 
       <div *ngFor="let group of value?.optionsAge" class="age-group">
-        <div *ngFor="let age of group.options" class="age-row">
-          <div class="buttons">
-            <button (click)="decrement(age)" [disabled]="age.minCount === 0">−</button>
-            <span class="count">{{ age.minCount }}</span>
-            <button (click)="increment(age)" [disabled]="age.minCount === age.maxCount">+</button>
+        <div *ngFor="let age of group.options" class="age-item">
+          <div class="age-row">
+            <div class="buttons">
+              <button (click)="decrement(age)" [disabled]="age.minCount === 0">−</button>
+              <span class="count">{{ age.minCount }}</span>
+              <button (click)="increment(age)" [disabled]="age.minCount === age.maxCount">+</button>
+            </div>
+            <div class="label">
+              {{ age.label }}
+              <small class="note">{{ age.note }}</small>
+            </div>
           </div>
-          <div class="label">
-            {{ age.label }}
-            <small class="note">{{ age.note }}</small>
+
+          <div *ngIf="age.requiresSpecificAge && age.minCount > 0" class="specific-ages">
+            <div *ngFor="let i of getAgeArray(age.minCount); let idx = index" class="age-selector">
+              <label>{{ age.label }} {{ idx + 1 }}:</label>
+              <select 
+                [value]="age.selectedAges?.[idx]" 
+                (change)="onSpecificAgeChange(age, idx, +$any($event.target).value)">
+                <option *ngFor="let ageOption of age.specificAgeOptions" [value]="ageOption">
+                  {{ ageOption }}
+                </option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
 
-      <button class="confirm" (click)="isOpen = false">בחירה</button>
+      <div class="footer-section">
+        <div class="multi-room-offer">
+          <span class="offer-text">רוצה יותר מחדר אחד?</span>
+          <a href="#" class="contact-link">השאירו פרטים וסוכן יעזור לך</a>
+        </div>
+        <button class="confirm" (click)="isOpen = false">בחירה</button>
+      </div>
     </div>
   </app-shared-dropdown>
 </div>

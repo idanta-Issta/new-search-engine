@@ -21,6 +21,13 @@ padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    min-width: 351px;
+  }
+
+  .age-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
   .age-row {
@@ -34,22 +41,31 @@ padding: 20px;
     .buttons {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 17px;
+      width: 135px;
 
       button {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: none;
-        background: #00a651;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
+       width: 42px;
+    height: 42px;
+    border-radius: 30%;
+    justify-content: center;
+    display: flex;
+    border: 1px solid #2AAE54;
+    color: #00a651;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #2AAE54;
+    align-items: center;
+    font-size: 23px;
+    background: white;
+    font-weight: 100;
 
         &:disabled {
-          background: #ccc;
-          cursor: not-allowed;
+         background: #ffffff;
+    cursor: not-allowed;
+    color: #BFCACD;
+    border: 1px solid #BFCACD;
         }
 
         &:hover:not(:disabled) {
@@ -58,38 +74,135 @@ padding: 20px;
       }
 
       .count {
-        font-weight: 600;
-        font-size: 1rem;
-        min-width: 20px;
-        text-align: center;
+        font-family: 'Rubik';
+font-weight: 400;
+font-style: Regular;
+font-size: 20px;
+color: #2A3335;
+line-height: 240%;
+letter-spacing: 0%;
+text-align: center;
+
       }
     }
 
     .label {
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: #333;
+      font-family: 'Rubik';
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 240%;
+    letter-spacing: 0%;
+    text-align: right;
+    color: #2A3335;
 
       .note {
-        color: #888;
-        font-size: 0.85rem;
-        margin-right: 4px;
+        color: #687482;
+       font-family: 'Rubik';
+font-weight: 400;
+font-size: 16px;
+line-height: 240%;
+letter-spacing: 0%;
+text-align: right;
+
+      }
+    }
+  }
+
+  .specific-ages {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    margin-right: 8px;
+
+    .age-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+
+      label {
+        color: #555;
+        font-weight: 500;
+        min-width: 70px;
+      }
+
+      select {
+        padding: 6px 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: white;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: border-color 0.2s;
+
+        &:hover {
+          border-color: #00a651;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #00a651;
+          box-shadow: 0 0 0 2px rgba(0, 166, 81, 0.1);
+        }
+      }
+    }
+  }
+
+  .footer-section {
+  display: flex;
+    flex-direction: row;
+    gap: 26px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .multi-room-offer {
+   display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    width: 186px;
+    font-size: 16px;
+    text-align: start;
+
+    .offer-text {
+      
+      color: #333;
+      font-weight: 500;
+    }
+
+    .contact-link {
+      color: #0066cc;
+      text-decoration: underline;
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #004999;
       }
     }
   }
 
   .confirm {
-    width: 100%;
-    margin-top: 14px;
-    background: #00a651;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 0;
-    font-size: 1rem;
-    font-weight: 600;
+    width: 139px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    border: none;
+    font-size: 18px;
+    font-family: 'Rubik';
+height: 46px;
+gap: 10px;
+opacity: 1;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 500;
+border-radius: 16px;
+background-color: #2AAE54;
+color: white;
 
     &:hover {
       background: #009247;

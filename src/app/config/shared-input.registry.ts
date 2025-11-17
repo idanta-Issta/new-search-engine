@@ -60,7 +60,6 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       title: 'נוסעים',
       icon: 'icon-count-man',
       placeholder: 'בחר נוסעים',
-      titleMenuOptions: 'נוסעים לפי קבוצת גיל',
       allowAutoComplete: false,
     },
     component: SharedPassangerInputComponent,

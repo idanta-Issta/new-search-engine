@@ -26,11 +26,50 @@ private getFlightPassengers(): PassangersInput {
       {
         title: 'קבוצות גיל',
         options: [
-          { label: 'מבוגר', value: 'adult', note: '(גיל 24–64)', minCount: 2, maxCount: 9 },
-          { label: 'צעיר', value: 'teen', note: '(גיל 12–23)', minCount: 0, maxCount: 9 },
-          { label: 'ילד', value: 'child', note: '(גיל 2–11)', minCount: 0, maxCount: 9 },
-          { label: 'תינוק', value: 'infant', note: '(מתחת ל־2)', minCount: 0, maxCount: 9 },
-          { label: 'פנסיונר', value: 'senior', note: '(גיל 65+)', minCount: 0, maxCount: 9 }
+          { 
+            label: 'מבוגר', 
+            value: 'adult', 
+            note: '(גיל 24–64)', 
+            minCount: 2, 
+            maxCount: 9,
+            requiresSpecificAge: false
+          },
+          { 
+            label: 'צעיר', 
+            value: 'teen', 
+            note: '(גיל 12–23)', 
+            minCount: 0, 
+            maxCount: 9,
+            requiresSpecificAge: true,
+            specificAgeOptions: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            selectedAges: []
+          },
+          { 
+            label: 'ילד', 
+            value: 'child', 
+            note: '(גיל 2–11)', 
+            minCount: 0, 
+            maxCount: 9,
+            requiresSpecificAge: true,
+            specificAgeOptions: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            selectedAges: []
+          },
+          { 
+            label: 'תינוק', 
+            value: 'infant', 
+            note: '(מתחת ל־2)', 
+            minCount: 0, 
+            maxCount: 9,
+            requiresSpecificAge: false
+          },
+          { 
+            label: 'פנסיונר', 
+            value: 'senior', 
+            note: '(גיל 65+)', 
+            minCount: 0, 
+            maxCount: 9,
+            requiresSpecificAge: false
+          }
         ]
       }
     ]

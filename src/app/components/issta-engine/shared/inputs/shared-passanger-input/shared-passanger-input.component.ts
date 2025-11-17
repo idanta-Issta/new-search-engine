@@ -46,19 +46,19 @@ export class SharedPassangerInputComponent implements OnInit {
     }
 
     this.config = registryEntry.uiConfig;
+    this.loadPassengersData();
+  }
 
-    // טען נתונים רק אם לא קיבלנו value מהסבא
-    if (!this.value) {
-      this.passengersSrv.getPassengersByType(this.type).subscribe({
-        next: (data) => {
+  private loadPassengersData() {
+    this.passengersSrv.getPassengersByType(this.type).subscribe({
+      next: (data) => {
+        if (!this.value) {
           this.value = data;
-          this.updateTotal();
-        },
-        error: (err) => console.error('Error fetching passengers data:', err)
-      });
-    } else {
-      this.updateTotal();
-    }
+        }
+        this.updateTotal();
+      },
+      error: (err) => console.error('Error fetching passengers data:', err)
+    });
   }
 
   updateTotal() {
@@ -74,6 +74,10 @@ export class SharedPassangerInputComponent implements OnInit {
   increment(age: AgeGroup) {
     if (age.minCount < age.maxCount) {
       age.minCount++;
+      // אם דורש גיל ספציפי, אתחל את המערך אם צריך
+      if (age.requiresSpecificAge && age.selectedAges) {
+        age.selectedAges.push(age.specificAgeOptions?.[0] || 0);
+      }
       this.emitChange();
     }
   }
@@ -81,8 +85,23 @@ export class SharedPassangerInputComponent implements OnInit {
   decrement(age: AgeGroup) {
     if (age.minCount > 0) {
       age.minCount--;
+      // אם דורש גיל ספציפי, הסר את האחרון
+      if (age.requiresSpecificAge && age.selectedAges) {
+        age.selectedAges.pop();
+      }
       this.emitChange();
     }
+  }
+
+  onSpecificAgeChange(age: AgeGroup, index: number, selectedAge: number) {
+    if (age.selectedAges) {
+      age.selectedAges[index] = selectedAge;
+      this.emitChange();
+    }
+  }
+
+  getAgeArray(count: number): number[] {
+    return Array.from({ length: count }, (_, i) => i);
   }
 
   emitChange() {
@@ -92,6 +111,20 @@ export class SharedPassangerInputComponent implements OnInit {
 
   toggleDropdown() {
     this.isOpen = !this.isOpen;
+  }
+
+  /** פתיחה מתוכנתית - נדרש ע"י shared-input-row */
+  open() {
+    // אם אין נתונים, טען אותם
+    if (!this.value) {
+      this.loadPassengersData();
+    }
+    this.isOpen = true;
+  }
+
+  /** סגירה מתוכנתית - נדרש ע"י shared-input-row */
+  close() {
+    this.isOpen = false;
   }
 
   @HostListener('document:mousedown', ['$event'])
