@@ -63,7 +63,10 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges {
 
     this.config = registryEntry.uiConfig;
 
-    if (this.config.defaultValue && !this.value) {
+    // Set search term from value if provided
+    if (this.value) {
+      this.searchTerm = this.value.label || '';
+    } else if (this.config.defaultValue) {
       this.searchTerm = this.config.defaultValue.label;
     }
 

@@ -107,15 +107,20 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
     const inst = ref.instance as any;
 
     if (typeof inst.open === 'function') {
-      inst.open();               // עדיפות ל־API מפורש
+      inst.open();
       ref.changeDetectorRef.detectChanges();
       return;
     }
     if ('isOpen' in inst) {
-      inst.isOpen = true;        // fallback
+      inst.isOpen = true;
       ref.changeDetectorRef.detectChanges();
       return;
     }
     console.warn(`הרכיב מסוג ${type} לא תומך בפתיחה מתוכנתית`);
+  }
+
+  /** פתיחה מתוכנתית עם דיליי - למנוע קונפליקט עם אירועי קליק */
+  openInputDelayed(type: ESharedInputType, delay: number = 0) {
+    setTimeout(() => this.openInput(type), delay);
   }
 }

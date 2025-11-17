@@ -1,31 +1,47 @@
 // src/app/features/flights/flights.component.ts
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SectionTitleComponent } from '../../shared/section-title/section-title.component';
 import { MenuOption } from '../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../enums/ESharedInputType';
-import { SharedCalendarInputComponent } from '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
-import { SharedCalendarInputConfig } from '../../../../models/shared-calendar-input.models';
 import { SharedInputRowComponent } from '../../shared/inputs/input-row/shared-input-row/shared-input-row.component';
-import { SharedInputRegistry } from '../../../../config/shared-input.registry';
 import { PassangersInput } from '../../../../models/shared-passanger-input.models';
 import { FlightUrlBuilderService } from '../../../../services/flight-url-builder.service';
+import { ISearchEngine } from '../../../../models/search-engine-base.interface';
+import { SearchFooterComponent } from '../../shared/footer/search-footer/search-footer.component';
+import { SearchHeaderComponent, HeaderState } from '../../shared/header/search-header/search-header.component';
+import { FLIGHTS_CONFIG, SearchEngineConfig } from '../../../../config/search-engine.config';
 
 @Component({
   selector: 'app-flights',
   standalone: true,
-  imports: [CommonModule, SectionTitleComponent, SharedInputRowComponent],
+  imports: [CommonModule, SharedInputRowComponent, SearchFooterComponent, SearchHeaderComponent],
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.scss'],
 })
 
-export class FlightsComponent {
+export class FlightsComponent implements ISearchEngine {
   @ViewChild('inputsRow') inputsRow!: SharedInputRowComponent;
 
   EInputType = ESharedInputType;
   ESharedInputType = ESharedInputType;
 
+  private config = FLIGHTS_CONFIG;
+
   constructor(private flightUrlBuilder: FlightUrlBuilderService) {}
+
+  getConfig(): SearchEngineConfig {
+    return this.config;
+  }
+
+  get header() {
+    return this.config.header;
+  }
+
+  get footer() {
+    return this.config.footer;
+  }
+
+  headerState: HeaderState = {};
 
   readonly inputsOrder: ESharedInputType[] = [
     ESharedInputType.DESTINATIONS_FLIGHTS,
@@ -34,74 +50,81 @@ export class FlightsComponent {
     ESharedInputType.PASSANGERS_FLIGHTS,
   ];
 
-  selectedOrigin: MenuOption | null = null;
   selectedDestination: MenuOption | null = null;
+  selectedOrigin: MenuOption | null = null;
 
   selectedDate = { start: null as Date | null, end: null as Date | null };
 
   selectedPassengers: PassangersInput | null = null;
 
   valuesMap = {
-    [ESharedInputType.DESTINATIONS_FLIGHTS]: null,
+    [ESharedInputType.DESTINATIONS_FLIGHTS]: { label: 'תל אביב, שדה תעופה (TLV)', value: 'TLV' },
     [ESharedInputType.ORIGINS_FLIGHTS]: null,
     [ESharedInputType.PICKER_DATES]: this.selectedDate,
     [ESharedInputType.PASSANGERS_FLIGHTS]: null,
   };
 
   onInputPicked(event: { type: ESharedInputType; value: any }) {
+    this.updateValue(event.type, event.value);
+
     switch (event.type) {
       case ESharedInputType.DESTINATIONS_FLIGHTS:
-        this.selectedDestination = event.value;
-        this.valuesMap = {
-          ...this.valuesMap,
-          [ESharedInputType.DESTINATIONS_FLIGHTS]: event.value,
-        };
-        setTimeout(() => this.openInput(ESharedInputType.ORIGINS_FLIGHTS), 0);
+        this.openNextInput(ESharedInputType.ORIGINS_FLIGHTS);
         break;
       case ESharedInputType.ORIGINS_FLIGHTS:
-        this.selectedOrigin = event.value;
-        this.valuesMap = {
-          ...this.valuesMap,
-          [ESharedInputType.ORIGINS_FLIGHTS]: event.value,
-        };
-        setTimeout(() => this.openInput(ESharedInputType.PICKER_DATES), 0);
+        this.openNextInput(ESharedInputType.PICKER_DATES);
         break;
-
       case ESharedInputType.PICKER_DATES:
-        this.selectedDate = event.value;
-        this.valuesMap = {
-          ...this.valuesMap,
-          [ESharedInputType.PICKER_DATES]: event.value,
-        };
         if (event.value?.start && event.value?.end) {
-          setTimeout(() => this.openInput(ESharedInputType.PASSANGERS_FLIGHTS), 0);
+          this.openNextInput(ESharedInputType.PASSANGERS_FLIGHTS);
         }
-        break;
-
-      case ESharedInputType.PASSANGERS_FLIGHTS:
-        this.selectedPassengers = event.value;
-        this.valuesMap = {
-          ...this.valuesMap,
-          [ESharedInputType.PASSANGERS_FLIGHTS]: event.value,
-        };
         break;
     }
   }
 
-  openInput(type: ESharedInputType) {
-    this.inputsRow?.openInput(type);
+  private updateValue(type: ESharedInputType, value: any) {
+    switch (type) {
+      case ESharedInputType.DESTINATIONS_FLIGHTS:
+        this.selectedDestination = value;
+        break;
+      case ESharedInputType.ORIGINS_FLIGHTS:
+        this.selectedOrigin = value;
+        break;
+      case ESharedInputType.PICKER_DATES:
+        this.selectedDate = value;
+        break;
+      case ESharedInputType.PASSANGERS_FLIGHTS:
+        this.selectedPassengers = value;
+        break;
+    }
+    this.valuesMap = { ...this.valuesMap, [type]: value };
   }
 
-  onSearch() {
-    const url = this.flightUrlBuilder.buildFlightUrl({
+  private openNextInput(type: ESharedInputType) {
+    this.inputsRow?.openInputDelayed(type);
+  }
+
+  buildUrl(): string {
+    return this.flightUrlBuilder.buildFlightUrl({
       origin: this.selectedOrigin,
       destination: this.selectedDestination,
       dates: this.selectedDate,
       passengers: this.selectedPassengers
     });
+  }
 
+  onSearch() {
+    const url = this.buildUrl();
     console.log('Generated URL:', url);
-
     window.open(url, '_blank');
+  }
+
+  onFooterOptionChange(event: { value: string; checked: boolean }) {
+    console.log('Footer option changed:', event);
+  }
+
+  onHeaderStateChange(state: HeaderState) {
+    this.headerState = state;
+    console.log('Header state changed:', state);
   }
 }

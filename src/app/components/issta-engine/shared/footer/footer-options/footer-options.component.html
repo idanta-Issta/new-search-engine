@@ -1,0 +1,10 @@
+<div class="footer-options">
+  <label *ngFor="let option of options">
+    <input 
+      type="checkbox" 
+      [checked]="option.checked"
+      (change)="onCheckboxChange(option, $any($event.target).checked)"
+    /> 
+    {{ option.label }}
+  </label>
+</div>

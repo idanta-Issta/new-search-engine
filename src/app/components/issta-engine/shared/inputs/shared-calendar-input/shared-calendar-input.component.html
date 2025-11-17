@@ -1,8 +1,8 @@
 <div class="calendar-input-wrapper" #anchor>
   <app-input-box
-    [icon]="uiConfig?.icon ?? 'ng-icon-calendar'"
-    [title]="uiConfig?.title || 'תאריכים'"
-    [placeholder]="uiConfig?.placeholder || 'בחר תאריך'"
+    [icon]="uiConfig.icon ?? 'ng-icon-calendar'"
+    [title]="uiConfig.title || 'תאריכים'"
+    [placeholder]="uiConfig.placeholder || 'בחר תאריך'"
     [isOpen]="isOpen"
     [model]="valueAsString"
     (opened)="onInputOpened()"
@@ -54,7 +54,8 @@
                 [class.other-month]="day.other"
                 [class.selected]="isSelected(day.date)"
                 [class.range]="isInRange(day.date)"
-                (click)="selectDate(day.date)"
+                [class.disabled]="day.disabled"
+                (click)="selectDate(day)"
                 (mousedown)="$event.stopPropagation()"
               >
                 <span>{{ day.date.getDate() }}</span>
@@ -86,7 +87,8 @@
                 [class.other-month]="day.other"
                 [class.selected]="isSelected(day.date)"
                 [class.range]="isInRange(day.date)"
-                (click)="selectDate(day.date)"
+                [class.disabled]="day.disabled"
+                (click)="selectDate(day)"
                 (mousedown)="$event.stopPropagation()"
               >
                 <span>{{ day.date.getDate() }}</span>

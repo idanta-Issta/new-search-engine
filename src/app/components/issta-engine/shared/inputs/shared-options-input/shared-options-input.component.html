@@ -1,7 +1,7 @@
 <div class="shared-input" [class.open]="isOpen" #anchor>
   <app-input-box
     [icon]="config.icon ?? ''"
-    [title]="config.title ?? ''"
+    [title]="config.title"
     [placeholder]="config.placeholder ?? ''"
     [isOpen]="isOpen"
     [(model)]="searchTerm"
@@ -18,7 +18,7 @@
      
   >
     <div class="dropdown-container">
-      <h4 *ngIf="config?.titleMenuOptions" class="dropdown-title">
+      <h4 *ngIf="config.titleMenuOptions" class="dropdown-title">
         {{ config.titleMenuOptions }}
       </h4>
 

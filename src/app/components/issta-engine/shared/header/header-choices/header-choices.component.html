@@ -1,0 +1,10 @@
+<div class="header-choices">
+  <button 
+    *ngFor="let choice of choices"
+    class="choice-button"
+    [class.selected]="choice.value === selectedValue"
+    (click)="selectChoice(choice)">
+    <span class="label">{{ choice.label }}</span>
+    <span class="promotion" *ngIf="choice.promotionText">{{ choice.promotionText }}</span>
+  </button>
+</div>

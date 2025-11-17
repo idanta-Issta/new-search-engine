@@ -5,6 +5,7 @@ export interface CalendarDay {
   date: Date;
   other: boolean;
   suggested?: SuggestedDate | null;
+  disabled?: boolean;
 }
 
 @Injectable({
@@ -33,7 +34,9 @@ export class SharedCalendarService {
   generateMonthDays(
     year: number,
     month: number,
-    suggested: SuggestedDate[] = []
+    suggested: SuggestedDate[] = [],
+    minDate?: Date | null,
+    maxDate?: Date | null
   ): CalendarDay[] {
 
     const total = this.daysInMonth(year, month);
@@ -55,10 +58,24 @@ export class SharedCalendarService {
         this.isSameDate(new Date(s.date), date)
       );
 
+      // בדיקה אם התאריך מחוץ לטווח המותר
+      let disabled = false;
+      if (minDate) {
+        const minDateOnly = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
+        const currentDateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        if (currentDateOnly < minDateOnly) disabled = true;
+      }
+      if (maxDate && !disabled) {
+        const maxDateOnly = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate());
+        const currentDateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        if (currentDateOnly > maxDateOnly) disabled = true;
+      }
+
       days.push({
         date,
         other: false,
-        suggested: match
+        suggested: match,
+        disabled
       });
     }
 

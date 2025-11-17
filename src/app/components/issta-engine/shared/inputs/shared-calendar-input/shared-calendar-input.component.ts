@@ -93,13 +93,17 @@ export class SharedCalendarInputComponent implements OnInit {
     this.leftMonthDays = this.calendarSrv.generateMonthDays(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth(),
-      this.dataConfig.suggestedDates
+      this.dataConfig.suggestedDates,
+      this.dataConfig.minDate,
+      this.dataConfig.maxDate
     );
 
     this.rightMonthDays = this.calendarSrv.generateMonthDays(
       this.displayedMonthRight.getFullYear(),
       this.displayedMonthRight.getMonth(),
-      this.dataConfig.suggestedDates
+      this.dataConfig.suggestedDates,
+      this.dataConfig.minDate,
+      this.dataConfig.maxDate
     );
   }
 
@@ -118,7 +122,12 @@ export class SharedCalendarInputComponent implements OnInit {
     }, 0);
   }
 
-  selectDate(date: Date) {
+  selectDate(day: CalendarDay) {
+    // מניעת בחירת תאריכים disabled
+    if (day.disabled || day.other) return;
+
+    const date = day.date;
+
     if (!this.value || !this.value.start) {
       this.value = { start: date, end: undefined };
     } else if (!this.value.end) {
@@ -135,7 +144,7 @@ export class SharedCalendarInputComponent implements OnInit {
   }
 
   formatFullHebrewDate(d: Date | null): string {
-    if (!d) return '---';
+    if (!d) return '';
     return new Intl.DateTimeFormat('he-IL', {
       day: 'numeric', month: 'long', year: 'numeric'
     }).format(d);
@@ -156,8 +165,8 @@ export class SharedCalendarInputComponent implements OnInit {
     const s = this.value?.start ?? null;
     const e = this.value?.end ?? null;
     if (s && e) return `${this.formatDate(s)} - ${this.formatDate(e)}`;
-    if (s) return `${this.formatDate(s)} - ---`;
-    return '---';
+    if (s) return this.formatDate(s);
+    return '';
   }
 
   private formatDate(d: Date): string {

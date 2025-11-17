@@ -1,0 +1,9 @@
+<div class="header-tabs">
+  <button 
+    *ngFor="let tab of tabs"
+    class="tab"
+    [class.active]="tab.active"
+    (click)="selectTab(tab)">
+    {{ tab.label }}
+  </button>
+</div>

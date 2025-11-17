@@ -19,7 +19,7 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       titleMenuOptions: 'יעדים פופולריים',
       allowAutoComplete: true,
     },
-    component: SharedOptionsInputComponent, // 👈 זה האינפוט המתאים
+    component: SharedOptionsInputComponent,
   },
 
   [ESharedInputType.DESTINATIONS_FLIGHTS]: {
@@ -47,11 +47,15 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     },
     dataConfig: new SharedCalendarInputConfig({
       suggestedDates: [],
-      minDate: new Date(),
+      minDate: (() => {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate());
+        return yesterday;
+      })(),
       maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       allowPickHours: false,
     }),
-    component: SharedCalendarInputComponent, // 👈 קישור ברור לקומפוננטת הקלנדר
+    component: SharedCalendarInputComponent,
   },
 
   [ESharedInputType.PASSANGERS_FLIGHTS]: {

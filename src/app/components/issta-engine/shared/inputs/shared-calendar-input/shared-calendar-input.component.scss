@@ -123,6 +123,13 @@
       opacity: 0.3;
     }
 
+    &.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+      color: #ccc;
+    }
+
     &.selected {
       background: #e2f7e8;
 
@@ -145,7 +152,7 @@
       background: #e2f7e8;
     }
 
-    &:hover {
+    &:hover:not(.disabled) {
       background: #e2f7e8;
     }
 

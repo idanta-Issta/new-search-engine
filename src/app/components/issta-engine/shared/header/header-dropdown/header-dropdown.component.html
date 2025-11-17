@@ -1,0 +1,16 @@
+<div class="header-dropdown" (clickOutside)="closeDropdown()">
+  <button class="dropdown-button" (click)="toggleDropdown()">
+    {{ selectedLabel }}
+    <span class="arrow">▾</span>
+  </button>
+  
+  <div class="dropdown-menu" *ngIf="isOpen">
+    <div 
+      *ngFor="let option of options"
+      class="dropdown-item"
+      [class.selected]="option.value === selectedValue"
+      (click)="selectOption(option)">
+      {{ option.label }}
+    </div>
+  </div>
+</div>

@@ -1,48 +1,27 @@
 <div class="flights-container">
-   <app-section-title title="חיפוש טיסות זולות לחו&quot;ל"></app-section-title>
+  <app-search-header
+    [title]="header.title"
+    [choices]="header.choices"
+    [tabs]="header.tabs"
+    [tripTypeOptions]="header.tripTypeOptions"
+    [classOptions]="header.classOptions"
+    (stateChange)="onHeaderStateChange($event)">
+  </app-search-header>
 
-  <div class="flight-options">
-    <button class="selected">הכי משתלם</button>
-    <div class="flight-type">
-      <button class="active">טיסה בלבד</button>
-      <button>טיסה + מלון</button>
-    </div>
+  <div class="flights-box">
+    <app-shared-input-row
+      #inputsRow
+      [inputs]="inputsOrder"
+      [values]="valuesMap"
+      buttonText="חיפוש"
+      (inputPicked)="onInputPicked($event)"
+      (searchClicked)="onSearch()">
+    </app-shared-input-row>
   </div>
-
-  <div class="flight-tabs">
-    <button class="tab active">הלוך ושוב</button>
-    <button class="tab">מחלוקת תיירים ▾</button>
-  </div>
-
-<div class="flights-box">
-<app-shared-input-row
-  #inputsRow
-  [inputs]="inputsOrder"
-  [values]="valuesMap"
-  buttonText="חיפוש"
-  (inputPicked)="onInputPicked($event)"
-  (searchClicked)="onSearch()">
-</app-shared-input-row>
-
-
-
-
-
-
-
-</div>
-
-
-
-  <div class="flight-footer">
-    <div class="left">
-      <span>✔ כל סוג של נופש</span>
-      <span>✔ פריסת תשלומים נוחה</span>
-      <span>✔ דילים גמישים בשבלכם</span>
-    </div>
-    <div class="right">
-      <label><input type="checkbox" /> טיסות ישירות</label>
-      <label><input type="checkbox" /> חיפוש גמיש ±3 ימים</label>
-    </div>
-  </div>
+  
+  <app-search-footer
+    [infoItems]="footer.infoItems"
+    [options]="footer.options"
+    (optionChange)="onFooterOptionChange($event)">
+  </app-search-footer>
 </div>

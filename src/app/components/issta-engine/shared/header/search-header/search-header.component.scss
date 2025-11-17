@@ -1,0 +1,45 @@
+.search-header {
+  margin-bottom: 4px;
+      display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  .title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 20px 0;
+  }
+
+  .header-row {
+    margin-bottom: 16px;
+
+    .choices-section {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .tabs-dropdown-container{
+        display: flex
+;
+    gap: 20px;
+  }
+
+  .tabs-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+
+
+    .dropdowns-section {
+      display: flex;
+      gap: 12px;
+
+      &.no-tabs {
+        margin-right: auto;
+      }
+    }
+  }
+}

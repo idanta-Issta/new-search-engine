@@ -1,0 +1,84 @@
+.header-dropdown {
+  position: relative;
+
+  .dropdown-button {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+
+    &:hover {
+      border-color: #2aae54;
+      color: #2aae54;
+    }
+
+    .arrow {
+      font-size: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover .arrow {
+      transform: translateY(2px);
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    z-index: 1000;
+    animation: slideDown 0.2s ease;
+
+    .dropdown-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      color: #333;
+
+      &:hover {
+        background: #f5f5f5;
+        color: #2aae54;
+      }
+
+      &.selected {
+        background: #e8f5e9;
+        color: #2aae54;
+        font-weight: 500;
+      }
+
+      &:first-child {
+        border-radius: 4px 4px 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 4px 4px;
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
