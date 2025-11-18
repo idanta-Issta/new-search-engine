@@ -26,6 +26,7 @@ type ValuesMap = Partial<Record<ESharedInputType, any>>;
 export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   @Input() inputs: ESharedInputType[] = [];
   @Input() buttonText = 'חיפוש';
+  @Input() widths: Partial<Record<ESharedInputType, string>> = {};
 
   // למה: נעדכן ערכים לתוך אינסטנסים בלי להרוס ולבנות
   @Input() values: ValuesMap = {};
@@ -67,6 +68,11 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
       const instance = componentRef.instance as any;
 
       instance.type = inputType;
+
+      // העברת width אם קיים
+      if (this.widths[inputType]) {
+        instance.width = this.widths[inputType];
+      }
 
       if (this.values[inputType] !== undefined) {
         instance.value = this.values[inputType];

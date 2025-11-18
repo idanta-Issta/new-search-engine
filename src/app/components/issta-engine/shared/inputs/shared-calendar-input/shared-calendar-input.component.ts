@@ -27,6 +27,7 @@ import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-
 })
 export class SharedCalendarInputComponent implements OnInit {
   @Input() type!: ESharedInputType;
+  @Input() width: string = '100%';
 
   uiConfig!: SharedInputUIConfig;
   dataConfig!: SharedCalendarInputConfig;

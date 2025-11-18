@@ -9,6 +9,7 @@
     padding: 6px 0px 5px 3px;
     border-radius: 16px;
      background-color: white;
+     max-width: 1170px;
 }
 .action-btn-container{
       width: 100%;
@@ -44,15 +45,11 @@
 
 
 
-.inputs-container{
-    min-width: 90%;
-    flex: 1;
-}
 
-:host ::ng-deep .inputs-container > * {
-  flex: 1;
-  min-width: 0;
-}
+// :host ::ng-deep .inputs-container > * {
+//   flex: 1;
+//   min-width: 0;
+// }
 
 .action-btn {
 height: 46px;

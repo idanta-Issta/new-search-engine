@@ -6,6 +6,7 @@
   gap: 6px;
   direction: rtl;
   position: relative;
+  min-width: 0;
 
   &::before {
     content: '';

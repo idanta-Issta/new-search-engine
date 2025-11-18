@@ -5,6 +5,7 @@
     [placeholder]="config.placeholder ?? ''"
     [isOpen]="isOpen"
     [(model)]="searchTerm"
+    [width]="width"
     (opened)="isOpen = true"
     (closed)="isOpen = false"
     (inputChange)="onSearchChange($event)"

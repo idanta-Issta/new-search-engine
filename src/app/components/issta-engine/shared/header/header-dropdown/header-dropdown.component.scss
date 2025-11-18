@@ -4,31 +4,36 @@
   .dropdown-button {
     padding: 8px 16px;
     background: transparent;
-    border: 1px solid #ddd;
+       border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    color: #333;
+  
+    color: #098137;
     display: flex;
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
     white-space: nowrap;
+    font-family: 'Rubik';
 
-    &:hover {
-      border-color: #2aae54;
-      color: #2aae54;
-    }
 
-    .arrow {
-      font-size: 10px;
-      transition: transform 0.3s ease;
-    }
 
-    &:hover .arrow {
-      transform: translateY(2px);
-    }
+   .arrow {
+    position: relative;
+    top: -2px;
+        width: 6px;
+    height: 6px;
+    border-left: 1.5px solid #333;
+    border-bottom: 1.5px solid #333;
+    transform: rotate(-45deg);
+    transition: transform 0.3s ease;
+}
+
+
+
+   
   }
 
   .dropdown-menu {

@@ -25,7 +25,7 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
     title: 'חיפוש טיסות זולות לחו"ל',
     choices: [
       { label: 'טיסה בלבד', value: 'flight-only' },
-      { label: 'טיסה + מלון', value: 'flight-hotel' }
+      { label: 'טיסה + מלון', value: 'flight-hotel', promotionText: 'הכי משתלם' }
     ],
     defaultChoice: 'flight-only',
     tabs: [],
@@ -47,7 +47,7 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
     infoItems: [
       'כל סוג של נופש',
       'פריסת תשלומים נוחה',
-      'דילים גמישים בשבלכם'
+      'זמינים בשבילכם'
     ],
     options: [
       { label: 'טיסות ישירות', value: 'direct', checked: false },

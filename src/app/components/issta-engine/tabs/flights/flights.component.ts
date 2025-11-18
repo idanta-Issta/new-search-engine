@@ -10,6 +10,8 @@ import { ISearchEngine } from '../../../../models/search-engine-base.interface';
 import { SearchFooterComponent } from '../../shared/footer/search-footer/search-footer.component';
 import { SearchHeaderComponent, HeaderState } from '../../shared/header/search-header/search-header.component';
 import { FLIGHTS_CONFIG, SearchEngineConfig } from '../../../../config/search-engine.config';
+import { InputSizeHelper } from '../../../../utilies/input-size.helper';
+import { EInputSize } from '../../../../enums/EInputSize';
 
 @Component({
   selector: 'app-flights',
@@ -49,6 +51,13 @@ export class FlightsComponent implements ISearchEngine {
     ESharedInputType.PICKER_DATES,
     ESharedInputType.PASSANGERS_FLIGHTS,
   ];
+
+  readonly inputWidths: Partial<Record<ESharedInputType, string>> = {
+    [ESharedInputType.DESTINATIONS_FLIGHTS]: InputSizeHelper.getWidth(EInputSize.LARGE),
+    [ESharedInputType.ORIGINS_FLIGHTS]: InputSizeHelper.getWidth(EInputSize.LARGE),
+    [ESharedInputType.PICKER_DATES]: InputSizeHelper.getWidth(EInputSize.MEDIUM),
+    [ESharedInputType.PASSANGERS_FLIGHTS]: InputSizeHelper.getWidth(EInputSize.SMALL),
+  };
 
   selectedDestination: MenuOption | null = null;
   selectedOrigin: MenuOption | null = null;

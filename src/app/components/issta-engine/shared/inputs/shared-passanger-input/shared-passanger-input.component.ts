@@ -27,6 +27,7 @@ import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-
 export class SharedPassangerInputComponent implements OnInit {
   @Input() type!: ESharedInputType;
   @Input() value?: PassangersInput;
+  @Input() width: string = '100%';
   @Output() valueChange = new EventEmitter<PassangersInput>();
 
   config!: SharedInputUIConfig;

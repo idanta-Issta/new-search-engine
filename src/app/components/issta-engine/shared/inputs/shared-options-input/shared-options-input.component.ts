@@ -36,6 +36,7 @@ import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-
 export class SharedOptionsInputComponent implements OnInit, OnChanges {
   @Input() type!: ESharedInputType;
   @Input() value?: MenuOption;
+  @Input() width: string = '100%';
 
   @Output() valueChange = new EventEmitter<MenuOption>();
   @Output() optionPicked = new EventEmitter<MenuOption>();
