@@ -1,5 +1,36 @@
+// Main colors
 $search-engine-main-color: #098137;
 $search-engine-secondary-color: #2AAE54;
+$search-engine-hover-bg: #f8fdf9;
+$search-engine-light-bg: #f3f8f5;
+$search-engine-success: #00a651;
+$search-engine-success-dark: #00703c;
+$search-engine-success-light: #e8f5ee;
+$search-engine-promotion-bg: #ffde59;
+
+// Gray scale
+$color-white: #fff;
+$color-black: #000;
+$color-gray-dark: #2A3335;
+$color-gray-medium: #687482;
+$color-gray: #666;
+$color-gray-light: #dcdcdc;
+$color-gray-lighter: #e0e0e0;
+$color-gray-lightest: #f8f8f8;
+$color-border: #ccc;
+$color-border-light: #ddd;
+$color-border-lighter: #e5e5e5;
+$color-disabled: #BFCACD;
+$color-text-dark: #2e2e2e;
+$color-text-medium: #2c2c2c;
+$color-text-light: #555;
+$color-text-gray: #333;
+
+// Shadows
+$box-shadow-light: 0 2px 6px rgba(0, 0, 0, 0.05);
+$box-shadow-focus: 0 0 0 2px rgba(0, 166, 81, 0.1);
+
+// Fonts
 $main-font-family: 'Rubik';
 
 :root {

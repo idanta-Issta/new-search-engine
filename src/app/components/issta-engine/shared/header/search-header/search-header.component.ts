@@ -35,7 +35,7 @@ export class SearchHeaderComponent implements OnInit {
   ngOnInit() {
     // Set defaults
     if (this.choices.length) {
-      const defaultChoice = this.choices.find(c => c.active) || this.choices[0];
+      const defaultChoice = this.choices.find(c => c.isDefault) || this.choices[0];
       this.selectedChoice = defaultChoice.value;
     }
     if (this.tabs.length) {
@@ -43,10 +43,12 @@ export class SearchHeaderComponent implements OnInit {
       this.selectedTab = defaultTab.value;
     }
     if (this.tripTypeOptions.length) {
-      this.selectedTripType = this.tripTypeOptions[0].value;
+      const defaultTripType = this.tripTypeOptions.find(t => t.isDefault) || this.tripTypeOptions[0];
+      this.selectedTripType = defaultTripType.value;
     }
     if (this.classOptions.length) {
-      this.selectedClass = this.classOptions[0].value;
+      const defaultClass = this.classOptions.find(c => c.isDefault) || this.classOptions[0];
+      this.selectedClass = defaultClass.value;
     }
   }
 

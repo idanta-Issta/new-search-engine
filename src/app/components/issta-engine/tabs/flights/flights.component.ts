@@ -82,7 +82,7 @@ export class FlightsComponent implements ISearchEngine {
   selectedPassengers: PassangersInput | null = null;
 
   onInputPicked(event: { type: ESharedInputType; value: any }) {
-    // עדכון הערך ב-inputConfigs
+
     const config = this.inputConfigs.find(c => c.type === event.type);
     if (config) {
       config.value = event.value;
@@ -137,16 +137,13 @@ export class FlightsComponent implements ISearchEngine {
 
   onSearch() {
     const url = this.buildUrl();
-    console.log('Generated URL:', url);
     window.open(url, '_blank');
   }
 
   onFooterOptionChange(event: { value: string; checked: boolean }) {
-    console.log('Footer option changed:', event);
   }
 
   onHeaderStateChange(state: HeaderState) {
     this.headerState = state;
-    console.log('Header state changed:', state);
   }
 }

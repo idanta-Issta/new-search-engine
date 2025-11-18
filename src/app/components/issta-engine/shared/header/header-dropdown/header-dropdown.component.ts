@@ -5,6 +5,7 @@ import { ClickOutsideDirective } from '../../../../../directives/click-outside.d
 export interface DropdownOption {
   label: string;
   value: string;
+  isDefault?: boolean;
 }
 
 @Component({

@@ -1,16 +1,18 @@
+@import '../../../../../utilies/variables.scss';
+
 .header-choices {
   display: flex;
  
 
   .choice-button {
     padding: 10px 20px;
-    font-family: 'Rubik';
-    border: 1px solid #e0e0e0;
+    font-family: $main-font-family;
+    border: 1px solid $color-gray-lighter;
     border-radius: 0;
     cursor: pointer;
     font-size: 14px;
     font-weight: normal;
-    color: #666;
+    color: $color-gray;
     transition: all 0.3s ease;
     position: relative;
     display: flex;
@@ -22,27 +24,27 @@
     &:first-child {
       border-top-right-radius: 8px;
       border-bottom-right-radius: 8px;
-      border-right: 1px solid #e0e0e0;
+      border-right: 1px solid $color-gray-lighter;
     }
 
     &:last-child {
       border-top-left-radius: 8px;
       border-bottom-left-radius: 8px;
-      border-right: 1px solid #e0e0e0;
+      border-right: 1px solid $color-gray-lighter;
     }
 
     &:hover {
-      border-color: #2aae54;
-      background: #f8fdf9;
+      border-color: $search-engine-secondary-color;
+      background: $search-engine-hover-bg;
       z-index: 1;
 
   
     }
 
     &.selected {
-      color: #098137;
+      color: $search-engine-main-color;
       font-weight: bold;
-      border-color: #098137;
+      border-color: $search-engine-main-color;
       z-index: 2;
 
       .label{
@@ -63,8 +65,8 @@
     left: 50%;
     transform: translateX(-50%);
     font-size: 11px;
-    color: #000;
-    background: #FEED00;
+    color: $color-black;
+    background: $search-engine-promotion-bg;
     padding: 3px 10px;
     border-radius: 12px;
     font-weight: 400;

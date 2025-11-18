@@ -6,6 +6,7 @@ export interface ChoiceOption {
   value: string;
   promotionText?: string;
   active?: boolean;
+  isDefault?: boolean;
 }
 
 @Component({

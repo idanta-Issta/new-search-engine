@@ -2,17 +2,15 @@ import { ChoiceOption } from '../components/issta-engine/shared/header/header-ch
 import { TabOption } from '../components/issta-engine/shared/header/header-tabs/header-tabs.component';
 import { DropdownOption } from '../components/issta-engine/shared/header/header-dropdown/header-dropdown.component';
 import { FooterOption } from '../components/issta-engine/shared/footer/footer-options/footer-options.component';
+import { TEXTS, VALUES } from '../constants/app.constants';
 
 export interface SearchEngineConfig {
   header: {
     title: string;
     choices: ChoiceOption[];
-    defaultChoice: string;
     tabs: TabOption[];
     tripTypeOptions: DropdownOption[];
-    defaultTripType: string;
     classOptions: DropdownOption[];
-    defaultClass: string;
   };
   footer: {
     infoItems: string[];
@@ -22,67 +20,61 @@ export interface SearchEngineConfig {
 
 export const FLIGHTS_CONFIG: SearchEngineConfig = {
   header: {
-    title: 'חיפוש טיסות זולות לחו"ל',
+    title: TEXTS.HEADER.FLIGHTS_TITLE,
     choices: [
-      { label: 'טיסה בלבד', value: 'flight-only' },
-      { label: 'טיסה + מלון', value: 'flight-hotel', promotionText: 'הכי משתלם' }
+      { label: TEXTS.CHOICES.FLIGHT_ONLY, value: VALUES.CHOICES.FLIGHT_ONLY, isDefault: true },
+      { label: TEXTS.CHOICES.FLIGHT_HOTEL, value: VALUES.CHOICES.FLIGHT_HOTEL, promotionText: TEXTS.PROMOTION.BEST_DEAL }
     ],
-    defaultChoice: 'flight-only',
     tabs: [],
     tripTypeOptions: [
-      { label: 'הלוך ושוב', value: 'round-trip' },
-      { label: 'כיוון אחד', value: 'one-way' },
-      { label: 'ריבוי יעדים', value: 'multi-city' }
+      { label: TEXTS.TRIP_TYPE.ROUND_TRIP, value: VALUES.TRIP_TYPE.ROUND_TRIP, isDefault: true },
+      { label: TEXTS.TRIP_TYPE.ONE_WAY, value: VALUES.TRIP_TYPE.ONE_WAY },
+      { label: TEXTS.TRIP_TYPE.MULTI_CITY, value: VALUES.TRIP_TYPE.MULTI_CITY }
     ],
-    defaultTripType: 'round-trip',
     classOptions: [
-      { label: 'מחלקת תיירים', value: 'economy' },
-      { label: 'מחלקת פרימיום', value: 'premium' },
-      { label: 'מחלקת עסקים', value: 'business' },
-      { label: 'מחלקה ראשונה', value: 'first' }
-    ],
-    defaultClass: 'economy'
+      { label: TEXTS.CLASS.ECONOMY, value: VALUES.CLASS.ECONOMY, isDefault: true },
+      { label: TEXTS.CLASS.PREMIUM, value: VALUES.CLASS.PREMIUM },
+      { label: TEXTS.CLASS.BUSINESS, value: VALUES.CLASS.BUSINESS },
+      { label: TEXTS.CLASS.FIRST, value: VALUES.CLASS.FIRST }
+    ]
   },
   footer: {
     infoItems: [
-      'כל סוג של נופש',
-      'פריסת תשלומים נוחה',
-      'זמינים בשבילכם'
+      TEXTS.FOOTER.INFO.ANY_VACATION,
+      TEXTS.FOOTER.INFO.PAYMENT_PLAN,
+      TEXTS.FOOTER.INFO.AVAILABLE
     ],
     options: [
-      { label: 'טיסות ישירות', value: 'direct', checked: false },
-      { label: 'חיפוש גמיש +/- 3 ימים', value: 'flexible', checked: false }
+      { label: TEXTS.FOOTER.OPTIONS.DIRECT_FLIGHTS, value: VALUES.FOOTER_OPTIONS.DIRECT, checked: false },
+      { label: TEXTS.FOOTER.OPTIONS.FLEXIBLE_SEARCH, value: VALUES.FOOTER_OPTIONS.FLEXIBLE, checked: false }
     ]
   }
 };
 
 export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
   header: {
-    title: 'חיפוש מלונות בחו"ל',
+    title: TEXTS.HEADER.HOTEL_ABROAD_TITLE,
     choices: [
-      { label: 'הכי משתלם', value: 'best' },
-      { label: 'מלון בלבד', value: 'hotel-only' },
-      { label: 'מלון + טיסה', value: 'hotel-flight' }
+      { label: TEXTS.CHOICES.BEST_DEAL, value: VALUES.CHOICES.BEST_DEAL, isDefault: true },
+      { label: TEXTS.CHOICES.HOTEL_ONLY, value: VALUES.CHOICES.HOTEL_ONLY },
+      { label: TEXTS.CHOICES.HOTEL_FLIGHT, value: VALUES.CHOICES.HOTEL_FLIGHT }
     ],
-    defaultChoice: 'best',
     tabs: [
-      { label: 'מלונות מומלצים', value: 'recommended', active: true },
-      { label: 'מלונות בוטיק', value: 'boutique', active: false }
+      { label: TEXTS.TABS.RECOMMENDED_HOTELS, value: VALUES.TABS.RECOMMENDED, active: true },
+      { label: TEXTS.TABS.BOUTIQUE_HOTELS, value: VALUES.TABS.BOUTIQUE, active: false }
     ],
     tripTypeOptions: [],
-    defaultTripType: '',
-    classOptions: [],
-    defaultClass: ''
+    classOptions: []
   },
   footer: {
     infoItems: [
-      'מלונות מומלצים',
-      'ביטול חינם',
-      'מחירים מיוחדים'
+      TEXTS.FOOTER.INFO.RECOMMENDED_HOTELS,
+      TEXTS.FOOTER.INFO.FREE_CANCELLATION,
+      TEXTS.FOOTER.INFO.SPECIAL_PRICES
     ],
     options: [
-      { label: 'רק מלונות בוטיק', value: 'boutique', checked: false },
-      { label: 'כולל ארוחת בוקר', value: 'breakfast', checked: false }
+      { label: TEXTS.FOOTER.OPTIONS.BOUTIQUE_ONLY, value: VALUES.FOOTER_OPTIONS.BOUTIQUE, checked: false },
+      { label: TEXTS.FOOTER.OPTIONS.BREAKFAST_INCLUDED, value: VALUES.FOOTER_OPTIONS.BREAKFAST, checked: false }
     ]
   }
 };

@@ -17,7 +17,6 @@ export class SearchEngineComponent implements AfterViewInit {
   ETypeSearchEngine = ETypeSearchEngine;
 
   ngAfterViewInit() {
-    // נוודא שנטען אחרי שהסקריפט של window.SearchEngineConfig מוכן
     setTimeout(() => {
       if (!this.options && (window as any).SearchEngineConfig) {
         this.options = (window as any).SearchEngineConfig;
