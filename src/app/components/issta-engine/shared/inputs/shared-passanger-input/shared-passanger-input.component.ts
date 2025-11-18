@@ -5,7 +5,8 @@ import {
   EventEmitter,
   OnInit,
   ElementRef,
-  HostListener
+  HostListener,
+  ChangeDetectorRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -38,7 +39,8 @@ export class SharedPassangerInputComponent implements OnInit {
 
   constructor(
     private el: ElementRef,
-    private passengersSrv: SharedPassengersService
+    private passengersSrv: SharedPassengersService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -59,6 +61,7 @@ export class SharedPassangerInputComponent implements OnInit {
           this.value = data;
         }
         this.updateTotal();
+        this.cdr.markForCheck();
       },
       error: (err) => console.error('Error fetching passengers data:', err)
     });
@@ -82,6 +85,7 @@ export class SharedPassangerInputComponent implements OnInit {
         age.selectedAges.push(age.specificAgeOptions?.[0] || 0);
       }
       this.emitChange();
+      this.cdr.markForCheck();
     }
   }
 
@@ -93,6 +97,7 @@ export class SharedPassangerInputComponent implements OnInit {
         age.selectedAges.pop();
       }
       this.emitChange();
+      this.cdr.markForCheck();
     }
   }
 

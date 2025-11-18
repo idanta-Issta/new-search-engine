@@ -76,7 +76,7 @@ export const ICONS = {
   USER: 'icon-user',
   PASSENGER: 'icon-count-man',
   PLANE: 'ist-icon-deals-flight',
-  HOTEL: 'icon-hotel',
+  HOTEL: 'icon-rate_sleep',
   SEARCH: 'icon-search',
   CHEVRON_DOWN: 'chevron-down',
   CHEVRON_UP: 'chevron-up'

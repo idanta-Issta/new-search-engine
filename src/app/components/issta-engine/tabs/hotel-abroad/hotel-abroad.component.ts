@@ -47,13 +47,13 @@ export class HotelAbroadComponent implements ISearchEngine {
     },
     {
       type: ESharedInputType.PICKER_DATES,
-      size: EInputSize.MEDIUM,
-      position: EDropdownPosition.BOTTOM_LEFT,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_CENTER,
       value: { start: null as Date | null, end: null as Date | null }
     },
     {
       type: ESharedInputType.PASSANGERS_FLIGHTS,
-      size: EInputSize.MEDIUM,
+      size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_RIGHT,
       value: null
     }

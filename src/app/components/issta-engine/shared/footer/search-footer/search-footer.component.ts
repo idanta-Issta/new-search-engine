@@ -13,6 +13,7 @@ import { FooterOptionsComponent, FooterOption } from '../footer-options/footer-o
 export class SearchFooterComponent {
   @Input() infoItems: string[] = [];
   @Input() options: FooterOption[] = [];
+  @Input() buttonWidth?: number; // רוחב דינמי לכפתור
   @Output() optionChange = new EventEmitter<{ value: string; checked: boolean }>();
 
   onOptionChange(event: { value: string; checked: boolean }) {

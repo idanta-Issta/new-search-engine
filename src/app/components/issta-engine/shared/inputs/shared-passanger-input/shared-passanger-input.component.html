@@ -34,15 +34,17 @@
           </div>
 
           <div *ngIf="age.requiresSpecificAge && age.minCount > 0" class="specific-ages">
-            <div *ngFor="let i of getAgeArray(age.minCount); let idx = index" class="age-selector">
-              <label>{{ age.label }} {{ idx + 1 }}:</label>
-              <select 
-                [value]="age.selectedAges?.[idx]" 
-                (change)="onSpecificAgeChange(age, idx, +$any($event.target).value)">
-                <option *ngFor="let ageOption of age.specificAgeOptions" [value]="ageOption">
-                  {{ ageOption }}
-                </option>
-              </select>
+            <label class="ages-label">בחירת גילאים</label>
+            <div class="age-selectors-row">
+              <div *ngFor="let i of getAgeArray(age.minCount); let idx = index" class="age-selector">
+                <select 
+                  [value]="age.selectedAges?.[idx]" 
+                  (change)="onSpecificAgeChange(age, idx, +$any($event.target).value)">
+                  <option *ngFor="let ageOption of age.specificAgeOptions" [value]="ageOption">
+                    {{ ageOption }}
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
         </div>

@@ -1,28 +1,49 @@
 import { EInputSize } from '../enums/EInputSize';
+import { InputConfig } from '../models/input-config.model';
 
 export class InputSizeHelper {
-  private static readonly sizeMap: Record<EInputSize, string> = {
-    [EInputSize.SMALL]: '150px',
-    [EInputSize.MEDIUM]: '200px',
-    [EInputSize.LARGE]: '300px',
-    [EInputSize.HUGE]: '400px'
-  };
+  private static readonly MAX_ROW_WIDTH = 1045;
+  private static readonly BUTTON_WIDTH = 150; // רוחב כפתור החיפוש
+  private static readonly GAP = 8; // רווח בין אלמנטים
 
-  static getWidth(size: EInputSize): string {
-    return this.sizeMap[size];
-  }
-
-  static getFlexBasis(size: EInputSize): string {
-    return `flex: ${this.getFlexGrow(size)} 1 ${this.getWidth(size)}`;
-  }
-
-  private static getFlexGrow(size: EInputSize): number {
-    const growMap: Record<EInputSize, number> = {
-      [EInputSize.SMALL]: 0,
-      [EInputSize.MEDIUM]: 1,
-      [EInputSize.LARGE]: 2,
-      [EInputSize.HUGE]: 3
+  /**
+   * מחשב רוחב חכם לאינפוטים + כפתור
+   * מחלק את 1045px בצורה שווה בין כל האלמנטים
+   */
+  static calculateWidths(inputConfigs: InputConfig[]): { inputWidths: number[]; buttonWidth: number } {
+    const totalInputs = inputConfigs.length;
+    const totalGaps = totalInputs; // gaps between inputs + gap before button
+    const totalGapWidth = totalGaps * this.GAP;
+    
+    // רוחב זמין לאינפוטים + כפתור
+    const availableWidth = this.MAX_ROW_WIDTH - totalGapWidth;
+    
+    // רוחב שווה לכל אחד
+    const equalWidth = Math.floor(availableWidth / (totalInputs + 1));
+    
+    return {
+      inputWidths: new Array(totalInputs).fill(equalWidth),
+      buttonWidth: equalWidth
     };
-    return growMap[size];
+  }
+
+  /**
+   * מחזיר רוחב לאינפוט בודד (fallback למצב ישן)
+   */
+  static getWidth(size: EInputSize): string {
+    const sizeMap: Record<EInputSize, string> = {
+      [EInputSize.SMALL]: '150px',
+      [EInputSize.MEDIUM]: '200px',
+      [EInputSize.LARGE]: '300px',
+      [EInputSize.HUGE]: '500px'
+    };
+    return sizeMap[size];
+  }
+
+  /**
+   * מחזיר רוחב כפתור ברירת מחדל
+   */
+  static getButtonWidth(): number {
+    return this.BUTTON_WIDTH;
   }
 }

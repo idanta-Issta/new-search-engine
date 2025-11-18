@@ -75,6 +75,7 @@ padding: 20px;
 
       .count {
         font-family: 'Rubik';
+            min-width: 15px;
 font-weight: 400;
 font-style: Regular;
 font-size: 20px;
@@ -110,42 +111,77 @@ text-align: right;
 
   .specific-ages {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 8px 12px;
-    background: #f8f8f8;
-    border-radius: 8px;
+    flex-direction: row;
+    gap: 12px;
+    padding: 16px 0 12px 0;
     margin-right: 8px;
+    border-top: 1px solid #E5E5E5;
+    margin-top: 12px;
+
+    .ages-label {
+      color: #2A3335;
+      font-weight: 400;
+      font-size: 16px;
+      text-align: right;
+      font-family: 'Rubik', sans-serif;
+    }
+
+    .age-selectors-row {
+      display: grid;
+      grid-template-columns: repeat(3, 87px);
+      gap: 8px;
+      justify-content: start;
+    }
 
     .age-selector {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-
-      label {
-        color: #555;
-        font-weight: 500;
-        min-width: 70px;
-      }
 
       select {
-        padding: 6px 10px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
+        width: 87px;
+        height: 42px;
+        border-radius: 16px;
+        padding: 8px 12px;
+        border: 1px solid #2AAE54;
         background: white;
-        font-size: 0.9rem;
+        font-size: 16px;
+        font-weight: 400;
+        color: #2A3335;
         cursor: pointer;
-        transition: border-color 0.2s;
+        transition: all 0.2s;
+        text-align: center;
+        font-family: 'Rubik', sans-serif;
+        
+        /* Custom dropdown with indicator */
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%232AAE54' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center right 12px;
+        padding-right: 32px;
 
         &:hover {
-          border-color: #00a651;
+          border-color: #2AAE54;
+          box-shadow: 0 0 0 1px #2AAE54;
         }
 
-        &:focus {
+        &:focus,
+        &:active {
           outline: none;
-          border-color: #00a651;
-          box-shadow: 0 0 0 2px rgba(0, 166, 81, 0.1);
+          border-color: #2AAE54;
+          background-color: #ECF8F0;
+          box-shadow: 0 0 0 2px rgba(42, 174, 84, 0.2);
+        }
+        
+        /* Dropdown menu styling */
+        option {
+          padding: 8px;
+          background: white;
+          color: #2A3335;
+          font-family: 'Rubik', sans-serif;
+          
+          &:checked {
+            background: #2AAE54;
+            color: white;
+          }
         }
       }
     }

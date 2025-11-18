@@ -13,6 +13,7 @@ export interface SearchEngineConfig {
   footer: {
     infoItems: string[];
     options: FooterOption[];
+    buttonWidth?: number; // רוחב כפתור החיפוש
   };
 }
 
