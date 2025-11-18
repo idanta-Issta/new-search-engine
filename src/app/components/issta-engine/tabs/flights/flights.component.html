@@ -11,9 +11,7 @@
   <div class="flights-box">
     <app-shared-input-row
       #inputsRow
-      [inputs]="inputsOrder"
-      [values]="valuesMap"
-      [widths]="inputWidths"
+      [configs]="inputConfigs"
       buttonText="חיפוש"
       (inputPicked)="onInputPicked($event)"
       (searchClicked)="onSearch()">

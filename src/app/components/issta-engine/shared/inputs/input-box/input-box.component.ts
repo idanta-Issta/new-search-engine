@@ -16,7 +16,7 @@ export class InputBoxComponent {
   @Input() title?: string;
   @Input() placeholder: string = '';
   @Input() allowAutoComplete = true;
-  @Input() isOpen = false; // קבלת מצב isOpen מהאב
+  @Input() isOpen = false;
   @Input() width: string = '100%';
   
   @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;

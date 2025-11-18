@@ -14,6 +14,9 @@ import {
 } from '@angular/core';
 import { ESharedInputType } from '../../../../../../enums/ESharedInputType';
 import { SharedInputRegistry } from '../../../../../../config/shared-input.registry';
+import { EDropdownPosition } from '../../../../../../enums/EDropdownPosition';
+import { InputConfig } from '../../../../../../models/input-config.model';
+import { InputSizeHelper } from '../../../../../../utilies/input-size.helper';
 
 type ValuesMap = Partial<Record<ESharedInputType, any>>;
 
@@ -24,12 +27,8 @@ type ValuesMap = Partial<Record<ESharedInputType, any>>;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SharedInputRowComponent implements AfterViewInit, OnChanges {
-  @Input() inputs: ESharedInputType[] = [];
+  @Input() configs: InputConfig[] = [];
   @Input() buttonText = 'חיפוש';
-  @Input() widths: Partial<Record<ESharedInputType, string>> = {};
-
-  // למה: נעדכן ערכים לתוך אינסטנסים בלי להרוס ולבנות
-  @Input() values: ValuesMap = {};
 
   @Output() inputPicked = new EventEmitter<{ type: ESharedInputType; value: any }>();
   @Output() searchClicked = new EventEmitter<void>();
@@ -46,13 +45,13 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // למה: אם רק values השתנה → לעדכן ערכים בלי להרוס קומפוננטות
-    if (this.didInit && changes['values'] && !changes['inputs']) {
-      this.applyValuesToInstances();
-    }
-    // למה: בונים מחדש רק אם רשימת ה-inputs עצמה השתנתה (by reference)
-    if (this.didInit && changes['inputs']) {
+    // למה: בונים מחדש רק אם ה-configs השתנו
+    if (this.didInit && changes['configs']) {
       this.renderInputs();
+    }
+    // עדכון ערכים בלי לבנות מחדש
+    if (this.didInit && !changes['configs']) {
+      this.applyValuesToInstances();
     }
   }
 
@@ -60,47 +59,50 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
     this.container.clear();
     this.componentRefs.clear();
 
-    this.inputs.forEach((inputType) => {
-      const config = SharedInputRegistry[inputType];
-      if (!config?.component) return;
+    this.configs.forEach((config) => {
+      const registryConfig = SharedInputRegistry[config.type];
+      if (!registryConfig?.component) return;
 
-      const componentRef = this.container.createComponent(config.component);
+      const componentRef = this.container.createComponent(registryConfig.component);
       const instance = componentRef.instance as any;
 
-      instance.type = inputType;
+      instance.type = config.type;
+      
+      // העברת width מה-size
+      instance.width = InputSizeHelper.getWidth(config.size);
+      
+      // העברת position
+      instance.position = config.position;
 
-      // העברת width אם קיים
-      if (this.widths[inputType]) {
-        instance.width = this.widths[inputType];
-      }
-
-      if (this.values[inputType] !== undefined) {
-        instance.value = this.values[inputType];
+      // העברת value
+      if (config.value !== undefined) {
+        instance.value = config.value;
       }
 
       // הרשמה לאירוע אחד בלבד כדי למנוע כפילות
       if (instance.optionPicked?.subscribe) {
         instance.optionPicked.subscribe((value: any) =>
-          this.inputPicked.emit({ type: inputType, value })
+          this.inputPicked.emit({ type: config.type, value })
         );
       } else if (instance.valueChange?.subscribe) {
         instance.valueChange.subscribe((value: any) =>
-          this.inputPicked.emit({ type: inputType, value })
+          this.inputPicked.emit({ type: config.type, value })
         );
       }
 
-      this.componentRefs.set(inputType, componentRef);
+      this.componentRefs.set(config.type, componentRef);
     });
   }
 
   private applyValuesToInstances(): void {
-    for (const [type, ref] of this.componentRefs.entries()) {
-      const inst = ref.instance as any;
-      if (this.values[type] !== undefined) {
-        inst.value = this.values[type];
+    this.configs.forEach(config => {
+      const ref = this.componentRefs.get(config.type);
+      if (ref && config.value !== undefined) {
+        const inst = ref.instance as any;
+        inst.value = config.value;
         ref.changeDetectorRef.detectChanges();
       }
-    }
+    });
   }
 
   /** פתיחה מתוכנתית מהסבא */

@@ -12,6 +12,8 @@ import { SearchHeaderComponent, HeaderState } from '../../shared/header/search-h
 import { FLIGHTS_CONFIG, SearchEngineConfig } from '../../../../config/search-engine.config';
 import { InputSizeHelper } from '../../../../utilies/input-size.helper';
 import { EInputSize } from '../../../../enums/EInputSize';
+import { EDropdownPosition } from '../../../../enums/EDropdownPosition';
+import { InputConfig } from '../../../../models/input-config.model';
 
 @Component({
   selector: 'app-flights',
@@ -45,19 +47,32 @@ export class FlightsComponent implements ISearchEngine {
 
   headerState: HeaderState = {};
 
-  readonly inputsOrder: ESharedInputType[] = [
-    ESharedInputType.DESTINATIONS_FLIGHTS,
-    ESharedInputType.ORIGINS_FLIGHTS,
-    ESharedInputType.PICKER_DATES,
-    ESharedInputType.PASSANGERS_FLIGHTS,
+  readonly inputConfigs: InputConfig[] = [
+    {
+      type: ESharedInputType.DESTINATIONS_FLIGHTS,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'תל אביב, שדה תעופה (TLV)', value: 'TLV' }
+    },
+    {
+      type: ESharedInputType.ORIGINS_FLIGHTS,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: null
+    },
+    {
+      type: ESharedInputType.PICKER_DATES,
+      size: EInputSize.MEDIUM,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { start: null as Date | null, end: null as Date | null }
+    },
+    {
+      type: ESharedInputType.PASSANGERS_FLIGHTS,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_RIGHT,
+      value: null
+    }
   ];
-
-  readonly inputWidths: Partial<Record<ESharedInputType, string>> = {
-    [ESharedInputType.DESTINATIONS_FLIGHTS]: InputSizeHelper.getWidth(EInputSize.LARGE),
-    [ESharedInputType.ORIGINS_FLIGHTS]: InputSizeHelper.getWidth(EInputSize.LARGE),
-    [ESharedInputType.PICKER_DATES]: InputSizeHelper.getWidth(EInputSize.MEDIUM),
-    [ESharedInputType.PASSANGERS_FLIGHTS]: InputSizeHelper.getWidth(EInputSize.SMALL),
-  };
 
   selectedDestination: MenuOption | null = null;
   selectedOrigin: MenuOption | null = null;
@@ -66,14 +81,13 @@ export class FlightsComponent implements ISearchEngine {
 
   selectedPassengers: PassangersInput | null = null;
 
-  valuesMap = {
-    [ESharedInputType.DESTINATIONS_FLIGHTS]: { label: 'תל אביב, שדה תעופה (TLV)', value: 'TLV' },
-    [ESharedInputType.ORIGINS_FLIGHTS]: null,
-    [ESharedInputType.PICKER_DATES]: this.selectedDate,
-    [ESharedInputType.PASSANGERS_FLIGHTS]: null,
-  };
-
   onInputPicked(event: { type: ESharedInputType; value: any }) {
+    // עדכון הערך ב-inputConfigs
+    const config = this.inputConfigs.find(c => c.type === event.type);
+    if (config) {
+      config.value = event.value;
+    }
+
     this.updateValue(event.type, event.value);
 
     switch (event.type) {
@@ -106,7 +120,6 @@ export class FlightsComponent implements ISearchEngine {
         this.selectedPassengers = value;
         break;
     }
-    this.valuesMap = { ...this.valuesMap, [type]: value };
   }
 
   private openNextInput(type: ESharedInputType) {

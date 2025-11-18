@@ -20,6 +20,21 @@
   /* במקום width: 100% */
   width: auto;
   min-width: 100%; /* כדי לא להיות קטן מדי אם התוכן קטן */
+  
+  &.position-bottom-left {
+    left: 0px;
+  }
+  
+  &.position-bottom-center {
+
+    right: -100%;
+    transform: translateX(-50%);
+  }
+  
+  &.position-bottom-right {
+    right: -125%;
+
+  }
 }
 
 .dropdown-wrapper.scrollable {

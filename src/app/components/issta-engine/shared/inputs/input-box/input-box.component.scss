@@ -1,7 +1,7 @@
 .input-box {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
+    padding: 2px 20px 0px 0px;
   height: 40px;
   gap: 6px;
   direction: rtl;
@@ -29,6 +29,7 @@
   > * {
     position: relative;
     z-index: 1;
+    margin-left: 5px;
   }
 }
 
@@ -43,13 +44,13 @@ i::before {
 }
 
 .input-title {
-  font-size: 14px;
+  font-size: 15px;
   color: #6b7280; /* אפור בהיר */
   margin: 0;
 }
 
 .input-field {
-  font-size: 16px;
+  font-size: 18px;
       background: transparent;
   font-family: var(--main-font-family);
   font-weight: 400;

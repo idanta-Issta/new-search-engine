@@ -16,6 +16,7 @@ import { InputBoxComponent } from '../input-box/input-box.component';
 import { PassangersInput, OptionAge, AgeGroup } from '../../../../../models/shared-passanger-input.models';
 import { SharedPassengersService } from '../../../../../services/shared-passengers.service';
 import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component';
+import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
 
 @Component({
   selector: 'app-shared-passanger-input',
@@ -28,6 +29,7 @@ export class SharedPassangerInputComponent implements OnInit {
   @Input() type!: ESharedInputType;
   @Input() value?: PassangersInput;
   @Input() width: string = '100%';
+  @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
   @Output() valueChange = new EventEmitter<PassangersInput>();
 
   config!: SharedInputUIConfig;

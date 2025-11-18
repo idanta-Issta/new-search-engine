@@ -2,6 +2,7 @@
 import { Component, Input, Output, EventEmitter, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
 
 @Component({
   selector: 'app-shared-dropdown',
@@ -11,7 +12,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     <div
   class="dropdown-wrapper"
   [@dropdownAnimation]="isOpen ? 'open' : 'closed'"
-  [ngClass]="{ 'scrollable': scrollable }"
+  [ngClass]="{ 'scrollable': scrollable, 'position-bottom-right': position === 'bottom-right', 'position-bottom-left': position === 'bottom-left', 'position-bottom-center': position === 'bottom-center' }"
   (mousedown)="$event.stopPropagation()"
 >
   <div class="dropdown-body">
@@ -34,6 +35,7 @@ export class SharedDropdownComponent {
   @Input() isOpen = false;
   @Input() anchor?: HTMLElement;
   @Input() scrollable = false;
+  @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
   @Output() closed = new EventEmitter<void>();
 
   constructor(private host: ElementRef<HTMLElement>) {}

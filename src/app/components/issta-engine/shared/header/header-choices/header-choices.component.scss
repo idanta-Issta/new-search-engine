@@ -5,7 +5,6 @@
   .choice-button {
     padding: 10px 20px;
     font-family: 'Rubik';
-    background: white;
     border: 1px solid #e0e0e0;
     border-radius: 0;
     cursor: pointer;
@@ -41,7 +40,6 @@
     }
 
     &.selected {
-      background: white;
       color: #098137;
       font-weight: bold;
       border-color: #098137;

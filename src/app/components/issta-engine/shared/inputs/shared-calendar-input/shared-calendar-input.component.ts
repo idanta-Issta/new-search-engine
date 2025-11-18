@@ -17,7 +17,8 @@ import { InputBoxComponent } from '../input-box/input-box.component';
 import { ESharedInputType } from '../../../../../enums/ESharedInputType';
 import { SharedInputRegistry } from '../../../../../config/shared-input.registry';
 import { SharedInputUIConfig } from '../../../../../models/shared-input-config.models';
-import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component'; 
+import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component';
+import { EDropdownPosition } from '../../../../../enums/EDropdownPosition'; 
 @Component({
   selector: 'app-shared-calendar-input',
   standalone: true,
@@ -28,6 +29,7 @@ import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-
 export class SharedCalendarInputComponent implements OnInit {
   @Input() type!: ESharedInputType;
   @Input() width: string = '100%';
+  @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
 
   uiConfig!: SharedInputUIConfig;
   dataConfig!: SharedCalendarInputConfig;

@@ -51,7 +51,7 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
     ],
     options: [
       { label: 'טיסות ישירות', value: 'direct', checked: false },
-      { label: 'חיפוש גמיש ±3 ימים', value: 'flexible', checked: false }
+      { label: 'חיפוש גמיש +/- 3 ימים', value: 'flexible', checked: false }
     ]
   }
 };

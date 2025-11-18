@@ -3,21 +3,17 @@
 import { ESharedInputType } from '../enums/ESharedInputType';
 import { SearchEngineConfig } from '../config/search-engine.config';
 import { HeaderState } from '../components/issta-engine/shared/header/search-header/search-header.component';
+import { InputConfig } from './input-config.model';
 
 /**
  * Interface שכל מנוע חיפוש חייב לממש
  */
 export interface ISearchEngine {
   /**
-   * סדר ה-inputs במנוע החיפוש
+   * קונפיגורציה מלאה של ה-inputs (type, size, position, value)
    */
-  readonly inputsOrder: ESharedInputType[];
+  readonly inputConfigs: InputConfig[];
 
-  /**
-   * מפת הערכים שנבחרו
-   */
-  valuesMap: Partial<Record<ESharedInputType, any>>;
-  
   /**
    * מחזיר את הקונפיגורציה של המנוע (header + footer)
    */

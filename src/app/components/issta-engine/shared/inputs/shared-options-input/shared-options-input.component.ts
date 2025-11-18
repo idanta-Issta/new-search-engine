@@ -24,6 +24,7 @@ import { SharedInputRegistry } from '../../../../../config/shared-input.registry
 import { SharedInputUIConfig } from '../../../../../models/shared-input-config.models';
 import { InputBoxComponent } from '../../../shared/inputs/input-box/input-box.component';
 import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component';
+import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
 
 @Component({
   selector: 'app-shared-options-input',
@@ -37,6 +38,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges {
   @Input() type!: ESharedInputType;
   @Input() value?: MenuOption;
   @Input() width: string = '100%';
+  @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
 
   @Output() valueChange = new EventEmitter<MenuOption>();
   @Output() optionPicked = new EventEmitter<MenuOption>();
