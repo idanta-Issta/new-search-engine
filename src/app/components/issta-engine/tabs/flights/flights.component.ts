@@ -20,7 +20,7 @@ import { InputConfig } from '../../../../models/input-config.model';
   standalone: true,
   imports: [CommonModule, SharedInputRowComponent, SearchFooterComponent, SearchHeaderComponent],
   templateUrl: './flights.component.html',
-  styleUrls: ['./flights.component.scss'],
+
 })
 
 export class FlightsComponent implements ISearchEngine {

@@ -1,4 +1,25 @@
-<div class="hotel-tab">
-  <h3>🏨 חיפוש מלונות בחו"ל</h3>
-  <p>מצאו מלונות בחו"ל לפי יעד, תאריכים ואורחים.</p>
+<div class="engine-container">
+  <app-search-header
+    [title]="header.title"
+    [choices]="header.choices"
+    [tripTypeOptions]="header.tripTypeOptions"
+    [classOptions]="header.classOptions"
+    (stateChange)="onHeaderStateChange($event)">
+  </app-search-header>
+
+  <div class="hotel-abroad-box">
+    <app-shared-input-row
+      #inputsRow
+      [configs]="inputConfigs"
+      buttonText="חיפוש"
+      (inputPicked)="onInputPicked($event)"
+      (searchClicked)="onSearch()">
+    </app-shared-input-row>
+  </div>
+  
+  <app-search-footer
+    [infoItems]="footer.infoItems"
+    [options]="footer.options"
+    (optionChange)="onFooterOptionChange($event)">
+  </app-search-footer>
 </div>

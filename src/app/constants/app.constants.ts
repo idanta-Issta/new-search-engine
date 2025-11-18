@@ -7,12 +7,14 @@ export const TEXTS = {
       DESTINATION: 'לאן נוסעים?',
       ORIGIN: 'מאיפה יוצאים?',
       DATES: 'בחר תאריך',
-      PASSENGERS: 'בחר נוסעים'
+      PASSENGERS: 'בחר נוסעים',
+      HOTEL_DESTINATION: 'יעד, שכונה או מלון ספציפי'
     },
     INPUT_TITLES: {
       TO: 'אל',
       FROM: 'מוצא',
-      WHEN: 'מתי'
+      WHEN: 'מתי',
+      WHERE: 'איפה נופשים הפעם?'
     },
     MENU_TITLES: {
       POPULAR_DESTINATIONS: 'יעדים פופולריים'

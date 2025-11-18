@@ -1,5 +1,6 @@
 import { ESharedInputType } from '../enums/ESharedInputType';
 import { FlightsMapper } from '../mappers/flights.mapper';
+import { HotelsMapper } from '../mappers/hotels.mapper';
 import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
 import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
@@ -67,6 +68,20 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       allowAutoComplete: false,
     },
     component: SharedPassangerInputComponent,
+  },
+
+  [ESharedInputType.HOTELS_DESTINATION]: {
+    requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.hotels.destinations}`,
+    autocompleteUrl: `${AppExternalConfig.baseUrl}abroad-hotels/autocomplete`,
+    mapper: HotelsMapper.mapDestinations,
+    uiConfig: {
+      title: TEXTS.SEARCH.INPUT_TITLES.WHERE,
+      icon: ICONS.HOTEL,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.HOTEL_DESTINATION,
+      titleMenuOptions: TEXTS.SEARCH.MENU_TITLES.POPULAR_DESTINATIONS,
+      allowAutoComplete: true,
+    },
+    component: SharedOptionsInputComponent,
   },
 
 }

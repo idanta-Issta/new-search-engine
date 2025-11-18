@@ -12,7 +12,7 @@
   </div>
 
   <!-- אזור התוכן עם האנימציה -->
- <div class="tab-content">
+ <div class="tab-content" [class.animating]="isAnimating">
     <app-flights
       *ngIf="getActiveType() === ETypeSearchEngine.FLIGHTS"
     ></app-flights>

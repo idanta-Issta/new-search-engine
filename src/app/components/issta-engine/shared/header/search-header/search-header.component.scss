@@ -10,8 +10,16 @@ max-width: 1175px;
     color: #333;
   }
 
+    .dropdowns-section{
+    display: flex;
+    
+  }
+
   .header-row {
 
+    display: flex;
+    flex-direction: row-reverse;
+        gap: 20px;
     .choices-section {
       display: flex;
       align-items: center;

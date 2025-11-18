@@ -1,14 +1,13 @@
-<div class="flights-container">
+<div class="engine-container">
   <app-search-header
     [title]="header.title"
     [choices]="header.choices"
-    [tabs]="header.tabs"
     [tripTypeOptions]="header.tripTypeOptions"
     [classOptions]="header.classOptions"
     (stateChange)="onHeaderStateChange($event)">
   </app-search-header>
 
-  <div class="flights-box">
+  <div>
     <app-shared-input-row
       #inputsRow
       [configs]="inputConfigs"

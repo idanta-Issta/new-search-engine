@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+@import './app/utilies/variables.scss';
+
+// Shared engine container styles - global for all engines
+.engine-container {
+  direction: rtl;
+  background: $search-engine-light-bg;
+  border-radius: 12px;
+  padding: 13px 20px 18px 0px;
+  font-family: $main-font-family;
+  color: $color-text-dark;
+  max-width: 1210px;
+  margin: 0 auto;
+  box-shadow: $box-shadow-light;
+}

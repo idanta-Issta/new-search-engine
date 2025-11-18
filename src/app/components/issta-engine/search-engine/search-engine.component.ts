@@ -15,6 +15,7 @@ export class SearchEngineComponent implements AfterViewInit {
   @Input() options: any;
   activeTab: any = null;
   ETypeSearchEngine = ETypeSearchEngine;
+  isAnimating = false;
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -37,7 +38,15 @@ export class SearchEngineComponent implements AfterViewInit {
   }
 
   selectTab(tab: any) {
-    this.activeTab = tab;
+    if (tab === this.activeTab) return;
+    
+    this.isAnimating = true;
+    setTimeout(() => {
+      this.activeTab = tab;
+      setTimeout(() => {
+        this.isAnimating = false;
+      }, 20);
+    }, 100);
   }
 
   getActiveType(): ETypeSearchEngine | undefined {

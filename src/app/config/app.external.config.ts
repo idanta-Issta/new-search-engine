@@ -8,7 +8,7 @@ export const AppExternalConfig = {
       searchResultsPath: '/loader?url=flights/results.aspx'
     },
     hotels: {
-      destinations: 'hotels/populardestinations',
+      destinations: 'abroad-hotels/populardestinations',
       searchResultsPath: '/loader?url=hotels/results.aspx'
     },
     cars: {

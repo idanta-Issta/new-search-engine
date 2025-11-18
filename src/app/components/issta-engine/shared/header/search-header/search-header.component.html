@@ -1,16 +1,18 @@
 <div class="search-header">
   <h1 class="title">{{ title }}</h1>
 
+  <div class="header-content">
+    <div class="header-row">
+      <div class="choices-section">
+        <app-header-choices
+          *ngIf="choices.length"
+          [choices]="choices"
+          [selectedValue]="selectedChoice"
+          (choiceSelected)="onChoiceSelected($event)">
+        </app-header-choices>
+      </div>
 
-<div class="tabs-dropdown-container">
-    <div class="tabs-row">
-      <app-header-tabs
-        *ngIf="tabs.length"
-        [tabs]="tabs"
-        (tabSelected)="onTabSelected($event)">
-      </app-header-tabs>
-  
-      <div class="dropdowns-section" [class.no-tabs]="!tabs.length">
+      <div class="dropdowns-section">
         <app-header-dropdown
           *ngIf="tripTypeOptions.length"
           [options]="tripTypeOptions"
@@ -26,17 +28,5 @@
         </app-header-dropdown>
       </div>
     </div>
-  
-      <div class="header-row">
-      <div class="choices-section">
-        <app-header-choices
-          *ngIf="choices.length"
-          [choices]="choices"
-          [selectedValue]="selectedChoice"
-          (choiceSelected)="onChoiceSelected($event)">
-        </app-header-choices>
-      </div>
-    </div>
-
-</div>
+  </div>
 </div>

@@ -2,11 +2,20 @@ import { MenuOption } from '../models/shared-options-input.models';
 import { ESharedInputType } from '../enums/ESharedInputType';
 
 export class HotelsMapper {
-  static mapDestinations(data: any[]): MenuOption[] {
-    return (data || []).map(item => ({
-      value: item.code || item.id || '',
-      label: item.name || item.cityName || item.airportName || 'Unknown destination'
-    }));
+  static mapDestinations(data: any): MenuOption[] {
+    // API returns { Hotels: [], Destinations: [] }
+    const destinations = data?.Destinations || [];
+    
+    return destinations.map((item: any) => {
+      const label = `${item.CityNameHe}, ${item.CountryNameHe} (${item.IataCode})`;
+
+      return {
+        label,
+        key: item.HotelLocationId || item.IataCode,
+        icon: 'icon-hotel',
+        isPromoted: item.IsPopular || false
+      };
+    });
   }
 
   static mapOrigins(data: any[]): MenuOption[] {
