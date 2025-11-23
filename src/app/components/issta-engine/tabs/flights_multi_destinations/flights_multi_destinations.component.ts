@@ -1,169 +1,198 @@
-
-import { Component, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuOption } from '../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../enums/ESharedInputType';
-import { SharedInputRowComponent } from '../../shared/inputs/input-row/shared-input-row/shared-input-row.component';
+import { SharedOptionsInputComponent } from '../../shared/inputs/shared-options-input/shared-options-input.component';
+import { SharedCalendarInputComponent } from '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
+import { SharedPassangerInputComponent } from '../../shared/inputs/shared-passanger-input/shared-passanger-input.component';
 import { PassangersInput } from '../../../../models/shared-passanger-input.models';
-import { FlightUrlBuilderService } from '../../../../services/flight-url-builder.service';
-import { ISearchEngine } from '../../../../models/search-engine-base.interface';
-import { SearchFooterComponent } from '../../shared/footer/search-footer/search-footer.component';
-import { SearchHeaderComponent, HeaderState } from '../../shared/header/search-header/search-header.component';
-import { FLIGHTS_CONFIG, SearchEngineConfig } from '../../../../config/search-engine.config';
-import { switchToEngine } from '../../../../config/engine-registry';
-import { InputConfig } from '../../../../models/input-config.model';
-import { ETypeSearchEngine } from '../../../../enums/ETypeSearchEngine';
+import { EDropdownPosition } from '../../../../enums/EDropdownPosition';
+
+interface FlightSegment {
+  id: number;
+  origin: MenuOption | null;
+  destination: MenuOption | null;
+  date: { start: Date | null; end: Date | null };
+}
 
 @Component({
   selector: 'app-flights-multi-destinations',
   standalone: true,
-  imports: [CommonModule, SharedInputRowComponent, SearchFooterComponent, SearchHeaderComponent],
+  imports: [
+    CommonModule,
+    SharedOptionsInputComponent,
+    SharedCalendarInputComponent,
+    SharedPassangerInputComponent
+  ],
   templateUrl: './flights_multi_destinations.component.html',
   styleUrls: ['./flights_multi_destinations.component.scss']
 })
 
-export class FlightsComponent implements ISearchEngine {
-  @ViewChild('inputsRow') inputsRow!: SharedInputRowComponent;
+export class FlightsMultiDestinationsComponent {
+  @Output() inputPicked = new EventEmitter<{ type: ESharedInputType; value: any }>();
+  @Output() searchClicked = new EventEmitter<void>();
 
-  EInputType = ESharedInputType;
-  ESharedInputType = ESharedInputType;
+  @ViewChildren(SharedOptionsInputComponent) optionsInputs!: QueryList<SharedOptionsInputComponent>;
+  @ViewChildren(SharedCalendarInputComponent) calendarInputs!: QueryList<SharedCalendarInputComponent>;
 
-  private config = FLIGHTS_CONFIG;
-  private originalConfig = FLIGHTS_CONFIG;
-  
-  activeHeader: any;
-  activeFooter: any;
-  isTransitioning = false;
-  currentEngine: ETypeSearchEngine | null = null;
+  // Types
+  readonly ORIGINS_FLIGHTS = ESharedInputType.ORIGINS_FLIGHTS;
+  readonly DESTINATIONS_FLIGHTS = ESharedInputType.DESTINATIONS_FLIGHTS;
+  readonly PICKER_DATES = ESharedInputType.PICKER_DATES;
+  readonly PASSANGERS_FLIGHTS = ESharedInputType.PASSANGERS_FLIGHTS;
+  readonly DROPDOWN_LEFT = EDropdownPosition.BOTTOM_LEFT;
+  readonly DROPDOWN_CENTER = EDropdownPosition.BOTTOM_CENTER;
+  // מערך שורות טיסה
+  segments: FlightSegment[] = [
+    { id: 1, origin: null, destination: null, date: { start: null, end: null } },
+    { id: 2, origin: null, destination: null, date: { start: null, end: null } }
+  ];
+  private nextId = 3;
 
-  constructor(private flightUrlBuilder: FlightUrlBuilderService) {
-    this.inputConfigs = [...this.config.inputs];
-    this.activeHeader = this.config.header;
-    this.activeFooter = this.config.footer;
-  }
-
-  getConfig(): SearchEngineConfig {
-    return this.config;
-  }
-
-  get header() {
-    return this.activeHeader;
-  }
-
-  get footer() {
-    return this.activeFooter;
-  }
-
-  headerState: HeaderState = {};
-  inputConfigs: InputConfig[];
-  selectedDestination: MenuOption | null = null;
-  selectedOrigin: MenuOption | null = null;
-  selectedDate = { start: null as Date | null, end: null as Date | null };
+  // נוסעים - משותף לכל השורות
   selectedPassengers: PassangersInput | null = null;
+  
+  // תאריך מינימום cached (נוצר פעם אחת)
+  private readonly todayMinDate: Date;
 
-  onInputPicked(event: { type: ESharedInputType; value: any }) {
-
-    const config = this.inputConfigs.find(c => c.type === event.type);
-    if (config) {
-      config.value = event.value;
-    }
-
-    this.updateValue(event.type, event.value);
-
-    switch (event.type) {
-      case ESharedInputType.DESTINATIONS_FLIGHTS:
-        this.openNextInput(ESharedInputType.ORIGINS_FLIGHTS);
-        break;
-      case ESharedInputType.ORIGINS_FLIGHTS:
-        this.openNextInput(ESharedInputType.PICKER_DATES);
-        break;
-      case ESharedInputType.PICKER_DATES:
-        if (event.value?.start && event.value?.end) {
-          this.openNextInput(ESharedInputType.PASSANGERS_FLIGHTS);
-        }
-        break;
-    }
+  constructor() {
+    this.todayMinDate = new Date();
+    this.todayMinDate.setHours(0, 0, 0, 0);
   }
 
-  private updateValue(type: ESharedInputType, value: any) {
-    switch (type) {
-      case ESharedInputType.DESTINATIONS_FLIGHTS:
-        this.selectedDestination = value;
-        break;
-      case ESharedInputType.ORIGINS_FLIGHTS:
-        this.selectedOrigin = value;
-        break;
-      case ESharedInputType.PICKER_DATES:
-        this.selectedDate = value;
-        break;
-      case ESharedInputType.PASSANGERS_FLIGHTS:
-        this.selectedPassengers = value;
-        break;
-    }
-  }
-
-  private openNextInput(type: ESharedInputType) {
-    this.inputsRow?.openInputDelayed(type);
-  }
-
-  buildUrl(): string {
-    return this.flightUrlBuilder.buildFlightUrl({
-      origin: this.selectedOrigin,
-      destination: this.selectedDestination,
-      dates: this.selectedDate,
-      passengers: this.selectedPassengers
-    });
-  }
-
-  onSearch() {
-    const url = this.buildUrl();
-    window.open(url, '_blank');
-  }
-
-  onFooterOptionChange(event: { value: string; checked: boolean }) {
-  }
-
-  onHeaderStateChange(state: HeaderState) {
-    this.headerState = state;
+  // טיפול בבחירת מוצא
+  onOriginPicked(segmentIndex: number, value: MenuOption) {
+    this.segments[segmentIndex].origin = value;
+    this.emitInput(ESharedInputType.ORIGINS_FLIGHTS, value);
     
-    const targetEngine = state.selectedChoice?.useEngine || null;
-    
-    // רק אם יש שינוי במנוע
-    if (targetEngine !== this.currentEngine) {
-      if (targetEngine) {
-        this.animateEngineSwitch(() => {
-          const result = switchToEngine(targetEngine, this.originalConfig);
-          this.activeHeader = result.header;
-          this.activeFooter = result.footer;
-          this.inputConfigs = result.inputs;
-          this.currentEngine = targetEngine;
-        });
-      } else {
-        this.animateEngineSwitch(() => {
-          this.resetToOriginalEngine();
-          this.currentEngine = null;
-        });
-      }
+    // אם עדיין לא נבחר יעד באותה שורה - פתח את dropdown של היעד
+    if (!this.segments[segmentIndex].destination) {
+      this.openDestinationInput(segmentIndex);
     }
   }
 
-  private animateEngineSwitch(callback: () => void) {
-    this.isTransitioning = true;
+  // טיפול בבחירת יעד
+  onDestinationPicked(segmentIndex: number, value: MenuOption) {
+    this.segments[segmentIndex].destination = value;
     
-    // Fade out
-    setTimeout(() => {
-      callback();
+    // העתקה אוטומטית - יעד בשורה הנוכחית = מוצא בשורה הבאה
+    if (segmentIndex < this.segments.length - 1) {
+      this.segments[segmentIndex + 1].origin = value;
+    }
+    
+    this.emitInput(ESharedInputType.DESTINATIONS_FLIGHTS, value);
+    
+    // אם עדיין לא נבחר תאריך באותה שורה - פתח את התאריכון
+    if (!this.segments[segmentIndex].date.start) {
+      this.openDateInput(segmentIndex);
+    }
+  }
+
+  // טיפול בבחירת תאריך
+  onDatePicked(segmentIndex: number, value: { start?: Date | null; end?: Date | null } | null) {
+    this.segments[segmentIndex].date = {
+      start: value?.start ?? null,
+      end: null // תמיד null כי אנחנו בודדים
+    };
+    
+    // עדכון אוטומטי של התאריך בשורה הבאה (יום אחרי)
+    if (segmentIndex < this.segments.length - 1 && value?.start) {
+      const nextDate = new Date(value.start);
+      nextDate.setDate(nextDate.getDate() + 1);
+      this.segments[segmentIndex + 1].date = {
+        start: nextDate,
+        end: null
+      };
+    }
+    
+    this.emitInput(ESharedInputType.PICKER_DATES, value);
+  }
+
+  // טיפול בבחירת נוסעים
+  onPassengersPicked(value: PassangersInput) {
+    this.selectedPassengers = value;
+    this.emitInput(ESharedInputType.PASSANGERS_FLIGHTS, value);
+  }
+
+  private emitInput(type: ESharedInputType, value: any) {
+    this.inputPicked.emit({ type, value });
+  }
+
+  // הוספת שורה
+  addSegment() {
+    if (this.canAddSegment()) {
+      const lastSegment = this.segments[this.segments.length - 1];
       
-      // Fade in
-      setTimeout(() => {
-        this.isTransitioning = false;
-      }, 20);
-    }, 150);
+      // חישוב תאריך עבור השורה החדשה (יום אחרי התאריך הקודם)
+      let newDate: Date | null = null;
+      if (lastSegment.date.start) {
+        newDate = new Date(lastSegment.date.start);
+        newDate.setDate(newDate.getDate() + 1);
+      }
+      
+      this.segments.push({
+        id: this.nextId++,
+        origin: lastSegment.destination,
+        destination: null,
+        date: { start: newDate, end: null }
+      });
+    }
   }
 
-  private resetToOriginalEngine() {
-    this.activeHeader = this.originalConfig.header;
-    this.activeFooter = this.originalConfig.footer;
-    this.inputConfigs = [...this.originalConfig.inputs];
+  // הסרת שורה
+  removeSegment(index: number) {
+    if (this.canRemoveSegment()) {
+      this.segments.splice(index, 1);
+    }
+  }
+
+  canRemoveSegment(): boolean {
+    return this.segments.length > 2;
+  }
+
+  canAddSegment(): boolean {
+    return this.segments.length < 5;
+  }
+
+  // תאריך מינימום לכל שורה (מתאריך השורה הקודמת)
+  getMinDateForSegment(segmentIndex: number): Date | null {
+    if (segmentIndex === 0) {
+      return this.todayMinDate;
+    }
+    return this.segments[segmentIndex - 1].date.start;
+  }
+
+  // חיפוש
+  onSearch() {
+    this.searchClicked.emit();
+  }
+
+  // פתיחת dropdown של יעד בשורה מסוימת
+  private openDestinationInput(segmentIndex: number) {
+    setTimeout(() => {
+      const inputs = this.optionsInputs.toArray();
+      // כל שורה יש לה 2 options inputs (origin + destination)
+      // destination הוא תמיד במיקום (segmentIndex * 2 + 1)
+      const destinationInputIndex = segmentIndex * 2 + 1;
+      const destinationInput = inputs[destinationInputIndex];
+      
+      if (destinationInput && typeof destinationInput.open === 'function') {
+        destinationInput.open();
+      } else if (destinationInput) {
+        destinationInput.isOpen = true;
+      }
+    }, 100); // דיליי קטן למניעת קונפליקטים
+  }
+
+  // פתיחת תאריכון בשורה מסוימת
+  private openDateInput(segmentIndex: number) {
+    setTimeout(() => {
+      const inputs = this.calendarInputs.toArray();
+      const dateInput = inputs[segmentIndex];
+      
+      if (dateInput && typeof dateInput.toggleDropdown === 'function') {
+        dateInput.isOpen = true;
+      }
+    }, 100); // דיליי קטן למניעת קונפליקטים
   }
 }

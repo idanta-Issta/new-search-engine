@@ -14,7 +14,7 @@ export interface SharedInputConfig<T = any> {
     defaultValue?: any;
   };
   dataConfig?: T;
-  component?: Type<any>;
+  component?: Type<any> | (() => Promise<Type<any>>);
 }
 
 

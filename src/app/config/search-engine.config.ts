@@ -7,7 +7,6 @@ import { ESharedInputType } from '../enums/ESharedInputType';
 import { EInputSize } from '../enums/EInputSize';
 import { EDropdownPosition } from '../enums/EDropdownPosition';
 import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
-import { MultiDestinationsInputsComponent } from '../components/issta-engine/tabs/flights_multi_destinations/multi-destinations-inputs/multi-destinations-inputs.component';
 
 export interface SearchEngineConfig {
   engineType: ETypeSearchEngine;
@@ -38,7 +37,7 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
     tripTypeOptions: [
       { label: TEXTS.TRIP_TYPE.ROUND_TRIP, value: VALUES.TRIP_TYPE.ROUND_TRIP },
       { label: TEXTS.TRIP_TYPE.ONE_WAY, value: VALUES.TRIP_TYPE.ONE_WAY },
-      { label: TEXTS.TRIP_TYPE.MULTI_CITY, value: VALUES.TRIP_TYPE.MULTI_CITY, useEngine: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS, isDefault: true}
+      { label: TEXTS.TRIP_TYPE.MULTI_CITY, value: VALUES.TRIP_TYPE.MULTI_CITY, useEngine: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS, isDefault: true }
     ],
     classOptions: [
       { label: TEXTS.CLASS.ECONOMY, value: VALUES.CLASS.ECONOMY, isDefault: true },
@@ -131,7 +130,7 @@ export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
 
 export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS,
-  customInputsComponent: MultiDestinationsInputsComponent,
+  customInputsComponent: () => import('../components/issta-engine/tabs/flights_multi_destinations/flights_multi_destinations.component').then(m => m.FlightsMultiDestinationsComponent),
   header: {
     title: "ריבוי יעדים",
     choices: [],
@@ -150,24 +149,5 @@ export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
     ],
     options: []
   },
-  inputs: [
-    {
-      type: ESharedInputType.HOTELS_DESTINATION,
-      size: EInputSize.HUGE,
-      position: EDropdownPosition.BOTTOM_LEFT,
-      value: null
-    },
-    {
-      type: ESharedInputType.PICKER_DATES,
-      size: EInputSize.LARGE,
-      position: EDropdownPosition.BOTTOM_CENTER,
-      value: { start: null as Date | null, end: null as Date | null }
-    },
-    {
-      type: ESharedInputType.PASSANGERS_FLIGHTS,
-      size: EInputSize.SMALL,
-      position: EDropdownPosition.BOTTOM_RIGHT,
-      value: null
-    }
-  ]
+  inputs: []
 };

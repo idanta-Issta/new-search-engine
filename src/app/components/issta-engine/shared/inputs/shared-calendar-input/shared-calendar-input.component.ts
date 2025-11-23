@@ -4,6 +4,8 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  OnChanges,
+  SimpleChanges,
   HostListener,
   ElementRef
 } from '@angular/core';
@@ -26,10 +28,12 @@ import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
   templateUrl: './shared-calendar-input.component.html',
   styleUrls: ['./shared-calendar-input.component.scss'],
 })
-export class SharedCalendarInputComponent implements OnInit {
+export class SharedCalendarInputComponent implements OnInit, OnChanges {
   @Input() type!: ESharedInputType;
   @Input() width: string = '100%';
   @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
+  @Input() singleDateMode: boolean = false; // מצב בחירת תאריך בודד בלבד
+  @Input() minDate?: Date | null; // תאריך מינימום חיצוני
 
   uiConfig!: SharedInputUIConfig;
   dataConfig!: SharedCalendarInputConfig;
@@ -80,6 +84,13 @@ export class SharedCalendarInputComponent implements OnInit {
     this.renderCalendars();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // כאשר minDate משתנה - צריך לרנדר מחדש את הלוחות
+    if (changes['minDate'] && !changes['minDate'].firstChange) {
+      this.renderCalendars();
+    }
+  }
+
   get departureDate() { return this.value?.start ?? null; }
   get returnDate() { return this.value?.end ?? null; }
 
@@ -93,11 +104,19 @@ export class SharedCalendarInputComponent implements OnInit {
   }
 
   renderCalendars() {
+    if (!this.dataConfig) {
+      console.error('dataConfig is undefined!');
+      return;
+    }
+    
+    // שימוש ב-minDate חיצוני אם קיים, אחרת מה-dataConfig
+    const effectiveMinDate = this.minDate ?? this.dataConfig.minDate;
+    
     this.leftMonthDays = this.calendarSrv.generateMonthDays(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth(),
       this.dataConfig.suggestedDates,
-      this.dataConfig.minDate,
+      effectiveMinDate,
       this.dataConfig.maxDate
     );
 
@@ -105,7 +124,7 @@ export class SharedCalendarInputComponent implements OnInit {
       this.displayedMonthRight.getFullYear(),
       this.displayedMonthRight.getMonth(),
       this.dataConfig.suggestedDates,
-      this.dataConfig.minDate,
+      effectiveMinDate,
       this.dataConfig.maxDate
     );
   }
@@ -131,6 +150,15 @@ export class SharedCalendarInputComponent implements OnInit {
 
     const date = day.date;
 
+    // במצב single date - רק תאריך התחלה
+    if (this.singleDateMode) {
+      this.value = { start: date, end: null };
+      this.valueChange.emit(this.value);
+      this.isOpen = false; // סגירה מיידית
+      return;
+    }
+
+    // מצב רגיל - טווח תאריכים
     if (!this.value || !this.value.start) {
       this.value = { start: date, end: undefined };
     } else if (!this.value.end) {
@@ -167,6 +195,13 @@ export class SharedCalendarInputComponent implements OnInit {
   get valueAsString(): string {
     const s = this.value?.start ?? null;
     const e = this.value?.end ?? null;
+    
+    // במצב single date - רק תאריך אחד
+    if (this.singleDateMode && s) {
+      return this.formatDate(s);
+    }
+    
+    // מצב רגיל - טווח תאריכים
     if (s && e) return `${this.formatDate(s)} - ${this.formatDate(e)}`;
     if (s) return this.formatDate(s);
     return '';

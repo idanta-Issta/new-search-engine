@@ -1,10 +1,119 @@
-.engine-container {
-  .inputs-wrapper {
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    &.transitioning {
-      opacity: 0;
-      transform: translateY(-8px);
+.multi-destinations-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .segments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .segment-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .input-field {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .remove-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: #666;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #f44336;
+        color: white;
+        border-color: #f44336;
+      }
+    }
+  }
+
+  .add-segment-btn {
+    align-self: flex-start;
+    padding: 10px 20px;
+    background: white;
+    border: 2px dashed #2AAE54;
+    border-radius: 6px;
+    color: #2AAE54;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #f0f9f4;
+      border-color: #249945;
+      color: #249945;
+    }
+  }
+
+  .bottom-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+
+    .passengers-field {
+      flex: 0 0 auto;
+      min-width: 200px;
+    }
+
+    .search-button {
+      flex: 0 0 auto;
+      padding: 12px 32px;
+      background: #2AAE54;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #249945;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .multi-destinations-container {
+    .segment-row {
+      flex-direction: column;
+      align-items: stretch;
+
+      .remove-btn {
+        align-self: flex-end;
+      }
+    }
+
+    .bottom-row {
+      flex-direction: column;
+      align-items: stretch;
+
+      .passengers-field {
+        min-width: auto;
+      }
+
+      .search-button {
+        width: 100%;
+      }
     }
   }
 }

@@ -55,15 +55,22 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private renderInputs(): void {
+  private async renderInputs(): Promise<void> {
     this.container.clear();
     this.componentRefs.clear();
 
-    this.configs.forEach((config) => {
+    for (const config of this.configs) {
       const registryConfig = SharedInputRegistry[config.type];
-      if (!registryConfig?.component) return;
+      if (!registryConfig?.component) continue;
 
-      const componentRef = this.container.createComponent(registryConfig.component);
+      // Handle lazy loading
+      let componentClass: any = registryConfig.component;
+      if (typeof componentClass === 'function' && componentClass.toString().includes('import(')) {
+        // It's a lazy loader function
+        componentClass = await componentClass();
+      }
+
+      const componentRef = this.container.createComponent(componentClass);
       const instance = componentRef.instance as any;
 
       instance.type = config.type;
@@ -91,7 +98,7 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
       }
 
       this.componentRefs.set(config.type, componentRef);
-    });
+    }
   }
 
   private applyValuesToInstances(): void {

@@ -1,25 +1,78 @@
-<div class="engine-container">
-  <app-search-header
-    [title]="header.title"
-    [choices]="header.choices"
-    [tripTypeOptions]="header.tripTypeOptions"
-    [classOptions]="header.classOptions"
-    (stateChange)="onHeaderStateChange($event)">
-  </app-search-header>
+<div class="multi-destinations-container">
+  <!-- Flight segments list -->
+  <div class="segments-list">
+    <div *ngFor="let segment of segments; let i = index" class="segment-row">
+      <!-- Origin -->
+      <div class="input-field">
+        <app-shared-options-input
+          #originInput
+          [type]="ORIGINS_FLIGHTS"
+          [position]="DROPDOWN_LEFT"
+          [value]="segment.origin ?? undefined"
+          (optionPicked)="onOriginPicked(i, $event)">
+        </app-shared-options-input>
+      </div>
 
-  <div class="inputs-wrapper" [class.transitioning]="isTransitioning">
-    <app-shared-input-row
-      #inputsRow
-      [configs]="inputConfigs"
-      buttonText="חיפוש"
-      (inputPicked)="onInputPicked($event)"
-      (searchClicked)="onSearch()">
-    </app-shared-input-row>
+      <!-- Destination -->
+      <div class="input-field">
+        <app-shared-options-input
+          #destinationInput
+          [type]="DESTINATIONS_FLIGHTS"
+          [position]="DROPDOWN_LEFT"
+          [value]="segment.destination ?? undefined"
+          (optionPicked)="onDestinationPicked(i, $event)">
+        </app-shared-options-input>
+      </div>
+
+      <!-- Date -->
+      <div class="input-field">
+        <app-shared-calendar-input
+          #dateInput
+          [type]="PICKER_DATES"
+          [position]="DROPDOWN_CENTER"
+          [singleDateMode]="true"
+          [minDate]="getMinDateForSegment(i)"
+          [value]="segment.date"
+          (valueChange)="onDatePicked(i, $event)">
+        </app-shared-calendar-input>
+      </div>
+
+      <!-- Remove button (only if more than 2 segments) -->
+      <button 
+        *ngIf="canRemoveSegment()" 
+        class="remove-btn"
+        (click)="removeSegment(i)"
+        type="button">
+        ✕
+      </button>
+    </div>
   </div>
-  
-  <app-search-footer
-    [infoItems]="footer.infoItems"
-    [options]="footer.options"
-    (optionChange)="onFooterOptionChange($event)">
-  </app-search-footer>
+
+  <!-- Add segment button -->
+  <button 
+    *ngIf="canAddSegment()" 
+    class="add-segment-btn"
+    (click)="addSegment()"
+    type="button">
+    + הוספת קטע טיסה
+  </button>
+
+  <!-- Bottom row: Passengers + Search button -->
+  <div class="bottom-row">
+    <div class="passengers-field">
+      <app-shared-passanger-input
+        [type]="PASSANGERS_FLIGHTS"
+        [position]="DROPDOWN_LEFT"
+        [value]="selectedPassengers ?? undefined"
+        (valueChange)="onPassengersPicked($event)">
+      </app-shared-passanger-input>
+    </div>
+
+    <button 
+      class="search-button"
+      (click)="onSearch()"
+      type="button">
+      חיפוש
+    </button>
+  </div>
 </div>

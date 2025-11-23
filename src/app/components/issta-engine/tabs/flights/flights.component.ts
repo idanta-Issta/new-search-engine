@@ -46,7 +46,6 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Check if default tripType or choice has a different engine
     this.checkAndLoadDefaultEngine();
   }
 
@@ -97,7 +96,6 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
   selectedPassengers: PassangersInput | null = null;
 
   onInputPicked(event: { type: ESharedInputType; value: any }) {
-
     const config = this.inputConfigs.find(c => c.type === event.type);
     if (config) {
       config.value = event.value;
@@ -161,14 +159,12 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
   onHeaderStateChange(state: HeaderState) {
     this.headerState = state;
     
-    // Check for engine from choice OR tripType OR class
     const targetEngine = 
       state.selectedChoice?.useEngine || 
       state.selectedTripType?.useEngine || 
       state.selectedClass?.useEngine || 
       null;
     
-    // רק אם יש שינוי במנוע
     if (targetEngine !== this.currentEngine) {
       if (targetEngine) {
         this.animateEngineSwitch(() => {
@@ -177,7 +173,6 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
           this.activeFooter = result.footer;
           this.inputConfigs = result.inputs;
           
-          // Clear old custom component before loading new one
           this.clearCustomComponent();
           this.customInputsComponent = result.customComponent;
           this.loadCustomComponent();
@@ -198,21 +193,35 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
   private loadCustomComponent() {
     if (this.customInputsComponent && this.customContainer) {
       this.clearCustomComponent();
-      this.customComponentRef = this.customContainer.createComponent(this.customInputsComponent);
       
-      // Pass inputs to custom component
-      const instance = this.customComponentRef.instance;
-      if (instance.inputConfigs) {
-        instance.inputConfigs = this.inputConfigs;
+      if (typeof this.customInputsComponent === 'function') {
+        this.customInputsComponent().then((componentClass: any) => {
+          if (this.customContainer) {
+            this.customComponentRef = this.customContainer.createComponent(componentClass);
+            this.wireCustomComponentEvents();
+          }
+        });
+      } else {
+        this.customComponentRef = this.customContainer.createComponent(this.customInputsComponent);
+        this.wireCustomComponentEvents();
       }
-      
-      // Subscribe to events
-      if (instance.inputPicked) {
-        instance.inputPicked.subscribe((event: any) => this.onInputPicked(event));
-      }
-      if (instance.searchClicked) {
-        instance.searchClicked.subscribe(() => this.onSearch());
-      }
+    }
+  }
+
+  private wireCustomComponentEvents() {
+    if (!this.customComponentRef) return;
+    
+    const instance = this.customComponentRef.instance;
+    
+    if (instance.inputConfigs !== undefined) {
+      instance.inputConfigs = this.inputConfigs;
+    }
+    
+    if (instance.inputPicked) {
+      instance.inputPicked.subscribe((event: any) => this.onInputPicked(event));
+    }
+    if (instance.searchClicked) {
+      instance.searchClicked.subscribe(() => this.onSearch());
     }
   }
 
@@ -229,11 +238,9 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
   private animateEngineSwitch(callback: () => void) {
     this.isTransitioning = true;
     
-    // Fade out
     setTimeout(() => {
       callback();
       
-      // Fade in
       setTimeout(() => {
         this.isTransitioning = false;
       }, 20);
