@@ -6,12 +6,12 @@
       (click)="selectTab(tab)"
       [class.active]="tab === activeTab"
     >
-      <i *ngIf="tab.hasIcon" [class]="tab.icon"></i>
+      <img *ngIf="tab.imagePath" [src]="tab.imagePath" [alt]="tab.title" />
+      <i *ngIf="!tab.imagePath && tab.icon" [class]="tab.icon"></i>
       <span>{{ tab.title }}</span>
     </div>
   </div>
 
-  <!-- אזור התוכן עם האנימציה -->
  <div class="tab-content" [class.animating]="isAnimating">
     <app-flights
       *ngIf="getActiveType() === ETypeSearchEngine.FLIGHTS"

@@ -66,9 +66,6 @@ export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
       TEXTS.FOOTER.INFO.FREE_CANCELLATION,
       TEXTS.FOOTER.INFO.SPECIAL_PRICES
     ],
-    options: [
-      { label: TEXTS.FOOTER.OPTIONS.BOUTIQUE_ONLY, value: VALUES.FOOTER_OPTIONS.BOUTIQUE, checked: false },
-      { label: TEXTS.FOOTER.OPTIONS.BREAKFAST_INCLUDED, value: VALUES.FOOTER_OPTIONS.BREAKFAST, checked: false }
-    ]
+    options: []
   }
 };

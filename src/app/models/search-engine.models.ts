@@ -11,8 +11,7 @@ export interface TypeTabSearchEngine {
 export interface TabsSearchEngine {
   title: string;
   icon?: string;
-  image?: string;
-  hasIcon: boolean;
+  imagePath?: string;
   searchEngine: TypeTabSearchEngine;
 }
 

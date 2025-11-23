@@ -71,6 +71,11 @@ export class HotelAbroadComponent implements ISearchEngine {
     this.updateValue(event.type, event.value);
 
     switch (event.type) {
+      case ESharedInputType.HOTELS_DESTINATION:
+        if (event.value) {
+          this.openNextInput(ESharedInputType.PICKER_DATES);
+        }
+        break;
       case ESharedInputType.PICKER_DATES:
         if (event.value?.start && event.value?.end) {
           this.openNextInput(ESharedInputType.PASSANGERS_FLIGHTS);
@@ -81,6 +86,9 @@ export class HotelAbroadComponent implements ISearchEngine {
 
   private updateValue(type: ESharedInputType, value: any) {
     switch (type) {
+      case ESharedInputType.HOTELS_DESTINATION:
+        // Store hotel destination
+        break;
       case ESharedInputType.PICKER_DATES:
         this.selectedDate = value;
         break;
