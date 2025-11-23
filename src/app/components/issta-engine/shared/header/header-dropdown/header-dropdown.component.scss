@@ -43,11 +43,10 @@
     top: calc(100% + 4px);
     left: 0;
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid #2AAE54;
+    border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
-    z-index: 1000;
+    z-index: 1004;
     animation: slideDown 0.2s ease;
 
     .dropdown-item {
@@ -58,22 +57,15 @@
       color: #333;
 
       &:hover {
-        background: #f5f5f5;
         color: #2aae54;
+             border-radius: 10px 10px 0px 0px;
       }
 
       &.selected {
         background: #e8f5e9;
         color: #2aae54;
         font-weight: 500;
-      }
-
-      &:first-child {
-        border-radius: 4px 4px 0 0;
-      }
-
-      &:last-child {
-        border-radius: 0 0 4px 4px;
+        border-radius: 10px 10px 0px 0px;
       }
     }
   }

@@ -1,5 +1,5 @@
 
-import { Component, ViewChild, ViewContainerRef, ComponentRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuOption } from '../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../enums/ESharedInputType';
@@ -15,16 +15,15 @@ import { InputConfig } from '../../../../models/input-config.model';
 import { ETypeSearchEngine } from '../../../../enums/ETypeSearchEngine';
 
 @Component({
-  selector: 'app-flights',
+  selector: 'app-flights-multi-destinations',
   standalone: true,
   imports: [CommonModule, SharedInputRowComponent, SearchFooterComponent, SearchHeaderComponent],
-  templateUrl: './flights.component.html',
-  styleUrls: ['./flights.component.scss']
+  templateUrl: './flights_multi_destinations.component.html',
+  styleUrls: ['./flights_multi_destinations.component.scss']
 })
 
-export class FlightsComponent implements ISearchEngine, AfterViewInit {
+export class FlightsComponent implements ISearchEngine {
   @ViewChild('inputsRow') inputsRow!: SharedInputRowComponent;
-  @ViewChild('customContainer', { read: ViewContainerRef }) customContainer?: ViewContainerRef;
 
   EInputType = ESharedInputType;
   ESharedInputType = ESharedInputType;
@@ -36,45 +35,11 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
   activeFooter: any;
   isTransitioning = false;
   currentEngine: ETypeSearchEngine | null = null;
-  customInputsComponent: any = null;
-  customComponentRef: ComponentRef<any> | null = null;
 
   constructor(private flightUrlBuilder: FlightUrlBuilderService) {
     this.inputConfigs = [...this.config.inputs];
     this.activeHeader = this.config.header;
     this.activeFooter = this.config.footer;
-  }
-
-  ngAfterViewInit() {
-    // Check if default tripType or choice has a different engine
-    this.checkAndLoadDefaultEngine();
-  }
-
-  private checkAndLoadDefaultEngine() {
-    const defaultChoice = this.config.header.choices.find(c => c.isDefault);
-    const defaultTripType = this.config.header.tripTypeOptions.find(t => t.isDefault);
-    const defaultClass = this.config.header.classOptions.find(c => c.isDefault);
-
-    const defaultEngine = 
-      defaultChoice?.useEngine || 
-      defaultTripType?.useEngine || 
-      defaultClass?.useEngine || 
-      null;
-
-    if (defaultEngine && defaultEngine !== this.config.engineType) {
-      // Default option points to a different engine - switch to it
-      const result = switchToEngine(defaultEngine, this.originalConfig);
-      this.activeHeader = result.header;
-      this.activeFooter = result.footer;
-      this.inputConfigs = result.inputs;
-      this.customInputsComponent = result.customComponent;
-      this.currentEngine = defaultEngine;
-      
-      // Load custom component if exists
-      setTimeout(() => {
-        this.loadCustomComponent();
-      }, 0);
-    }
   }
 
   getConfig(): SearchEngineConfig {
@@ -161,12 +126,7 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
   onHeaderStateChange(state: HeaderState) {
     this.headerState = state;
     
-    // Check for engine from choice OR tripType OR class
-    const targetEngine = 
-      state.selectedChoice?.useEngine || 
-      state.selectedTripType?.useEngine || 
-      state.selectedClass?.useEngine || 
-      null;
+    const targetEngine = state.selectedChoice?.useEngine || null;
     
     // רק אם יש שינוי במנוע
     if (targetEngine !== this.currentEngine) {
@@ -176,53 +136,14 @@ export class FlightsComponent implements ISearchEngine, AfterViewInit {
           this.activeHeader = result.header;
           this.activeFooter = result.footer;
           this.inputConfigs = result.inputs;
-          
-          // Clear old custom component before loading new one
-          this.clearCustomComponent();
-          this.customInputsComponent = result.customComponent;
-          this.loadCustomComponent();
-          
           this.currentEngine = targetEngine;
         });
       } else {
         this.animateEngineSwitch(() => {
           this.resetToOriginalEngine();
-          this.customInputsComponent = null;
-          this.clearCustomComponent();
           this.currentEngine = null;
         });
       }
-    }
-  }
-
-  private loadCustomComponent() {
-    if (this.customInputsComponent && this.customContainer) {
-      this.clearCustomComponent();
-      this.customComponentRef = this.customContainer.createComponent(this.customInputsComponent);
-      
-      // Pass inputs to custom component
-      const instance = this.customComponentRef.instance;
-      if (instance.inputConfigs) {
-        instance.inputConfigs = this.inputConfigs;
-      }
-      
-      // Subscribe to events
-      if (instance.inputPicked) {
-        instance.inputPicked.subscribe((event: any) => this.onInputPicked(event));
-      }
-      if (instance.searchClicked) {
-        instance.searchClicked.subscribe(() => this.onSearch());
-      }
-    }
-  }
-
-  private clearCustomComponent() {
-    if (this.customComponentRef) {
-      this.customComponentRef.destroy();
-      this.customComponentRef = null;
-    }
-    if (this.customContainer) {
-      this.customContainer.clear();
     }
   }
 

@@ -4,9 +4,9 @@ import { HeaderChoicesComponent, ChoiceOption } from '../header-choices/header-c
 import { HeaderDropdownComponent, DropdownOption } from '../header-dropdown/header-dropdown.component';
 
 export interface HeaderState {
-  selectedChoice?: string;
-  selectedTripType?: string;
-  selectedClass?: string;
+  selectedChoice?: ChoiceOption;
+  selectedTripType?: DropdownOption;
+  selectedClass?: DropdownOption;
 }
 
 @Component({
@@ -24,38 +24,38 @@ export class SearchHeaderComponent implements OnInit {
 
   @Output() stateChange = new EventEmitter<HeaderState>();
 
-  selectedChoice: string = '';
-  selectedTripType: string = '';
-  selectedClass: string = '';
+  selectedChoice: ChoiceOption | undefined = undefined;
+  selectedTripType: DropdownOption | undefined = undefined;
+  selectedClass: DropdownOption | undefined = undefined;
 
   ngOnInit() {
     // Set defaults
     if (this.choices.length) {
       const defaultChoice = this.choices.find(c => c.isDefault) || this.choices[0];
-      this.selectedChoice = defaultChoice.value;
+      this.selectedChoice = defaultChoice;
     }
     if (this.tripTypeOptions.length) {
       const defaultTripType = this.tripTypeOptions.find(t => t.isDefault) || this.tripTypeOptions[0];
-      this.selectedTripType = defaultTripType.value;
+      this.selectedTripType = defaultTripType;
     }
     if (this.classOptions.length) {
       const defaultClass = this.classOptions.find(c => c.isDefault) || this.classOptions[0];
-      this.selectedClass = defaultClass.value;
+      this.selectedClass = defaultClass;
     }
   }
 
   onChoiceSelected(choice: ChoiceOption) {
-    this.selectedChoice = choice.value;
+    this.selectedChoice = choice;
     this.emitState();
   }
 
   onTripTypeSelected(option: DropdownOption) {
-    this.selectedTripType = option.value;
+    this.selectedTripType = option;
     this.emitState();
   }
 
   onClassSelected(option: DropdownOption) {
-    this.selectedClass = option.value;
+    this.selectedClass = option;
     this.emitState();
   }
 

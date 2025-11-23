@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ETypeSearchEngine } from '../../../../../enums/ETypeSearchEngine';
 
 export interface ChoiceOption {
   label: string;
@@ -7,6 +8,7 @@ export interface ChoiceOption {
   promotionText?: string;
   active?: boolean;
   isDefault?: boolean;
+  useEngine?: ETypeSearchEngine;
 }
 
 @Component({

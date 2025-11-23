@@ -1,11 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClickOutsideDirective } from '../../../../../directives/click-outside.directive';
+import { ETypeSearchEngine } from '../../../../../enums/ETypeSearchEngine';
 
 export interface DropdownOption {
   label: string;
   value: string;
   isDefault?: boolean;
+  useEngine?: ETypeSearchEngine;
 }
 
 @Component({

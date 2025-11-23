@@ -22,7 +22,9 @@ export class HotelAbroadComponent implements ISearchEngine {
 
   private config = HOTEL_ABROAD_CONFIG;
 
-  constructor() {}
+  constructor() {
+    this.inputConfigs = [...this.config.inputs];
+  }
 
   getConfig(): SearchEngineConfig {
     return this.config;
@@ -38,26 +40,7 @@ export class HotelAbroadComponent implements ISearchEngine {
 
   headerState: HeaderState = {};
 
-  readonly inputConfigs: InputConfig[] = [
-    {
-      type: ESharedInputType.HOTELS_DESTINATION,
-      size: EInputSize.HUGE,
-      position: EDropdownPosition.BOTTOM_LEFT,
-      value: null
-    },
-    {
-      type: ESharedInputType.PICKER_DATES,
-      size: EInputSize.LARGE,
-      position: EDropdownPosition.BOTTOM_CENTER,
-      value: { start: null as Date | null, end: null as Date | null }
-    },
-    {
-      type: ESharedInputType.PASSANGERS_FLIGHTS,
-      size: EInputSize.SMALL,
-      position: EDropdownPosition.BOTTOM_RIGHT,
-      value: null
-    }
-  ];
+  readonly inputConfigs: InputConfig[];
 
   selectedDate = { start: null as Date | null, end: null as Date | null };
   selectedPassengers: PassangersInput | null = null;
