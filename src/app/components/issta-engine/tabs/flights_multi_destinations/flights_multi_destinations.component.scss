@@ -2,6 +2,12 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  
+      border: 2px solid #2AAE54;
+    border-radius: 18px;
+    background-color: white;
+    max-width: 1170px;
+    box-shadow: 0px 5px 14px 0px rgba(0, 0, 0, 0.0901960784);
 
   .segments-list {
     display: flex;
@@ -11,15 +17,40 @@
 
   .segment-row {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 12px;
+        padding: 14px 6px 11px 25px;
+    border-bottom: 1px solid #d1dbe3;
 
     .input-field {
-      flex: 1;
       min-width: 0;
+      position: relative;
+
+      /* הקו האפור העדין בין האינפוטים */
+      &:not(:last-of-type)::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        width: 1px;
+        height: 45px;
+        background-color: #d1dbe3;
+        opacity: 0.8;
+      }
+
+      /* גרסה ל-RTL */
+      [dir="rtl"] &:not(:last-of-type)::after {
+        left: auto;
+        right: 0;
+      }
     }
 
     .remove-btn {
+          position: absolute;
+    right: 93%;
+      z-index: 100;
       width: 32px;
       height: 32px;
       border-radius: 50%;
@@ -42,38 +73,81 @@
     }
   }
 
-  .add-segment-btn {
-    align-self: flex-start;
-    padding: 10px 20px;
-    background: white;
-    border: 2px dashed #2AAE54;
-    border-radius: 6px;
-    color: #2AAE54;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+  .segment-row-summary{
+     display: flex;
+    flex-direction: row;
+    min-width: 1000px;
+    gap: 20px;
+    padding: 10px;
+    flex: 1;
 
-    &:hover {
-      background: #f0f9f4;
-      border-color: #249945;
-      color: #249945;
+    /* קו אפור בין האלמנטים */
+    > div {
+      position: relative;
+      
+      &:not(:last-of-type)::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        width: 1px;
+        height: 45px;
+        background-color: #d1dbe3;
+        opacity: 0.8;
+      }
+
+      /* גרסה ל-RTL */
+      [dir="rtl"] &:not(:last-of-type)::after {
+        left: auto;
+        right: 0;
+      }
     }
   }
 
-  .bottom-row {
+  .add-segment-btn {
+    align-self: flex-start;
+    padding: 10px 15px;
+    background: transparent;
+    border: none;
+       font-family: var(--main-font-family);
+    color: #098137;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-top: 8px;
+    gap: 4px;
+
+    .btn-text {
+      font-weight: 600;
+    }
+
+    .btn-hint {
+      font-weight: 400;
+
+    }
+
+    &:hover {
+      .btn-text {
+        color: #249945;
+      }
+    }
+  }
+
+  .add-segment-btn-container{
+    width: 455px;
+  }
+
 
     .passengers-field {
-      flex: 0 0 auto;
-      min-width: 200px;
+
+        width: 453px;
     }
 
     .search-button {
-      flex: 0 0 auto;
+   
+   
       padding: 12px 32px;
       background: #2AAE54;
       color: white;
@@ -89,7 +163,7 @@
       }
     }
   }
-}
+
 
 // Responsive
 @media (max-width: 768px) {

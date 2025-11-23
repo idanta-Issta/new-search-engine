@@ -8,6 +8,7 @@
           #originInput
           [type]="ORIGINS_FLIGHTS"
           [position]="DROPDOWN_LEFT"
+           [width]="HUGE_WIDTH"
           [value]="segment.origin ?? undefined"
           (optionPicked)="onOriginPicked(i, $event)">
         </app-shared-options-input>
@@ -19,6 +20,7 @@
           #destinationInput
           [type]="DESTINATIONS_FLIGHTS"
           [position]="DROPDOWN_LEFT"
+  [width]="HUGE_WIDTH"
           [value]="segment.destination ?? undefined"
           (optionPicked)="onDestinationPicked(i, $event)">
         </app-shared-options-input>
@@ -32,12 +34,13 @@
           [position]="DROPDOWN_CENTER"
           [singleDateMode]="true"
           [minDate]="getMinDateForSegment(i)"
+          [width]="MEDIUM_WIDTH"
           [value]="segment.date"
           (valueChange)="onDatePicked(i, $event)">
         </app-shared-calendar-input>
       </div>
 
-      <!-- Remove button (only if more than 2 segments) -->
+
       <button 
         *ngIf="canRemoveSegment()" 
         class="remove-btn"
@@ -48,31 +51,42 @@
     </div>
   </div>
 
-  <!-- Add segment button -->
-  <button 
-    *ngIf="canAddSegment()" 
-    class="add-segment-btn"
-    (click)="addSegment()"
-    type="button">
-    + הוספת קטע טיסה
-  </button>
+  <div class="segment-row-summary">
 
-  <!-- Bottom row: Passengers + Search button -->
-  <div class="bottom-row">
-    <div class="passengers-field">
-      <app-shared-passanger-input
-        [type]="PASSANGERS_FLIGHTS"
-        [position]="DROPDOWN_LEFT"
-        [value]="selectedPassengers ?? undefined"
-        (valueChange)="onPassengersPicked($event)">
-      </app-shared-passanger-input>
+    <div class="add-segment-btn-container">
+      <button 
+        *ngIf="canAddSegment()" 
+        class="add-segment-btn"
+        (click)="addSegment()"
+        type="button">
+        <span class="btn-text">+ הוספת קטע טיסה</span>
+        <span class="btn-hint">(עד 5 קטעים)</span>
+      </button>
+
     </div>
+  
+    <!-- Bottom row: Passengers + Search button -->
+   
+      <div class="passengers-field">
+        <app-shared-passanger-input
+          [type]="PASSANGERS_FLIGHTS"
+          [position]="DROPDOWN_LEFT"
+          [value]="selectedPassengers ?? undefined"
+          (valueChange)="onPassengersPicked($event)">
+        </app-shared-passanger-input>
+      </div>
+      <div class="search-button-container">
 
-    <button 
-      class="search-button"
-      (click)="onSearch()"
-      type="button">
-      חיפוש
-    </button>
+        <button 
+          class="search-button"
+          (click)="onSearch()"
+          type="button">
+          חיפוש
+        </button>
+
+      </div>
+    
+
+  <!-- Add segment button -->
   </div>
 </div>

@@ -7,6 +7,8 @@ import { SharedCalendarInputComponent } from '../../shared/inputs/shared-calenda
 import { SharedPassangerInputComponent } from '../../shared/inputs/shared-passanger-input/shared-passanger-input.component';
 import { PassangersInput } from '../../../../models/shared-passanger-input.models';
 import { EDropdownPosition } from '../../../../enums/EDropdownPosition';
+import { EInputSize } from '../../../../enums/EInputSize';
+import { InputSizeHelper } from '../../../../utilies/input-size.helper';
 
 interface FlightSegment {
   id: number;
@@ -42,6 +44,10 @@ export class FlightsMultiDestinationsComponent {
   readonly PASSANGERS_FLIGHTS = ESharedInputType.PASSANGERS_FLIGHTS;
   readonly DROPDOWN_LEFT = EDropdownPosition.BOTTOM_LEFT;
   readonly DROPDOWN_CENTER = EDropdownPosition.BOTTOM_CENTER;
+  readonly SMALL_WIDTH = InputSizeHelper.getWidth(EInputSize.SMALL);
+    readonly MEDIUM_WIDTH = InputSizeHelper.getWidth(EInputSize.MEDIUM);
+ readonly LARGE_WIDTH = InputSizeHelper.getWidth(EInputSize.LARGE);
+ readonly HUGE_WIDTH = InputSizeHelper.getWidth(EInputSize.HUGE);
   // מערך שורות טיסה
   segments: FlightSegment[] = [
     { id: 1, origin: null, destination: null, date: { start: null, end: null } },
