@@ -7,6 +7,7 @@
   direction: rtl;
   position: relative;
   min-width: 0;
+  
 
   &::before {
     content: '';
@@ -59,10 +60,12 @@ i::before {
   padding: 0;
   margin: 0;
   direction: rtl;
+      direction: rtl;
+    width: 300px;
 }
 
 .airplane-icon {
   font-size: 18px;
   color: #6b7280;
-  margin-top: 4px;  /* ליישור מדויק לגובה השורה */
+  margin-top: 4px;
 }

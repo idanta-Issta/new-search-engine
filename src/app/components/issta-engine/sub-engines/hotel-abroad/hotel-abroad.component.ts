@@ -8,6 +8,7 @@ import { SearchHeaderComponent } from '../../shared/header/search-header/search-
 import { HOTEL_ABROAD_CONFIG } from '../../../../config/search-engine.config';
 import { BaseEngineComponent } from '../base-engine.component';
 import { BaseEngineService } from '../../../../services/engine.service';
+import { HotelsManager } from '../../../../managers/hotels.manager';
 
 @Component({
   selector: 'app-hotel-abroad',
@@ -17,7 +18,9 @@ import { BaseEngineService } from '../../../../services/engine.service';
 })
 export class HotelAbroadComponent extends BaseEngineComponent {
   protected config = HOTEL_ABROAD_CONFIG;
+  private manager = new HotelsManager();
 
+  selectedDestination: any = null;
   selectedDate = { start: null as Date | null, end: null as Date | null };
   selectedPassengers: PassangersInput | null = null;
 
@@ -28,7 +31,7 @@ export class HotelAbroadComponent extends BaseEngineComponent {
   protected updateValue(type: ESharedInputType, value: any): void {
     switch (type) {
       case ESharedInputType.HOTELS_DESTINATION:
-        // Store hotel destination
+        this.selectedDestination = value;
         break;
       case ESharedInputType.PICKER_DATES:
         this.selectedDate = value;
@@ -55,18 +58,10 @@ export class HotelAbroadComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    const params = new URLSearchParams();
-    
-    if (this.selectedDate.start) {
-      params.append('checkIn', this.selectedDate.start.toISOString().split('T')[0]);
-    }
-    if (this.selectedDate.end) {
-      params.append('checkOut', this.selectedDate.end.toISOString().split('T')[0]);
-    }
-    if (this.selectedPassengers) {
-      params.append('passengers', JSON.stringify(this.selectedPassengers));
-    }
-
-    return `https://www.issta.co.il/hotels-abroad?${params.toString()}`;
+    return this.manager.buildUrl({
+      destination: this.selectedDestination,
+      dates: this.selectedDate,
+      passengers: this.selectedPassengers
+    });
   }
 }

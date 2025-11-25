@@ -22,7 +22,8 @@ export const TEXTS = {
   },
   HEADER: {
     FLIGHTS_TITLE: 'חיפוש טיסות זולות לחו"ל',
-    HOTEL_ABROAD_TITLE: 'חיפוש מלונות בחו"ל'
+    HOTEL_ABROAD_TITLE: 'חיפוש מלונות בחו"ל',
+    DOMESTIC_VACATION_TITLE: 'נופש בארץ'
   },
   CHOICES: {
     FLIGHT_ONLY: 'טיסה בלבד',

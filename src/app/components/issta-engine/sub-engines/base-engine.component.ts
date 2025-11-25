@@ -24,6 +24,8 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
   inputConfigs: InputConfig[] = [];
   isTransitioning = false;
   hasCustomComponent = false;
+  headerState: HeaderState = {};
+  footerState: { [key: string]: boolean } = {};
 
   get header() {
     return this.activeHeader;
@@ -73,6 +75,8 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
   protected abstract openNextInput(type: ESharedInputType, value: any): void;
 
   onHeaderStateChange(state: HeaderState): void {
+    this.headerState = state;
+    
     const targetEngine =
       state.selectedChoice?.useEngine ||
       state.selectedTripType?.useEngine ||
@@ -82,6 +86,10 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
     if (this.engineService.shouldSwitch(targetEngine)) {
       this.switchEngine(targetEngine);
     }
+  }
+
+  onFooterOptionChange(event: { value: string; checked: boolean }): void {
+    this.footerState[event.value] = event.checked;
   }
 
   private switchEngine(targetEngine: any): void {
@@ -139,9 +147,6 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
       callback();
       setTimeout(() => (this.isTransitioning = false), 20);
     }, 150);
-  }
-
-  onFooterOptionChange(event: { value: string; checked: boolean }): void {
   }
 
   getConfig(): SearchEngineConfig {

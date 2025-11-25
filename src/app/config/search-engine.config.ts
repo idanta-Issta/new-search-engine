@@ -35,9 +35,9 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
         useEngine: ETypeSearchEngine.HOTELS_ABROAD }
     ],
     tripTypeOptions: [
-      { label: TEXTS.TRIP_TYPE.ROUND_TRIP, value: VALUES.TRIP_TYPE.ROUND_TRIP },
+      { label: TEXTS.TRIP_TYPE.ROUND_TRIP, value: VALUES.TRIP_TYPE.ROUND_TRIP, isDefault: true},
       { label: TEXTS.TRIP_TYPE.ONE_WAY, value: VALUES.TRIP_TYPE.ONE_WAY },
-      { label: TEXTS.TRIP_TYPE.MULTI_CITY, value: VALUES.TRIP_TYPE.MULTI_CITY, useEngine: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS, isDefault: true }
+      { label: TEXTS.TRIP_TYPE.MULTI_CITY, value: VALUES.TRIP_TYPE.MULTI_CITY, useEngine: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS }
     ],
     classOptions: [
       { label: TEXTS.CLASS.ECONOMY, value: VALUES.CLASS.ECONOMY, isDefault: true },
@@ -140,10 +140,45 @@ export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
   }
 };
 
+export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.DOMESTIC_VACATIONS,
+  header: {
+    title: TEXTS.HEADER.DOMESTIC_VACATION_TITLE
+  },
+  footer: {
+    infoItems: [
+      TEXTS.FOOTER.INFO.RECOMMENDED_HOTELS,
+      TEXTS.FOOTER.INFO.FREE_CANCELLATION,
+      TEXTS.FOOTER.INFO.SPECIAL_PRICES
+    ]
+  },
+  inputs: [
+    {
+      type: ESharedInputType.DOMESTIC_VACATION_DESTINATION,
+      size: EInputSize.HUGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: null
+    },
+    {
+      type: ESharedInputType.PICKER_DATES,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { start: null as Date | null, end: null as Date | null }
+    },
+    {
+      type: ESharedInputType.PASSANGERS_DOMESTIC_VACATION,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_RIGHT,
+      value: null
+    }
+  ]
+};
+
 export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_CONFIG,
   HOTEL_ABROAD_CONFIG,
-  FLIGHTS_MULTI_DESTINATIONS_CONFIG
+  FLIGHTS_MULTI_DESTINATIONS_CONFIG,
+  DOMESTIC_VACATION_CONFIG
 ];
 
 export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 

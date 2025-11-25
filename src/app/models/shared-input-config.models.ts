@@ -1,6 +1,13 @@
 import { MenuOption } from './shared-options-input.models';
 import { Type } from '@angular/core';
 
+export interface CustomMenuHeaderAction {
+  label: string;
+  icon?: string;
+  value: string;
+  displayValue: string;
+}
+
 export interface SharedInputConfig<T = any> {
   requestUrl?: string;
   autocompleteUrl?: string;
@@ -15,6 +22,7 @@ export interface SharedInputConfig<T = any> {
   };
   dataConfig?: T;
   component?: Type<any> | (() => Promise<Type<any>>);
+  customMenuHeaderComponent?: Type<any> | (() => Promise<Type<any>>);
 }
 
 

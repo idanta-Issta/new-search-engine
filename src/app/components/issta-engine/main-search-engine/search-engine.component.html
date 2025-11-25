@@ -20,5 +20,9 @@
     <app-hotel-abroad
       *ngIf="getActiveType() === ETypeSearchEngine.HOTELS_ABROAD"
     ></app-hotel-abroad>
+
+    <app-domestic-vacation
+      *ngIf="getActiveType() === ETypeSearchEngine.DOMESTIC_VACATIONS"
+    ></app-domestic-vacation>
   </div>
 </div>

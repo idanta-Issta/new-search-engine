@@ -6,11 +6,15 @@ import {
   EventEmitter,
   OnInit,
   OnChanges,
+  AfterViewInit,
   SimpleChanges,
   HostListener,
   ElementRef,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  ViewChild,
+  ViewContainerRef,
+  Type,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +38,7 @@ import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
   styleUrls: ['./shared-options-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SharedOptionsInputComponent implements OnInit, OnChanges {
+export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() type!: ESharedInputType;
   @Input() value?: MenuOption;
   @Input() width: string = '100%';
@@ -43,7 +47,10 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges {
   @Output() valueChange = new EventEmitter<MenuOption>();
   @Output() optionPicked = new EventEmitter<MenuOption>();
 
+  @ViewChild('customHeaderContainer', { read: ViewContainerRef, static: false }) customHeaderContainer?: ViewContainerRef;
+
   config!: SharedInputUIConfig;
+  customHeaderComponent?: Type<any> | (() => Promise<Type<any>>);
 
   searchTerm = '';
   isOpen = false;
@@ -65,6 +72,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges {
     if (!registryEntry) return;
 
     this.config = registryEntry.uiConfig;
+    this.customHeaderComponent = registryEntry.customMenuHeaderComponent;
 
     // Set search term from value if provided
     if (this.value) {
@@ -99,9 +107,49 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges {
     }
   }
 
+  ngAfterViewInit(): void {
+    // Load custom header component when view is initialized if needed
+    if (this.customHeaderComponent) {
+      setTimeout(() => this.loadCustomHeaderComponent(), 0);
+    }
+  }
+
+  onInputOpened() {
+    this.isOpen = true;
+    this.loadCustomHeaderComponent();
+    this.cdr.markForCheck();
+  }
+
   /** למה: מאפשר פתיחה מתוכנתית מהסבא דרך הבן */
   open() {
     this.isOpen = true;
+    this.cdr.markForCheck();
+    // Use setTimeout to ensure the view is rendered before loading component
+    setTimeout(() => this.loadCustomHeaderComponent(), 0);
+  }
+
+  async loadCustomHeaderComponent() {
+    if (!this.customHeaderComponent || !this.customHeaderContainer) return;
+
+    this.customHeaderContainer.clear();
+
+    let componentType: Type<any>;
+    if (typeof this.customHeaderComponent === 'function') {
+      const module = await (this.customHeaderComponent as (() => Promise<Type<any>>))();
+      componentType = module as Type<any>;
+    } else {
+      componentType = this.customHeaderComponent as Type<any>;
+    }
+
+    const componentRef = this.customHeaderContainer.createComponent(componentType);
+    
+    // Listen to optionSelected output if it exists
+    if (componentRef.instance.optionSelected) {
+      componentRef.instance.optionSelected.subscribe((option: MenuOption) => {
+        this.selectOption(option);
+      });
+    }
+
     this.cdr.markForCheck();
   }
 
@@ -137,6 +185,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges {
   }
 
 selectOption(option: MenuOption) {
+  this.value = option; // Update the value to track selected option
   this.optionPicked.emit(option);
   this.searchTerm = option.label;
   this.isOpen = false;

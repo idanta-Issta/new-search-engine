@@ -38,7 +38,7 @@ export class FlightsMultiDestinationsComponent {
   @ViewChildren(SharedCalendarInputComponent) calendarInputs!: QueryList<SharedCalendarInputComponent>;
 
   // Types
-  readonly ORIGINS_FLIGHTS = ESharedInputType.ORIGINS_FLIGHTS;
+  readonly ORIGINS_FLIGHTS = ESharedInputType.MULTI_DESTINATION_ORIGINS_FLIGHTS;
   readonly DESTINATIONS_FLIGHTS = ESharedInputType.DESTINATIONS_FLIGHTS;
   readonly PICKER_DATES = ESharedInputType.PICKER_DATES;
   readonly PASSANGERS_FLIGHTS = ESharedInputType.PASSANGERS_FLIGHTS;

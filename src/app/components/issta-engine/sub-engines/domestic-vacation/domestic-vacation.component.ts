@@ -1,31 +1,26 @@
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuOption } from '../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../enums/ESharedInputType';
 import { SharedInputRowComponent } from '../../shared/inputs/input-row/shared-input-row/shared-input-row.component';
 import { PassangersInput } from '../../../../models/shared-passanger-input.models';
 import { SearchFooterComponent } from '../../shared/footer/search-footer/search-footer.component';
 import { SearchHeaderComponent } from '../../shared/header/search-header/search-header.component';
-import { FLIGHTS_CONFIG } from '../../../../config/search-engine.config';
-import { BaseEngineService } from '../../../../services/engine.service';
+import { DOMESTIC_VACATION_CONFIG } from '../../../../config/search-engine.config';
 import { BaseEngineComponent } from '../base-engine.component';
-import { FlightsManager } from '../../../../managers/flights.manager';
-
+import { BaseEngineService } from '../../../../services/engine.service';
+import { DomesticVacationManager } from '../../../../managers/domestic-vacation.manager';
 
 @Component({
-  selector: 'app-flights',
+  selector: 'app-domestic-vacation',
   standalone: true,
   imports: [CommonModule, SharedInputRowComponent, SearchFooterComponent, SearchHeaderComponent],
-  templateUrl: './flights.component.html',
-  styleUrls: ['./flights.component.scss']
+  templateUrl: './domestic-vacation.component.html',
 })
-export class FlightsComponent extends BaseEngineComponent {
-  protected config = FLIGHTS_CONFIG;
-  private manager = new FlightsManager();
+export class DomesticVacationComponent extends BaseEngineComponent {
+  protected config = DOMESTIC_VACATION_CONFIG;
+  private manager = new DomesticVacationManager();
 
-  selectedOrigin: MenuOption | null = null;
-  selectedDestination: MenuOption | null = null;
+  selectedDestination: any = null;
   selectedDate = { start: null as Date | null, end: null as Date | null };
   selectedPassengers: PassangersInput | null = null;
 
@@ -35,16 +30,13 @@ export class FlightsComponent extends BaseEngineComponent {
 
   protected updateValue(type: ESharedInputType, value: any): void {
     switch (type) {
-      case ESharedInputType.DESTINATIONS_FLIGHTS:
+      case ESharedInputType.HOTELS_DESTINATION:
         this.selectedDestination = value;
-        break;
-      case ESharedInputType.ORIGINS_FLIGHTS:
-        this.selectedOrigin = value;
         break;
       case ESharedInputType.PICKER_DATES:
         this.selectedDate = value;
         break;
-      case ESharedInputType.PASSANGERS_FLIGHTS:
+      case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
         this.selectedPassengers = value;
         break;
     }
@@ -52,15 +44,14 @@ export class FlightsComponent extends BaseEngineComponent {
 
   protected openNextInput(type: ESharedInputType, value: any): void {
     switch (type) {
-      case ESharedInputType.DESTINATIONS_FLIGHTS:
-        this.inputsRow?.openInputDelayed(ESharedInputType.ORIGINS_FLIGHTS);
-        break;
-      case ESharedInputType.ORIGINS_FLIGHTS:
-        this.inputsRow?.openInputDelayed(ESharedInputType.PICKER_DATES);
+      case ESharedInputType.HOTELS_DESTINATION:
+        if (value) {
+          this.inputsRow?.openInputDelayed(ESharedInputType.PICKER_DATES);
+        }
         break;
       case ESharedInputType.PICKER_DATES:
         if (value?.start && value?.end) {
-          this.inputsRow?.openInputDelayed(ESharedInputType.PASSANGERS_FLIGHTS);
+          this.inputsRow?.openInputDelayed(ESharedInputType.PASSANGERS_ABOARD_HOTEL);
         }
         break;
     }
@@ -68,12 +59,9 @@ export class FlightsComponent extends BaseEngineComponent {
 
   buildUrl(): string {
     return this.manager.buildUrl({
-      origin: this.selectedOrigin,
       destination: this.selectedDestination,
       dates: this.selectedDate,
-      passengers: this.selectedPassengers,
-      headerState: this.headerState,
-      footerState: this.footerState
+      passengers: this.selectedPassengers
     });
   }
 }
