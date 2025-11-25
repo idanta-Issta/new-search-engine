@@ -18,9 +18,9 @@ export interface HeaderState {
 })
 export class SearchHeaderComponent implements OnInit {
   @Input() title: string = '';
-  @Input() choices: ChoiceOption[] = [];
-  @Input() tripTypeOptions: DropdownOption[] = [];
-  @Input() classOptions: DropdownOption[] = [];
+  @Input() choices?: ChoiceOption[];
+  @Input() tripTypeOptions?: DropdownOption[];
+  @Input() classOptions?: DropdownOption[];
 
   @Output() stateChange = new EventEmitter<HeaderState>();
 
@@ -30,15 +30,15 @@ export class SearchHeaderComponent implements OnInit {
 
   ngOnInit() {
     // Set defaults
-    if (this.choices.length) {
+    if (this.choices?.length) {
       const defaultChoice = this.choices.find(c => c.isDefault) || this.choices[0];
       this.selectedChoice = defaultChoice;
     }
-    if (this.tripTypeOptions.length) {
+    if (this.tripTypeOptions?.length) {
       const defaultTripType = this.tripTypeOptions.find(t => t.isDefault) || this.tripTypeOptions[0];
       this.selectedTripType = defaultTripType;
     }
-    if (this.classOptions.length) {
+    if (this.classOptions?.length) {
       const defaultClass = this.classOptions.find(c => c.isDefault) || this.classOptions[0];
       this.selectedClass = defaultClass;
     }

@@ -1,11 +1,11 @@
 <div class="search-footer">
     <div class="left">
         <app-footer-options 
-        [options]="options"
+        [options]="options || []"
         (optionChange)="onOptionChange($event)">
     </app-footer-options>
 </div>
 <div class="right">
-  <app-footer-info [items]="infoItems"></app-footer-info>
+  <app-footer-info [items]="infoItems || []"></app-footer-info>
 </div>
 </div>

@@ -42,7 +42,7 @@
 
 
       <button 
-        *ngIf="canRemoveSegment()" 
+        *ngIf="canRemoveSegment(i)" 
         class="remove-btn"
         (click)="removeSegment(i)"
         type="button">
@@ -55,12 +55,13 @@
 
     <div class="add-segment-btn-container">
       <button 
-        *ngIf="canAddSegment()" 
         class="add-segment-btn"
+        [class.disabled]="!canAddSegment()"
+        [disabled]="!canAddSegment()"
         (click)="addSegment()"
         type="button">
         <span class="btn-text">+ הוספת קטע טיסה</span>
-        <span class="btn-hint">(עד 5 קטעים)</span>
+        <span class="btn-hint">עד 5 קטעים</span>
       </button>
 
     </div>

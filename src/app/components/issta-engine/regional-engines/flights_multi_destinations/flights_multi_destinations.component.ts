@@ -147,13 +147,13 @@ export class FlightsMultiDestinationsComponent {
 
   // הסרת שורה
   removeSegment(index: number) {
-    if (this.canRemoveSegment()) {
+    if (index >= 2) {
       this.segments.splice(index, 1);
     }
   }
 
-  canRemoveSegment(): boolean {
-    return this.segments.length > 2;
+  canRemoveSegment(index: number): boolean {
+    return index >= 2;
   }
 
   canAddSegment(): boolean {
@@ -173,12 +173,10 @@ export class FlightsMultiDestinationsComponent {
     this.searchClicked.emit();
   }
 
-  // פתיחת dropdown של יעד בשורה מסוימת
+
   private openDestinationInput(segmentIndex: number) {
     setTimeout(() => {
       const inputs = this.optionsInputs.toArray();
-      // כל שורה יש לה 2 options inputs (origin + destination)
-      // destination הוא תמיד במיקום (segmentIndex * 2 + 1)
       const destinationInputIndex = segmentIndex * 2 + 1;
       const destinationInput = inputs[destinationInputIndex];
       

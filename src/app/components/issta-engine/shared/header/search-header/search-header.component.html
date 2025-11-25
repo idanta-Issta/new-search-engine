@@ -5,8 +5,8 @@
     <div class="header-row">
       <div class="choices-section">
         <app-header-choices
-          *ngIf="choices.length"
-          [choices]="choices"
+          *ngIf="choices?.length"
+          [choices]="choices || []"
           [selectedValue]="selectedChoice?.value || ''"
           (choiceSelected)="onChoiceSelected($event)">
         </app-header-choices>
@@ -14,15 +14,15 @@
 
       <div class="dropdowns-section">
         <app-header-dropdown
-          *ngIf="tripTypeOptions.length"
-          [options]="tripTypeOptions"
+          *ngIf="tripTypeOptions?.length"
+          [options]="tripTypeOptions || []"
           [selectedValue]="selectedTripType?.value || ''"
           (optionSelected)="onTripTypeSelected($event)">
         </app-header-dropdown>
   
         <app-header-dropdown
-          *ngIf="classOptions.length"
-          [options]="classOptions"
+          *ngIf="classOptions?.length"
+          [options]="classOptions || []"
           [selectedValue]="selectedClass?.value || ''"
           (optionSelected)="onClassSelected($event)">
         </app-header-dropdown>

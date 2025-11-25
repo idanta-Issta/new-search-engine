@@ -13,16 +13,16 @@ export interface SearchEngineConfig {
   customInputsComponent?: any; // Custom component type for inputs row
   header: {
     title: string;
-    choices: ChoiceOption[];
-    tripTypeOptions: DropdownOption[];
-    classOptions: DropdownOption[];
+    choices?: ChoiceOption[];
+    tripTypeOptions?: DropdownOption[];
+    classOptions?: DropdownOption[];
   };
   footer: {
-    infoItems: string[];
-    options: FooterOption[];
-    buttonWidth?: number; // רוחב כפתור החיפוש
+    infoItems?: string[];
+    options?: FooterOption[];
+   
   };
-  inputs: InputConfig[];
+  inputs?: InputConfig[];
 }
 
 export const FLIGHTS_CONFIG: SearchEngineConfig = {
@@ -88,22 +88,14 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
 export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.HOTELS_ABROAD,
   header: {
-    title: TEXTS.HEADER.HOTEL_ABROAD_TITLE,
-    choices: [
-      { label: TEXTS.CHOICES.BEST_DEAL, value: VALUES.CHOICES.BEST_DEAL, isDefault: true },
-      { label: TEXTS.CHOICES.HOTEL_ONLY, value: VALUES.CHOICES.HOTEL_ONLY },
-      { label: TEXTS.CHOICES.HOTEL_FLIGHT, value: VALUES.CHOICES.HOTEL_FLIGHT }
-    ],
-    tripTypeOptions: [],
-    classOptions: []
+    title: TEXTS.HEADER.HOTEL_ABROAD_TITLE
   },
   footer: {
     infoItems: [
       TEXTS.FOOTER.INFO.RECOMMENDED_HOTELS,
       TEXTS.FOOTER.INFO.FREE_CANCELLATION,
       TEXTS.FOOTER.INFO.SPECIAL_PRICES
-    ],
-    options: []
+    ]
   },
   inputs: [
     {
@@ -130,24 +122,32 @@ export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
 
 export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS,
-  customInputsComponent: () => import('../components/issta-engine/tabs/flights_multi_destinations/flights_multi_destinations.component').then(m => m.FlightsMultiDestinationsComponent),
+  customInputsComponent: () => import('../components/issta-engine/regional-engines/flights_multi_destinations/flights_multi_destinations.component').then(m => m.FlightsMultiDestinationsComponent),
   header: {
     title: "ריבוי יעדים",
-    choices: [],
-  tripTypeOptions: [
+    tripTypeOptions: [
       { label: TEXTS.TRIP_TYPE.ROUND_TRIP, value: VALUES.TRIP_TYPE.ROUND_TRIP, isDefault: true },
       { label: TEXTS.TRIP_TYPE.ONE_WAY, value: VALUES.TRIP_TYPE.ONE_WAY },
       { label: TEXTS.TRIP_TYPE.MULTI_CITY, value: VALUES.TRIP_TYPE.MULTI_CITY, useEngine: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS }
-    ],
-    classOptions: []
+    ]
   },
   footer: {
     infoItems: [
       TEXTS.FOOTER.INFO.ANY_VACATION,
       TEXTS.FOOTER.INFO.PAYMENT_PLAN,
       TEXTS.FOOTER.INFO.AVAILABLE
-    ],
-    options: []
-  },
-  inputs: []
+    ]
+  }
 };
+
+export const ALL_CONFIGS: SearchEngineConfig[] = [
+  FLIGHTS_CONFIG,
+  HOTEL_ABROAD_CONFIG,
+  FLIGHTS_MULTI_DESTINATIONS_CONFIG
+];
+
+export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 
+  ALL_CONFIGS.reduce((registry, config) => {
+    registry[config.engineType] = config;
+    return registry;
+  }, {} as Partial<Record<ETypeSearchEngine, SearchEngineConfig>>);

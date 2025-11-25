@@ -54,7 +54,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      border: 2px solid #e0e0e0;
+      border: unset !important;
       background: white;
       color: #666;
       font-size: 18px;
@@ -65,10 +65,23 @@
       flex-shrink: 0;
       transition: all 0.2s;
 
+      /* קו מצד ימין */
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: -12px;
+        width: 1px;
+        height: 45px;
+        background-color: #d1dbe3;
+        opacity: 0.8;
+      }
+
       &:hover {
-        background: #f44336;
+        background: #2AAE54;
         color: white;
-        border-color: #f44336;
+        border-color: #2AAE54;
       }
     }
   }
@@ -128,9 +141,21 @@
 
     }
 
-    &:hover {
+    &:hover:not(.disabled) {
       .btn-text {
         color: #249945;
+      }
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      
+      .btn-text {
+        color: #999;
+      }
+      
+      .btn-hint {
+        color: #ccc;
       }
     }
   }

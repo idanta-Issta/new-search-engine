@@ -11,8 +11,8 @@ import { FooterOptionsComponent, FooterOption } from '../footer-options/footer-o
   styleUrls: ['./search-footer.component.scss']
 })
 export class SearchFooterComponent {
-  @Input() infoItems: string[] = [];
-  @Input() options: FooterOption[] = [];
+  @Input() infoItems?: string[];
+  @Input() options?: FooterOption[];
   @Input() buttonWidth?: number; // רוחב דינמי לכפתור
   @Output() optionChange = new EventEmitter<{ value: string; checked: boolean }>();
 

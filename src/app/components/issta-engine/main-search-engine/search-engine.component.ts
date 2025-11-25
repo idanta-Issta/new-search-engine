@@ -1,7 +1,7 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlightsComponent } from '../tabs/flights/flights.component';
-import { HotelAbroadComponent } from '../tabs/hotel-abroad/hotel-abroad.component';
+import { FlightsComponent } from '../sub-engines/flights/flights.component';
+import { HotelAbroadComponent } from '../sub-engines/hotel-abroad/hotel-abroad.component';
 import { ETypeSearchEngine } from '../../../enums/ETypeSearchEngine';
 
 @Component({
