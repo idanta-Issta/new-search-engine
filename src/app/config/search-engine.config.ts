@@ -10,7 +10,7 @@ import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
 
 export interface SearchEngineConfig {
   engineType: ETypeSearchEngine;
-  customInputsComponent?: any; // Custom component type for inputs row
+  customInputsComponent?: any;
   header: {
     title: string;
     choices?: ChoiceOption[];
@@ -111,7 +111,7 @@ export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
       value: { start: null as Date | null, end: null as Date | null }
     },
     {
-      type: ESharedInputType.PASSANGERS_FLIGHTS,
+      type: ESharedInputType.PASSANGERS_ABOARD_HOTEL,
       size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_RIGHT,
       value: null

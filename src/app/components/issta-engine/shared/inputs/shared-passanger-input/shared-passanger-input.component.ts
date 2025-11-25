@@ -82,7 +82,8 @@ export class SharedPassangerInputComponent implements OnInit {
       age.minCount++;
       // אם דורש גיל ספציפי, אתחל את המערך אם צריך
       if (age.requiresSpecificAge && age.selectedAges) {
-        age.selectedAges.push(age.specificAgeOptions?.[0] || 0);
+        const firstOption = age.specificAgeOptions?.[0];
+        age.selectedAges.push(firstOption ? parseInt(firstOption.key) : 0);
       }
       this.emitChange();
       this.cdr.markForCheck();

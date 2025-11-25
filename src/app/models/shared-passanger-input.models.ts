@@ -10,15 +10,20 @@ export interface OptionAge {
   options: AgeGroup[];
 }
 
+export interface AgeOption {
+  label: string;
+  key: string;
+}
+
 export interface AgeGroup {
   label: string;
   value: string;
   note: string;
   minCount: number;
   maxCount: number;
-  requiresSpecificAge: boolean; // האם חייב לבחור גיל ספציפי
-  specificAgeOptions?: number[]; // רשימת הגילאים האפשריים
-  selectedAges?: number[]; // הגילאים שנבחרו (אחד לכל נוסע)
+  requiresSpecificAge: boolean;
+  specificAgeOptions?: AgeOption[];
+  selectedAges?: number[];
 }
 
 
