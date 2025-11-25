@@ -3,6 +3,15 @@
 export interface PassangersInput {
   optionsAge: OptionAge[];
   allowPickRoom: boolean;
+  maxRoomsPick?: number;
+  rooms?: RoomPassengers[];
+}
+
+export interface RoomPassengers {
+  roomNumber: number;
+  adults: number;
+  children: number;
+  infants: number;
 }
 
 export interface OptionAge {
@@ -21,6 +30,8 @@ export interface AgeGroup {
   note: string;
   minCount: number;
   maxCount: number;
+  count?: number;
+  defaultValue?: number;
   requiresSpecificAge: boolean;
   specificAgeOptions?: AgeOption[];
   selectedAges?: number[];

@@ -14,7 +14,7 @@ import { ESharedInputType } from '../../../../../enums/ESharedInputType';
 import { SharedInputRegistry } from '../../../../../config/shared-input.registry';
 import { SharedInputUIConfig } from '../../../../../models/shared-input-config.models';
 import { InputBoxComponent } from '../input-box/input-box.component';
-import { PassangersInput, OptionAge, AgeGroup } from '../../../../../models/shared-passanger-input.models';
+import { PassangersInput, OptionAge, AgeGroup, RoomPassengers } from '../../../../../models/shared-passanger-input.models';
 import { SharedPassengersService } from '../../../../../services/shared-passengers.service';
 import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component';
 import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
@@ -36,6 +36,8 @@ export class SharedPassangerInputComponent implements OnInit {
   config!: SharedInputUIConfig;
   isOpen = false;
   totalPassengers = 0;
+  selectedRoomIndex = 0;
+  // Dynamic margin computed from service (no local mutation)
 
   constructor(
     private el: ElementRef,
@@ -58,6 +60,19 @@ export class SharedPassangerInputComponent implements OnInit {
     this.passengersSrv.getPassengersByType(this.type).subscribe({
       next: (data) => {
         if (!this.value) {
+          // Initialize count from defaultValue or minCount
+          data.optionsAge.forEach(group => {
+            group.options.forEach(option => {
+              option.count = option.defaultValue ?? option.minCount;
+              // Initialize selectedAges array if needed
+              if (option.requiresSpecificAge && option.count && option.count > 0) {
+                option.selectedAges = Array(option.count).fill(0).map(() => {
+                  const firstOption = option.specificAgeOptions?.[0];
+                  return firstOption ? parseInt(firstOption.key) : 0;
+                });
+              }
+            });
+          });
           this.value = data;
         }
         this.updateTotal();
@@ -68,18 +83,27 @@ export class SharedPassangerInputComponent implements OnInit {
   }
 
   updateTotal() {
-    if (!this.value?.optionsAge) {
+    if (!this.value) {
       this.totalPassengers = 0;
       return;
     }
-    this.totalPassengers = this.value.optionsAge
-      .flatMap((g) => g.options)
-      .reduce((sum, age) => sum + (age.minCount || 0), 0);
+
+    // If using rooms (domestic vacation), count from rooms
+    if (this.value.allowPickRoom && this.value.rooms) {
+      this.totalPassengers = this.value.rooms.reduce((sum, room) => 
+        sum + room.adults + room.children + room.infants, 0);
+    } else {
+      // Otherwise count from optionsAge (flights, hotels)
+      this.totalPassengers = this.value.optionsAge
+        .flatMap((g) => g.options)
+        .reduce((sum, age) => sum + (age.count || 0), 0);
+    }
   }
 
   increment(age: AgeGroup) {
-    if (age.minCount < age.maxCount) {
-      age.minCount++;
+    const currentCount = age.count || 0;
+    if (currentCount < age.maxCount) {
+      age.count = currentCount + 1;
       // אם דורש גיל ספציפי, אתחל את המערך אם צריך
       if (age.requiresSpecificAge && age.selectedAges) {
         const firstOption = age.specificAgeOptions?.[0];
@@ -91,8 +115,9 @@ export class SharedPassangerInputComponent implements OnInit {
   }
 
   decrement(age: AgeGroup) {
-    if (age.minCount > 0) {
-      age.minCount--;
+    const currentCount = age.count || 0;
+    if (currentCount > age.minCount) {
+      age.count = currentCount - 1;
       // אם דורש גיל ספציפי, הסר את האחרון
       if (age.requiresSpecificAge && age.selectedAges) {
         age.selectedAges.pop();
@@ -136,9 +161,92 @@ export class SharedPassangerInputComponent implements OnInit {
     this.isOpen = false;
   }
 
+  // Room management methods
+  addRoom() {
+    if (!this.value?.rooms || !this.value.maxRoomsPick) return;
+    if (this.value.rooms.length >= this.value.maxRoomsPick) return;
+
+    const newRoom: RoomPassengers = {
+      roomNumber: this.value.rooms.length + 1,
+      adults: 2,
+      children: 0,
+      infants: 0
+    };
+
+    this.value.rooms.push(newRoom);
+    this.selectedRoomIndex = this.value.rooms.length - 1;
+    this.cdr.markForCheck();
+    this.emitChange();
+  }
+
+  removeRoom(index: number) {
+    if (!this.value?.rooms || index === 0) return; // Cannot remove first room
+    
+    this.value.rooms.splice(index, 1);
+    // Reorder room numbers
+    this.value.rooms.forEach((room, idx) => {
+      room.roomNumber = idx + 1;
+    });
+    
+    if (this.selectedRoomIndex >= this.value.rooms.length) {
+      this.selectedRoomIndex = this.value.rooms.length - 1;
+    }
+    
+    this.cdr.markForCheck();
+    this.emitChange();
+  }
+
+  selectRoom(index: number) {
+    this.selectedRoomIndex = index;
+    this.cdr.markForCheck();
+  }
+
+  incrementRoom(roomIndex: number, type: 'adults' | 'children' | 'infants') {
+    if (!this.value?.rooms || !this.value.rooms[roomIndex]) return;
+    
+    const room = this.value.rooms[roomIndex];
+    const maxValues = { adults: 6, children: 4, infants: 2 };
+    
+    if (room[type] < maxValues[type]) {
+      room[type]++;
+      this.emitChange();
+      this.cdr.markForCheck();
+    }
+  }
+
+  decrementRoom(roomIndex: number, type: 'adults' | 'children' | 'infants') {
+    if (!this.value?.rooms || !this.value.rooms[roomIndex]) return;
+    
+    const room = this.value.rooms[roomIndex];
+    const minValues = { adults: 1, children: 0, infants: 0 };
+    
+    if (room[type] > minValues[type]) {
+      room[type]--;
+      this.emitChange();
+      this.cdr.markForCheck();
+    }
+  }
+
+  canAddRoom(): boolean {
+    return !!(this.value?.rooms && this.value.maxRoomsPick && 
+             this.value.rooms.length < this.value.maxRoomsPick);
+  }
+
+  getDropdownMarginRight(): number {
+    const roomsCount = this.value?.rooms?.length || 0;
+    return this.passengersSrv.getRoomsMargin(roomsCount);
+  }
+
   @HostListener('document:mousedown', ['$event'])
   onOutsideClick(event: MouseEvent) {
-    if (!this.el.nativeElement.contains(event.target as Node)) {
+    if (!this.isOpen) return;
+    const target = event.target as Node;
+    // Root element of this component
+    const hostContains = this.el.nativeElement.contains(target);
+    // Dropdown content may be rendered elsewhere (e.g. overlay); allow clicks inside it
+    const dropdownEl = document.querySelector('.passenger-dropdown');
+    const insideDropdown = dropdownEl ? dropdownEl.contains(target) : false;
+    if (!hostContains && !insideDropdown) {
       this.isOpen = false;
     }
   }

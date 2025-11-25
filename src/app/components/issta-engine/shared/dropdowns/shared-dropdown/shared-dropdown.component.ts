@@ -13,6 +13,7 @@ import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
   class="dropdown-wrapper"
   [@dropdownAnimation]="isOpen ? 'open' : 'closed'"
   [ngClass]="{ 'scrollable': scrollable, 'position-bottom-right': position === 'bottom-right', 'position-bottom-left': position === 'bottom-left', 'position-bottom-center': position === 'bottom-center' }"
+  [style.marginRight.px]="marginRight"
   (mousedown)="$event.stopPropagation()"
 >
   <div class="dropdown-body">
@@ -36,6 +37,7 @@ export class SharedDropdownComponent {
   @Input() anchor?: HTMLElement;
   @Input() scrollable = false;
   @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
+  @Input() marginRight: number = 0;
   @Output() closed = new EventEmitter<void>();
 
   constructor(private host: ElementRef<HTMLElement>) {}

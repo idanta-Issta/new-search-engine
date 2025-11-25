@@ -119,7 +119,6 @@ export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
   ]
 };
 
-
 export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS,
   customInputsComponent: () => import('../components/issta-engine/regional-engines/flights_multi_destinations/flights_multi_destinations.component').then(m => m.FlightsMultiDestinationsComponent),
@@ -168,7 +167,7 @@ export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
     {
       type: ESharedInputType.PASSANGERS_DOMESTIC_VACATION,
       size: EInputSize.SMALL,
-      position: EDropdownPosition.BOTTOM_RIGHT,
+      position: EDropdownPosition.BOTTOM_CENTER,
       value: null
     }
   ]

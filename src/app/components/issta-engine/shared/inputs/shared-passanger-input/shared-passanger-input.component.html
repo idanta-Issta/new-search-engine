@@ -15,46 +15,82 @@
     [anchor]="anchorEl"
     [scrollable]="false"
     [position]="position"
+    [marginRight]="getDropdownMarginRight()"
   >
     <div class="dropdown passenger-dropdown">
       <h4 class="title" *ngIf="config.titleMenuOptions">{{ config.titleMenuOptions }}</h4>
 
-      <div *ngFor="let group of value?.optionsAge" class="age-group">
-        <div *ngFor="let age of group.options" class="age-item">
-          <div class="age-row">
-            <div class="buttons">
-              <button (click)="decrement(age)" [disabled]="age.minCount === 0">−</button>
-              <span class="count">{{ age.minCount }}</span>
-              <button (click)="increment(age)" [disabled]="age.minCount === age.maxCount">+</button>
+      <!-- Room-based selection (domestic vacation) - show all rooms simultaneously -->
+      <ng-container *ngIf="value?.allowPickRoom && value?.rooms?.length">
+        <div class="rooms-container">
+          <div class="room-block" *ngFor="let room of value?.rooms; let i = index">
+            <div class="room-header">
+              <span class="room-title">חדר {{ room.roomNumber }}</span>
+              <button type="button" class="remove-room" *ngIf="i > 0" (mousedown)="$event.stopPropagation()" (click)="removeRoom(i); $event.stopPropagation()">הסרה x</button>
             </div>
-            <div class="label">
-              {{ age.label }}
-              <small class="note">{{ age.note }}</small>
+            <div class="passenger-types" *ngFor="let group of value?.optionsAge">
+              <div class="passenger-row" *ngFor="let age of group.options">
+                <div class="buttons">
+                  <button
+                    (click)="decrementRoom(i, age.value === 'adult' ? 'adults' : age.value === 'child' ? 'children' : 'infants')"
+                    [disabled]="(age.value === 'adult' ? room.adults : age.value === 'child' ? room.children : room.infants) <= age.minCount"
+                  >−</button>
+                  <span class="count">{{ age.value === 'adult' ? room.adults : age.value === 'child' ? room.children : room.infants }}</span>
+                  <button
+                    (click)="incrementRoom(i, age.value === 'adult' ? 'adults' : age.value === 'child' ? 'children' : 'infants')"
+                    [disabled]="(age.value === 'adult' ? room.adults : age.value === 'child' ? room.children : room.infants) >= age.maxCount"
+                  >+</button>
+                </div>
+                <div class="label">
+                  {{ age.label }}
+                  <small class="note">{{ age.note }}</small>
+                </div>
+              </div>
             </div>
           </div>
+     
+        </div>
+      </ng-container>
 
-          <div *ngIf="age.requiresSpecificAge && age.minCount > 0" class="specific-ages">
-            <label class="ages-label">בחירת גילאים</label>
-            <div class="age-selectors-row">
-              <div *ngFor="let i of getAgeArray(age.minCount); let idx = index" class="age-selector">
-                <select 
-                  [value]="age.selectedAges?.[idx]" 
-                  (change)="onSpecificAgeChange(age, idx, +$any($event.target).value)">
-                  <option *ngFor="let ageOption of age.specificAgeOptions" [value]="ageOption">
-                    {{ ageOption }}
-                  </option>
-                </select>
+      <!-- Regular age-based selection (for flights and hotels) -->
+      <div *ngIf="!value?.allowPickRoom" class="age-group-container">
+        <div *ngFor="let group of value?.optionsAge" class="age-group">
+          <div *ngFor="let age of group.options" class="age-item">
+            <div class="age-row">
+              <div class="buttons">
+                <button (click)="decrement(age)" [disabled]="(age.count || 0) <= age.minCount">−</button>
+                <span class="count">{{ age.count || 0 }}</span>
+                <button (click)="increment(age)" [disabled]="(age.count || 0) >= age.maxCount">+</button>
+              </div>
+              <div class="label">
+                {{ age.label }}
+                <small class="note">{{ age.note }}</small>
+              </div>
+            </div>
+
+            <div *ngIf="age.requiresSpecificAge && (age.count || 0) > 0" class="specific-ages">
+              <label class="ages-label">בחירת גילאים</label>
+              <div class="age-selectors-row">
+                <div *ngFor="let i of getAgeArray(age.count || 0); let idx = index" class="age-selector">
+                  <select 
+                    [value]="age.selectedAges?.[idx]" 
+                    (change)="onSpecificAgeChange(age, idx, +$any($event.target).value)">
+                    <option *ngFor="let ageOption of age.specificAgeOptions" [value]="ageOption">
+                      {{ ageOption }}
+                    </option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Footer section -->
       <div class="footer-section">
-        <div class="multi-room-offer">
-          <span class="offer-text">רוצה יותר מחדר אחד?</span>
-          <a href="#" class="contact-link">השאירו פרטים וסוכן יעזור לך</a>
-        </div>
+             <div class="add-room-wrapper" *ngIf="canAddRoom()">
+            <button class="add-room-btn" (mousedown)="$event.stopPropagation()" (click)="addRoom(); $event.stopPropagation()">+ הוספת חדר</button>
+          </div>
         <button class="confirm" (click)="isOpen = false">בחירה</button>
       </div>
     </div>

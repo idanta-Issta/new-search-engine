@@ -196,6 +196,99 @@ text-align: right;
     border-top: 1px solid #e5e5e5;
   }
 
+  .footer-section {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .room-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+
+    .room-tab {
+      position: relative;
+      padding: 8px 24px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      transition: all 0.2s;
+      white-space: nowrap;
+
+      &.active {
+        border-color: #2AAE54;
+        background: #f0f9f3;
+        color: #2AAE54;
+      }
+
+      &:hover:not(.active) {
+        border-color: #bbb;
+      }
+
+      .remove-room {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ff4444;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        line-height: 1;
+        cursor: pointer;
+
+        &:hover {
+          background: #cc0000;
+        }
+      }
+    }
+  }
+
+  .room-passengers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .add-room-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+  border: unset !important;
+  font-family: var(--main-font-family);
+  text-decoration: underline;
+    border-radius: 8px;
+    background: white;
+    color: #197CBE;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #f0f9f3;
+      border-style: solid;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
   .multi-room-offer {
    display: flex;
     flex-direction: column;
@@ -244,4 +337,122 @@ color: white;
       background: #009247;
     }
   }
+
+
+  .rooms-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .room-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 265px;
+    padding: 0 8px;
+    position: relative;
+    &:not(:last-child) {
+      border-left: 1px solid #e5e5e5;
+    }
+  }
+
+  .room-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-family: 'Rubik';
+    font-size: 16px;
+    font-weight: 600;
+    color: #2A3335;
+    .room-title { font-weight: 600; }
+    .remove-room {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #197CBE;
+      font-family: var(--main-font-family);
+      font-size: 16px;
+      padding: 0;
+
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  .passenger-types { display: flex; flex-direction: column; gap: 4px; }
+
+  .passenger-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse; /* keep RTL order */
+    padding: 4px 0;
+    min-width: 186px;
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      width: 135px;
+
+      button {
+        width: 42px;
+        height: 42px;
+        border-radius: 30%;
+        justify-content: center;
+        display: flex;
+        border: 1px solid #2AAE54;
+        color: #2AAE54;
+        font-weight: 100;
+        cursor: pointer;
+        transition: all 0.2s;
+        align-items: center;
+        font-size: 23px;
+        background: #ffffff;
+
+        &:disabled {
+          background: #ffffff;
+          cursor: not-allowed;
+          color: #BFCACD;
+          border: 1px solid #BFCACD;
+        }
+        &:hover:not(:disabled) { background: #009247; color: #fff; }
+      }
+      .count {
+        font-family: 'Rubik';
+        min-width: 15px;
+        font-weight: 400;
+        font-size: 20px;
+        color: #2A3335;
+        line-height: 240%;
+        letter-spacing: 0%;
+        text-align: center;
+      }
+    }
+    .label {
+      font-family: 'Rubik';
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 240%;
+      letter-spacing: 0%;
+      text-align: right;
+      color: #2A3335;
+      .note {
+        color: #687482;
+        font-family: 'Rubik';
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 240%;
+        letter-spacing: 0%;
+        text-align: right;
+      }
+    }
+  }
+
+  .add-room-wrapper { align-self: stretch; display: flex; align-items: flex-end; }
 }

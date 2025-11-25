@@ -9,13 +9,26 @@ import { PassangersInput } from '../models/shared-passanger-input.models';
   providedIn: 'root'
 })
 export class SharedPassengersService {
+  // Shift (px) applied per room (desktop only)
+  readonly ROOMS_MARGIN_SHIFT = 230;
+
+  // Calculate cumulative right margin for given rooms count
+  getRoomsMargin(roomsCount: number): number {
+    if (roomsCount <= 1) return 0;
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      return - (roomsCount - 1) * this.ROOMS_MARGIN_SHIFT; // negative to push left
+    }
+    return 0;
+  }
 
   getPassengersByType(type: ESharedInputType): Observable<PassangersInput> {
     switch (type) {
       case ESharedInputType.PASSANGERS_FLIGHTS:
         return of(this.getFlightPassengers());
-             case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
+      case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
         return of(this.getAboardHotelPassengers());
+      case ESharedInputType.PASSANGERS_DOMESTIC_VACATION:
+        return of(this.getDomesticVacationPassengers());
       default:
         return of({ optionsAge: [], allowPickRoom: false });
     }
@@ -140,6 +153,56 @@ private getAboardHotelPassengers(): PassangersInput {
             ],
             selectedAges: []
           },
+        ]
+      }
+    ]
+  };
+}
+
+private getDomesticVacationPassengers(): PassangersInput {
+  return {
+    allowPickRoom: true,
+    maxRoomsPick: 4,
+    rooms: [
+      {
+        roomNumber: 1,
+        adults: 2,
+        children: 0,
+        infants: 0
+      }
+    ],
+    optionsAge: [
+      {
+        title: 'קבוצות גיל',
+        options: [
+          { 
+            label: 'מבוגר', 
+            value: 'adult', 
+            note: '(גיל 12+)', 
+            minCount: 1, 
+            maxCount: 6,
+            defaultValue: 2,
+            requiresSpecificAge: false
+          },
+          { 
+            label: 'ילד', 
+            value: 'child', 
+            note: '(גיל 2-11)', 
+            minCount: 0, 
+            maxCount: 4,
+            defaultValue: 0,
+            requiresSpecificAge: false,
+            selectedAges: []
+          },
+          { 
+            label: 'תינוק', 
+            value: 'infant', 
+            note: '(מתחת ל-2)', 
+            minCount: 0, 
+            maxCount: 2,
+            defaultValue: 0,
+            requiresSpecificAge: false
+          }
         ]
       }
     ]
