@@ -100,18 +100,39 @@ export class SharedPassangerInputComponent implements OnInit {
     }
   }
 
-  increment(age: AgeGroup) {
-    const currentCount = age.count || 0;
-    if (currentCount < age.maxCount) {
-      age.count = currentCount + 1;
-      // אם דורש גיל ספציפי, אתחל את המערך אם צריך
-      if (age.requiresSpecificAge && age.selectedAges) {
-        const firstOption = age.specificAgeOptions?.[0];
-        age.selectedAges.push(firstOption ? parseInt(firstOption.key) : 0);
-      }
-      this.emitChange();
-      this.cdr.markForCheck();
+  isMaxTotalReached(): boolean {
+    if (!this.value?.maxTotalPassengers) {
+      return false;
     }
+    return this.totalPassengers >= this.value.maxTotalPassengers;
+  }
+
+  canIncrement(age: AgeGroup): boolean {
+    const currentCount = age.count || 0;
+    if (currentCount >= age.maxCount) {
+      return false;
+    }
+    // בדוק אם הגענו למקסימום כללי
+    if (this.isMaxTotalReached()) {
+      return false;
+    }
+    return true;
+  }
+
+  increment(age: AgeGroup) {
+    if (!this.canIncrement(age)) {
+      return;
+    }
+    
+    const currentCount = age.count || 0;
+    age.count = currentCount + 1;
+    // אם דורש גיל ספציפי, אתחל את המערך אם צריך
+    if (age.requiresSpecificAge && age.selectedAges) {
+      const firstOption = age.specificAgeOptions?.[0];
+      age.selectedAges.push(firstOption ? parseInt(firstOption.key) : 0);
+    }
+    this.emitChange();
+    this.cdr.markForCheck();
   }
 
   decrement(age: AgeGroup) {
@@ -201,14 +222,38 @@ export class SharedPassangerInputComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  incrementRoom(roomIndex: number, type: 'adults' | 'children' | 'infants') {
-    if (!this.value?.rooms || !this.value.rooms[roomIndex]) return;
+  canIncrementRoom(roomIndex: number, type: 'adults' | 'children' | 'infants'): boolean {
+    if (!this.value?.rooms || !this.value.rooms[roomIndex]) return false;
     
     const room = this.value.rooms[roomIndex];
     const maxValues = { adults: 6, children: 4, infants: 2 };
     
-    if (room[type] < maxValues[type]) {
-      room[type]++;
+    // בדוק אם הגענו למקסימום של הסוג הזה
+    if (room[type] >= maxValues[type]) {
+      return false;
+    }
+    
+    // בדוק אם הגענו למקסימום כללי (כל הנוסעים)
+    if (this.isMaxTotalReached()) {
+      return false;
+    }
+    
+    // בדוק אם הגענו למקסימום בחדר הזה
+    if (this.value.maxPassengersInRoom) {
+      const currentRoomTotal = room.adults + room.children + room.infants;
+      if (currentRoomTotal >= this.value.maxPassengersInRoom) {
+        return false;
+      }
+    }
+    
+    return true;
+  }
+
+  incrementRoom(roomIndex: number, type: 'adults' | 'children' | 'infants') {
+    if (!this.canIncrementRoom(roomIndex, type)) return;
+    
+    if (this.value?.rooms && this.value.rooms[roomIndex]) {
+      this.value.rooms[roomIndex][type]++;
       this.emitChange();
       this.cdr.markForCheck();
     }

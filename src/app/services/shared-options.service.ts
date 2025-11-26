@@ -126,7 +126,7 @@ searchAutocomplete(type: ESharedInputType, term: string): Observable<MenuOption[
     const t = term.toLowerCase();
     return cached.filter(opt =>
       opt.label.toLowerCase().includes(t) ||
-      opt.key?.toLowerCase().includes(t) ||
+      (typeof opt.key === 'string' && opt.key.toLowerCase().includes(t)) ||
       opt.note?.toLowerCase().includes(t)
     );
   }

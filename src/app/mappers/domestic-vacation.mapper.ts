@@ -4,9 +4,6 @@ import { ESharedInputType } from '../enums/ESharedInputType';
 export class DomesticVacationMapper {
   static mapDestinations(data: any): MenuOption[] {
     
-   
-    
-    // API returns { Hotels: [], Destinations: [] }
     const hotels = data?.Hotels || [];
     const destinations = data?.Destinations || [];
     
@@ -32,10 +29,17 @@ export class DomesticVacationMapper {
       // For hotels, use HotelName, for destinations use CityNameHe
       const name = item.HotelName || item.CityNameHe || item.Name || item.LocationName || 'Unknown';
       const countryName = item.CountryNameHe || '';
-      const label = countryName ? `${name}, ${countryName}` : name;
       
-      // For hotels use HotelId, for destinations use IataCode
-      const key = item.HotelId || item.IataCode || item.LocationId || item.HotelLocationId || item.Id;
+      // אם זה מלון (HotelId קיים), הוסף את שם העיר
+      let label;
+      if (item.HotelId && item.CityNameHe) {
+        label = `${name}, ${item.CityNameHe}`;
+      } else {
+        label = countryName ? `${name}, ${countryName}` : name;
+      }
+      
+      // For hotels use HotelId, for destinations use IataCode - convert to string
+      const key = String(item.HotelId || item.IataCode || item.LocationId || item.HotelLocationId || item.Id || '');
       
       const result = {
         label,
@@ -51,4 +55,5 @@ export class DomesticVacationMapper {
     console.log('[DomesticVacationMapper] Final mapped results:', mappedResults);
     return mappedResults;
   }
+
 }

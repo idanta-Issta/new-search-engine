@@ -28,7 +28,12 @@ export class SharedPassengersService {
       case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
         return of(this.getAboardHotelPassengers());
       case ESharedInputType.PASSANGERS_DOMESTIC_VACATION:
-        return of(this.getDomesticVacationPassengers());
+        return of(this.getDomesticVacationPassengers(true, 36, 9, 4));
+          case ESharedInputType.PASSANGERS_FLIGHTS_EILAT:
+    return of(this.getDomesticVacationPassengers(false, 9, 0));
+
+      case ESharedInputType.PASSANGERS_FLIGHTS_AND_HOTEL_EILAT:
+        return of(this.getDomesticVacationPassengers(true, 7, 7, 1));
       default:
         return of({ optionsAge: [], allowPickRoom: false });
     }
@@ -37,6 +42,7 @@ export class SharedPassengersService {
 private getFlightPassengers(): PassangersInput {
   return {
     allowPickRoom: false,
+    maxTotalPassengers: 9,
     optionsAge: [
       {
         title: 'קבוצות גיל',
@@ -159,10 +165,16 @@ private getAboardHotelPassengers(): PassangersInput {
   };
 }
 
-private getDomesticVacationPassengers(): PassangersInput {
+private getDomesticVacationPassengers(
+  includeRooms: boolean = true,
+  maxTotalPassengers: number = 9, 
+  maxPassengersInRoom: number = 9,
+maxRoomsPick = 4): PassangersInput {
   return {
-    allowPickRoom: true,
-    maxRoomsPick: 4,
+    allowPickRoom: includeRooms,
+    maxRoomsPick: includeRooms ? maxRoomsPick : 1,
+    maxTotalPassengers: maxTotalPassengers,
+    maxPassengersInRoom: includeRooms ? maxPassengersInRoom : undefined,
     rooms: [
       {
         roomNumber: 1,

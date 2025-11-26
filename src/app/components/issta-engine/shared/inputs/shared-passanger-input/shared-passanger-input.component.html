@@ -38,7 +38,7 @@
                   <span class="count">{{ age.value === 'adult' ? room.adults : age.value === 'child' ? room.children : room.infants }}</span>
                   <button
                     (click)="incrementRoom(i, age.value === 'adult' ? 'adults' : age.value === 'child' ? 'children' : 'infants')"
-                    [disabled]="(age.value === 'adult' ? room.adults : age.value === 'child' ? room.children : room.infants) >= age.maxCount"
+                    [disabled]="!canIncrementRoom(i, age.value === 'adult' ? 'adults' : age.value === 'child' ? 'children' : 'infants')"
                   >+</button>
                 </div>
                 <div class="label">
@@ -60,7 +60,7 @@
               <div class="buttons">
                 <button (click)="decrement(age)" [disabled]="(age.count || 0) <= age.minCount">−</button>
                 <span class="count">{{ age.count || 0 }}</span>
-                <button (click)="increment(age)" [disabled]="(age.count || 0) >= age.maxCount">+</button>
+                <button (click)="increment(age)" [disabled]="!canIncrement(age)">+</button>
               </div>
               <div class="label">
                 {{ age.label }}

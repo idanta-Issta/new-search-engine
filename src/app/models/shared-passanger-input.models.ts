@@ -4,6 +4,8 @@ export interface PassangersInput {
   optionsAge: OptionAge[];
   allowPickRoom: boolean;
   maxRoomsPick?: number;
+  maxTotalPassengers?: number;
+  maxPassengersInRoom?: number;
   rooms?: RoomPassengers[];
 }
 

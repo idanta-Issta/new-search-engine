@@ -147,7 +147,7 @@ export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
      choices: [
       { label: "מלונות בארץ", value: "hotel_domestic", isDefault: false },
       { label: "חיפוש טיסות לאילת", value: "flight_to_eilat", isDefault: true, useEngine: ETypeSearchEngine.FLIGHTS_TO_EILAT },
-      { label: "טיסה ומלון לאילת", value: "flight_hotel_eilat", isDefault: false ,  promotionText: TEXTS.PROMOTION.BEST_DEAL}
+      { label: "טיסה ומלון לאילת", value: "flight_hotel_eilat", isDefault: false, promotionText: TEXTS.PROMOTION.BEST_DEAL, useEngine: ETypeSearchEngine.FLIGHTS_AND_HOTELS_TO_EILAT }
 
     ],
   },
@@ -219,9 +219,43 @@ export const FLIGHTS_TO_EILAT_CONFIG: SearchEngineConfig = {
       value: { start: null as Date | null, end: null as Date | null }
     },
     {
-      type: ESharedInputType.PASSANGERS_FLIGHTS,
+      type: ESharedInputType.PASSANGERS_FLIGHTS_EILAT,
       size: EInputSize.SMALL,
-      position: EDropdownPosition.BOTTOM_RIGHT,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: null
+    }
+  ]
+};
+
+export const FLIGHTS_AND_HOTELS_TO_EILAT_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.FLIGHTS_AND_HOTELS_TO_EILAT,
+  header: {
+    title: 'טיסה ומלון לאילת',
+  },
+  footer: {
+    infoItems: [
+      TEXTS.FOOTER.INFO.ANY_VACATION,
+      TEXTS.FOOTER.INFO.PAYMENT_PLAN,
+      TEXTS.FOOTER.INFO.AVAILABLE
+    ]
+  },
+  inputs: [
+    {
+      type: ESharedInputType.DESTINATIONS_FLIGHTS_HOTEL_EILAT,
+      size: EInputSize.HUGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: null
+    },
+    {
+      type: ESharedInputType.PICKER_DATES,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { start: null as Date | null, end: null as Date | null }
+    },
+    {
+      type: ESharedInputType.PASSANGERS_FLIGHTS_AND_HOTEL_EILAT,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_CENTER,
       value: null
     }
   ]
@@ -232,6 +266,7 @@ export const ALL_CONFIGS: SearchEngineConfig[] = [
   HOTEL_ABROAD_CONFIG,
   FLIGHTS_MULTI_DESTINATIONS_CONFIG,
   FLIGHTS_TO_EILAT_CONFIG,
+  FLIGHTS_AND_HOTELS_TO_EILAT_CONFIG,
   DOMESTIC_VACATION_CONFIG
 ];
 

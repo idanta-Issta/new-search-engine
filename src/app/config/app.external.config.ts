@@ -15,6 +15,9 @@ export const AppExternalConfig = {
       destinations: 'domestic-hotels/populardestinations',
       searchResultsPath: '/loader?url=domestic-vacation/results.aspx'
     },
+    domesticDynamicPackages: {
+      destinations: 'domestic-dynamic-packages/populardestinations'
+    },
     cars: {
       rental: 'cars/popularrental'
     }

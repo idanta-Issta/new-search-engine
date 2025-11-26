@@ -6,6 +6,7 @@ import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
 import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
 import { TEXTS, ICONS } from '../constants/app.constants';
+import { EILAT_AIRPORTS } from '../constants/destinations.constants';
 
 export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = {
   [ESharedInputType.DESTINATIONS_FLIGHTS]: {
@@ -24,11 +25,7 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
   },
 
   [ESharedInputType.DESTINATIONS_FLIGHTS_EILAT]: {
-    listMenuOption: [
-      { label: 'אילת, נמל תעופה רמון (ETM)', value: 'ETM' },
-      { label: 'חיפה (HFA)', value: 'HFA' },
-      { label: 'תל אביב, נתב"ג (TLV)', value: 'TLV' }
-    ],
+    listMenuOption: EILAT_AIRPORTS,
     mapper: (data: any) => data,
     uiConfig: {
       title: "מ",
@@ -40,12 +37,21 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
   },
 
+  [ESharedInputType.DESTINATIONS_FLIGHTS_HOTEL_EILAT]: {
+   requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.domesticDynamicPackages.destinations}`,
+    mapper: DomesticVacationMapper.mapDestinations,
+    uiConfig: {
+      title: TEXTS.SEARCH.INPUT_TITLES.WHERE,
+      icon: ICONS.HOTEL,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.HOTEL_DESTINATION,
+      titleMenuOptions: TEXTS.SEARCH.MENU_TITLES.POPULAR_DESTINATIONS,
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
     [ESharedInputType.ORIGINS_FLIGHTS_EILAT]: {
-    listMenuOption: [
-      { label: 'אילת, נמל תעופה רמון (ETM)', value: 'ETM' },
-      { label: 'חיפה (HFA)', value: 'HFA' },
-      { label: 'תל אביב, נתב"ג (TLV)', value: 'TLV' }
-    ],
+    listMenuOption: EILAT_AIRPORTS,
     mapper: (data: any) => data,
     uiConfig: {
       title: "אל",
@@ -118,6 +124,28 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
   },
 
   [ESharedInputType.PASSANGERS_ABOARD_HOTEL]: {
+    mapper: () => [],
+    uiConfig: {
+      title: TEXTS.PASSENGERS.LABEL,
+      icon: ICONS.PASSENGER,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.PASSENGERS,
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
+  },
+
+    [ESharedInputType.PASSANGERS_FLIGHTS_EILAT]: {
+    mapper: () => [],
+    uiConfig: {
+      title: TEXTS.PASSENGERS.LABEL,
+      icon: ICONS.PASSENGER,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.PASSENGERS,
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
+  },
+
+   [ESharedInputType.PASSANGERS_FLIGHTS_AND_HOTEL_EILAT]: {
     mapper: () => [],
     uiConfig: {
       title: TEXTS.PASSENGERS.LABEL,
