@@ -43,6 +43,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   @Input() value?: MenuOption;
   @Input() width: string = '100%';
   @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
+  @Input() excludeValues?: string[];
 
   @Output() valueChange = new EventEmitter<MenuOption>();
   @Output() optionPicked = new EventEmitter<MenuOption>();
@@ -81,7 +82,9 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
       this.searchTerm = this.config.defaultValue.label;
     }
 
-    this.sharedService.getOptionsByType(this.type).subscribe({
+    // טען אופציות תוך שמירה על הערך הנוכחי
+    const currentValue = this.value?.value || this.value?.key;
+    this.sharedService.getOptionsWithCurrentValue(this.type, currentValue).subscribe({
       next: (data) => {
         this.options = data;
         this.filteredOptions = data;
@@ -105,6 +108,11 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
       const newValue = changes['value'].currentValue as MenuOption;
       this.searchTerm = newValue.label || '';
     }
+
+    // אם excludeValues השתנה ויש כבר אופציות, טען מחדש
+    if (changes['excludeValues'] && !changes['excludeValues'].firstChange && this.options) {
+      this.reloadOptions();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -116,6 +124,8 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
 
   onInputOpened() {
     this.isOpen = true;
+    // טען מחדש אופציות בכל פתיחה (כדי לתפוס שינויים ב-excludeValues)
+    this.reloadOptions();
     this.loadCustomHeaderComponent();
     this.cdr.markForCheck();
   }
@@ -123,9 +133,21 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   /** למה: מאפשר פתיחה מתוכנתית מהסבא דרך הבן */
   open() {
     this.isOpen = true;
+    this.reloadOptions();
     this.cdr.markForCheck();
     // Use setTimeout to ensure the view is rendered before loading component
     setTimeout(() => this.loadCustomHeaderComponent(), 0);
+  }
+
+  private reloadOptions() {
+    this.sharedService.getOptionsByType(this.type, this.excludeValues).subscribe({
+      next: (data) => {
+        this.options = data;
+        this.filteredOptions = data;
+        this.cdr.markForCheck();
+      },
+      error: (err) => console.error('Error reloading options:', err),
+    });
   }
 
   async loadCustomHeaderComponent() {
@@ -185,11 +207,19 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   }
 
 selectOption(option: MenuOption) {
-  this.value = option; // Update the value to track selected option
+  this.value = option;
   this.optionPicked.emit(option);
   this.searchTerm = option.label;
   this.isOpen = false;
   this.cdr.markForCheck();
+}
+
+isSelected(option: MenuOption): boolean {
+  if (!this.value) return false;
+  // Support both 'key' and 'value' properties for backward compatibility
+  const selectedIdentifier = this.value.value || this.value.key;
+  const optionIdentifier = option.value || option.key;
+  return selectedIdentifier === optionIdentifier && selectedIdentifier !== undefined;
 }
 
 

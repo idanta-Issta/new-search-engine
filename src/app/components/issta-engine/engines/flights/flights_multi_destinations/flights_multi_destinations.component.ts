@@ -189,7 +189,7 @@ export class FlightsMultiDestinationsComponent {
     }, 100); // דיליי קטן למניעת קונפליקטים
   }
 
-  // פתיחת תאריכון בשורה מסוימת
+ 
   private openDateInput(segmentIndex: number) {
     setTimeout(() => {
       const inputs = this.calendarInputs.toArray();

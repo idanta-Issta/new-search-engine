@@ -23,6 +23,40 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
  
   },
 
+  [ESharedInputType.DESTINATIONS_FLIGHTS_EILAT]: {
+    listMenuOption: [
+      { label: 'אילת, נמל תעופה רמון (ETM)', value: 'ETM' },
+      { label: 'חיפה (HFA)', value: 'HFA' },
+      { label: 'תל אביב, נתב"ג (TLV)', value: 'TLV' }
+    ],
+    mapper: (data: any) => data,
+    uiConfig: {
+      title: "מ",
+      icon: ICONS.PLANE,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.DESTINATION,
+      titleMenuOptions: 'יעדים פופולריים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+    [ESharedInputType.ORIGINS_FLIGHTS_EILAT]: {
+    listMenuOption: [
+      { label: 'אילת, נמל תעופה רמון (ETM)', value: 'ETM' },
+      { label: 'חיפה (HFA)', value: 'HFA' },
+      { label: 'תל אביב, נתב"ג (TLV)', value: 'TLV' }
+    ],
+    mapper: (data: any) => data,
+    uiConfig: {
+      title: "אל",
+      icon: ICONS.PLANE,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.DESTINATION,
+      titleMenuOptions: 'יעדים פופולריים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
   [ESharedInputType.ORIGINS_FLIGHTS]: {
     requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.flights.destinations}`,
     autocompleteUrl: `${AppExternalConfig.baseUrl}flights/autocomplete`,

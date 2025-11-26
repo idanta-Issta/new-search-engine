@@ -12,6 +12,8 @@ export interface SharedInputConfig<T = any> {
   requestUrl?: string;
   autocompleteUrl?: string;
   mapper?: (data: any) => any;
+  listMenuOption?: MenuOption[];
+  excludeValues?: string[];
   uiConfig: {
     title: string;
     placeholder?: string;

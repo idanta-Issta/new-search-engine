@@ -146,8 +146,8 @@ export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
     title: TEXTS.HEADER.DOMESTIC_VACATION_TITLE,
      choices: [
       { label: "מלונות בארץ", value: "hotel_domestic", isDefault: true },
-      { label: "חיפוש טיסות לאילת", value: "flight_to_eilat", isDefault: true, useEngine: ETypeSearchEngine.FLIGHTS_TO_EILAT },
-      { label: "טיסה ומלון לאילת", value: "flight_hotel_eilat", isDefault: true ,  promotionText: TEXTS.PROMOTION.BEST_DEAL}
+      { label: "חיפוש טיסות לאילת", value: "flight_to_eilat", isDefault: false, useEngine: ETypeSearchEngine.FLIGHTS_TO_EILAT },
+      { label: "טיסה ומלון לאילת", value: "flight_hotel_eilat", isDefault: false ,  promotionText: TEXTS.PROMOTION.BEST_DEAL}
 
     ],
   },
@@ -201,16 +201,16 @@ export const FLIGHTS_TO_EILAT_CONFIG: SearchEngineConfig = {
   },
   inputs: [
     {
-      type: ESharedInputType.DESTINATIONS_FLIGHTS,
+      type: ESharedInputType.DESTINATIONS_FLIGHTS_EILAT,
       size: EInputSize.LARGE,
       position: EDropdownPosition.BOTTOM_LEFT,
-      value: { label: 'תל אביב, שדה תעופה (TLV)', value: 'TLV' }
+      value: { label: 'תל אביב, נתב"ג', value: 'TLV' }
     },
     {
-      type: ESharedInputType.ORIGINS_FLIGHTS,
+      type: ESharedInputType.ORIGINS_FLIGHTS_EILAT,
       size: EInputSize.LARGE,
       position: EDropdownPosition.BOTTOM_LEFT,
-      value: null
+        value: { label: 'אילת, נמל תעופה רמון', value: 'ETM' }
     },
     {
       type: ESharedInputType.PICKER_DATES,

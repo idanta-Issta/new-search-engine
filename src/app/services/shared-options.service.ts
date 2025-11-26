@@ -12,8 +12,15 @@ export class SharedOptionsService {
 
   constructor(private http: HttpClient) {}
 
-getOptionsByType(type: ESharedInputType): Observable<MenuOption[]> {
+getOptionsByType(type: ESharedInputType, excludeValues?: string[]): Observable<MenuOption[]> {
   const config = SharedInputRegistry[type];
+  
+  // אם יש listMenuOption מוגדר - נחזיר אותו ישירות ללא בקשת HTTP
+  if (config?.listMenuOption) {
+    const filtered = this.filterExcludedValues(config.listMenuOption, excludeValues);
+    return of(filtered);
+  }
+  
   if (!config?.requestUrl) {
     console.warn(`⚠️ Missing requestUrl for input type: ${type}`);
     return of([]);
@@ -21,8 +28,44 @@ getOptionsByType(type: ESharedInputType): Observable<MenuOption[]> {
 
 return this.http
   .get<any[]>(config.requestUrl!)
-  .pipe(map(config.mapper ?? ((data: any) => data)));
+  .pipe(
+    map(config.mapper ?? ((data: any) => data)),
+    map(options => this.filterExcludedValues(options, excludeValues))
+  );
 
+}
+
+private filterExcludedValues(options: MenuOption[], excludeValues?: string[]): MenuOption[] {
+  if (!excludeValues || excludeValues.length === 0) return options;
+  return options.filter(opt => {
+    const optValue = opt.value || opt.key;
+    return !excludeValues.includes(optValue || '');
+  });
+}
+
+getOptionsWithCurrentValue(type: ESharedInputType, currentValue?: string): Observable<MenuOption[]> {
+  const config = SharedInputRegistry[type];
+  
+  // אם יש listMenuOption מוגדר
+  if (config?.listMenuOption) {
+    // סנן את excludeValues אבל השאר את הערך הנוכחי
+    const excludeList = (config.excludeValues || []).filter(v => v !== currentValue);
+    const filtered = this.filterExcludedValues(config.listMenuOption, excludeList);
+    return of(filtered);
+  }
+  
+  if (!config?.requestUrl) {
+    console.warn(`⚠️ Missing requestUrl for input type: ${type}`);
+    return of([]);
+  }
+
+  const excludeList = (config.excludeValues || []).filter(v => v !== currentValue);
+  return this.http
+    .get<any[]>(config.requestUrl!)
+    .pipe(
+      map(config.mapper ?? ((data: any) => data)),
+      map(options => this.filterExcludedValues(options, excludeList))
+    );
 }
 
 

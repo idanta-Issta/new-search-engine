@@ -7,4 +7,5 @@ export interface InputConfig {
   size: EInputSize;
   position: EDropdownPosition;
   value?: any;
+  excludeValues?: string[];
 }

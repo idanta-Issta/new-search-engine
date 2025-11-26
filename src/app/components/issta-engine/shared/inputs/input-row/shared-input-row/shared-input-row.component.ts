@@ -86,6 +86,11 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
         instance.value = config.value;
       }
 
+      // העברת excludeValues
+      if (config.excludeValues !== undefined) {
+        instance.excludeValues = config.excludeValues;
+      }
+
       // הרשמה לאירוע אחד בלבד כדי למנוע כפילות
       if (instance.optionPicked?.subscribe) {
         instance.optionPicked.subscribe((value: any) =>
@@ -104,12 +109,27 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   private applyValuesToInstances(): void {
     this.configs.forEach(config => {
       const ref = this.componentRefs.get(config.type);
-      if (ref && config.value !== undefined) {
+      if (ref) {
         const inst = ref.instance as any;
-        inst.value = config.value;
+        
+        // עדכון value
+        if (config.value !== undefined) {
+          inst.value = config.value;
+        }
+        
+        // עדכון excludeValues
+        if (config.excludeValues !== undefined) {
+          inst.excludeValues = config.excludeValues;
+        }
+        
         ref.changeDetectorRef.detectChanges();
       }
     });
+  }
+
+  /** עדכון ערכים בלי לבנות מחדש את הקומפוננטים */
+  updateValues(): void {
+    this.applyValuesToInstances();
   }
 
   /** פתיחה מתוכנתית מהסבא */

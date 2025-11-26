@@ -1,6 +1,7 @@
 export interface MenuOption {
   label: string;
-  note?: string | null; // 👈 תוסיף null לטייפ
+  value?: string;
+  note?: string | null;
   key?: string;
   icon?: string;
   isPromoted?: boolean;
