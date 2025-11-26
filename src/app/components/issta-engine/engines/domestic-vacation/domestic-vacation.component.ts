@@ -34,7 +34,10 @@ export class DomesticVacationComponent extends BaseEngineComponent {
 
   override ngOnInit(): void {
     super.ngOnInit();
-    // אתחול ראשוני של exclusions מערכי ברירת המחדל
+  }
+
+  protected override onEngineLoaded(): void {
+    // נקרא אחרי שמנוע נטען (כולל default choice)
     this.initializeEilatDefaults();
   }
 
@@ -42,6 +45,16 @@ export class DomesticVacationComponent extends BaseEngineComponent {
     // קרא את ערכי ברירת המחדל מהקונפיג
     const destinationConfig = this.inputConfigs.find(c => c.type === ESharedInputType.DESTINATIONS_FLIGHTS_EILAT);
     const originConfig = this.inputConfigs.find(c => c.type === ESharedInputType.ORIGINS_FLIGHTS_EILAT);
+
+    // אם אין inputs של אילת, לא צריך לעשות כלום
+    if (!destinationConfig && !originConfig) {
+      return;
+    }
+
+    // אתחול: חזור מתחיל מוסתר חיפה ותל אביב
+    if (originConfig) {
+      originConfig.excludeValues = ["HFA", "TLV"];
+    }
 
     if (destinationConfig?.value) {
       this.selectedDestinationFlightEilat = destinationConfig.value;
@@ -79,18 +92,43 @@ export class DomesticVacationComponent extends BaseEngineComponent {
 
   private updateEilatInputExclusions(): void {
     const destinationValue = this.selectedDestinationFlightEilat?.value;
-    const originValue = this.selectedOriginFlightEilat?.value;
 
-    // עדכן את ה-InputConfig של origins - נסנן את היעד הנבחר
     const originsConfig = this.inputConfigs.find(c => c.type === ESharedInputType.ORIGINS_FLIGHTS_EILAT);
-    if (originsConfig) {
-      originsConfig.excludeValues = destinationValue ? [destinationValue] : [];
+    const destinationsConfig = this.inputConfigs.find(c => c.type === ESharedInputType.DESTINATIONS_FLIGHTS_EILAT);
+
+    // הלוך - אף פעם לא מסנן
+    if (destinationsConfig) {
+      destinationsConfig.excludeValues = [];
     }
 
-    // עדכן את ה-InputConfig של destinations - נסנן את המוצא הנבחר
-    const destinationsConfig = this.inputConfigs.find(c => c.type === ESharedInputType.DESTINATIONS_FLIGHTS_EILAT);
-    if (destinationsConfig) {
-      destinationsConfig.excludeValues = originValue ? [originValue] : [];
+    // לוגיקה לפי הלוך שנבחר - משנה את החזור ואת התפריט שלו
+    if (destinationValue === 'ETM') {
+      // אם בחרו אילת בהלוך
+      if (originsConfig) {
+        // החזור = תל אביב, הסתר רק אילת
+        const newOriginValue = { label: 'תל אביב, נתב"ג', value: 'TLV' };
+        originsConfig.value = newOriginValue;
+        originsConfig.excludeValues = ['ETM'];
+        this.selectedOriginFlightEilat = newOriginValue;
+      }
+    } else if (destinationValue === 'HFA') {
+      // אם בחרו חיפה בהלוך
+      if (originsConfig) {
+        // החזור = אילת, הסתר תל אביב וחיפה
+        const newOriginValue = { label: 'אילת, נמל תעופה רמון', value: 'ETM' };
+        originsConfig.value = newOriginValue;
+        originsConfig.excludeValues = ['TLV', 'HFA'];
+        this.selectedOriginFlightEilat = newOriginValue;
+      }
+    } else if (destinationValue === 'TLV') {
+      // אם בחרו תל אביב בהלוך
+      if (originsConfig) {
+        // החזור = אילת, הסתר תל אביב וחיפה
+        const newOriginValue = { label: 'אילת, נמל תעופה רמון', value: 'ETM' };
+        originsConfig.value = newOriginValue;
+        originsConfig.excludeValues = ['TLV', 'HFA'];
+        this.selectedOriginFlightEilat = newOriginValue;
+      }
     }
 
     // עדכן את הקומפוננטים הקיימים בלי לבנות מחדש
@@ -100,6 +138,21 @@ export class DomesticVacationComponent extends BaseEngineComponent {
   protected openNextInput(type: ESharedInputType, value: any): void {
     switch (type) {
       case ESharedInputType.DOMESTIC_VACATION_DESTINATION:
+        if (value) {
+          this.inputsRow?.openInputDelayed(ESharedInputType.PICKER_DATES);
+        }
+        break;
+      case ESharedInputType.DESTINATIONS_FLIGHTS_EILAT:
+        if (value?.value === 'ETM') {
+          // אם בחרו אילת - יש רק תל אביב בחזור, פתח תאריכון ישירות
+          this.inputsRow?.openInputDelayed(ESharedInputType.ORIGINS_FLIGHTS_EILAT);
+        } else {
+          // אם בחרו חיפה או תל אביב - יש רק אילת בחזור, פתח תאריכון ישירות
+          this.inputsRow?.openInputDelayed(ESharedInputType.PICKER_DATES);
+        }
+        break;
+      case ESharedInputType.ORIGINS_FLIGHTS_EILAT:
+        // תמיד פתח תאריכון אחרי בחירת חזור
         if (value) {
           this.inputsRow?.openInputDelayed(ESharedInputType.PICKER_DATES);
         }

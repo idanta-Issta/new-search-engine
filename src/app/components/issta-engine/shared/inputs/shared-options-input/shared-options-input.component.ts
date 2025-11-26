@@ -40,7 +40,19 @@ import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
 })
 export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() type!: ESharedInputType;
-  @Input() value?: MenuOption;
+  
+  private _value?: MenuOption;
+  @Input() 
+  set value(val: MenuOption | undefined) {
+    this._value = val;
+    if (val) {
+      this.searchTerm = val.label || '';
+    }
+  }
+  get value(): MenuOption | undefined {
+    return this._value;
+  }
+  
   @Input() width: string = '100%';
   @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
   @Input() excludeValues?: string[];
@@ -107,6 +119,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
     if (changes['value'] && changes['value'].currentValue) {
       const newValue = changes['value'].currentValue as MenuOption;
       this.searchTerm = newValue.label || '';
+      this.cdr.markForCheck();
     }
 
     // אם excludeValues השתנה ויש כבר אופציות, טען מחדש

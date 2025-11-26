@@ -51,15 +51,15 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
     this.loadDefaultEngine();
   }
 
-  private loadDefaultEngine(): void {
+  private async loadDefaultEngine(): Promise<void> {
     const defaultEngine = this.engineService.getDefaultEngine();
     if (defaultEngine) {
       this.applyEngine(defaultEngine);
-      this.loadCustomComponent(defaultEngine.customComponent);
+      await this.loadCustomComponent(defaultEngine.customComponent);
+      // אפשר לילדים לאתחל אחרי שהמנוע נטען
+      this.onEngineLoaded();
     }
-  }
-
-  onInputPicked(event: { type: ESharedInputType; value: any }): void {
+  }  onInputPicked(event: { type: ESharedInputType; value: any }): void {
     this.updateValue(event.type, event.value);
     const config = this.inputConfigs.find(c => c.type === event.type);
     if (config) {
@@ -93,13 +93,14 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
   }
 
   private switchEngine(targetEngine: any): void {
-    this.animateTransition(() => {
+    this.animateTransition(async () => {
       const result = targetEngine
         ? this.engineService.switchTo(targetEngine)
         : this.engineService.resetToOriginal();
 
       this.applyEngine(result);
-      this.loadCustomComponent(result.customComponent);
+      await this.loadCustomComponent(result.customComponent);
+      this.onEngineLoaded();
     });
   }
 
@@ -139,6 +140,11 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
     this.activeHeader = result.header;
     this.activeFooter = result.footer;
     this.inputConfigs = result.inputs;
+  }
+
+  /** Hook לילדים: נקרא אחרי שמנוע נטען (default או החלפה) */
+  protected onEngineLoaded(): void {
+    // קומפוננטים ילדים יכולים לעשות override
   }
 
   private animateTransition(callback: () => void): void {

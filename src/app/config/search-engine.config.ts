@@ -145,8 +145,8 @@ export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
   header: {
     title: TEXTS.HEADER.DOMESTIC_VACATION_TITLE,
      choices: [
-      { label: "מלונות בארץ", value: "hotel_domestic", isDefault: true },
-      { label: "חיפוש טיסות לאילת", value: "flight_to_eilat", isDefault: false, useEngine: ETypeSearchEngine.FLIGHTS_TO_EILAT },
+      { label: "מלונות בארץ", value: "hotel_domestic", isDefault: false },
+      { label: "חיפוש טיסות לאילת", value: "flight_to_eilat", isDefault: true, useEngine: ETypeSearchEngine.FLIGHTS_TO_EILAT },
       { label: "טיסה ומלון לאילת", value: "flight_hotel_eilat", isDefault: false ,  promotionText: TEXTS.PROMOTION.BEST_DEAL}
 
     ],
