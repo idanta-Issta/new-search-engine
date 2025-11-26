@@ -11,6 +11,7 @@ import { FLIGHTS_CONFIG } from '../../../../config/search-engine.config';
 import { BaseEngineService } from '../../../../services/engine.service';
 import { BaseEngineComponent } from '../base-engine.component';
 import { FlightsManager } from '../../../../managers/flights.manager';
+import { VALUES } from '../../../../constants/app.constants';
 
 
 @Component({
@@ -63,6 +64,49 @@ export class FlightsComponent extends BaseEngineComponent {
           this.inputsRow?.openInputDelayed(ESharedInputType.PASSANGERS_FLIGHTS);
         }
         break;
+    }
+  }
+
+  override onHeaderStateChange(state: any): void {
+    super.onHeaderStateChange(state);
+    
+    // Handle ONE_WAY trip type
+    if (state.selectedTripType?.value === VALUES.TRIP_TYPE.ONE_WAY) {
+      // Hide FLEXIBLE option
+      if (this.activeFooter?.options) {
+        this.activeFooter.options = this.activeFooter.options.map((opt: any) => {
+          if (opt.value === VALUES.FOOTER_OPTIONS.FLEXIBLE) {
+            return { ...opt, isHidden: true };
+          }
+          return opt;
+        });
+      }
+      
+      // Update calendar to single date mode
+      const dateInput = this.inputConfigs.find(c => c.type === ESharedInputType.PICKER_DATES);
+      if (dateInput) {
+        dateInput.isOneWay = true;
+        // Update the row component
+        this.inputsRow?.updateValues();
+      }
+    } else {
+      // Show FLEXIBLE option for other trip types
+      if (this.activeFooter?.options) {
+        this.activeFooter.options = this.activeFooter.options.map((opt: any) => {
+          if (opt.value === VALUES.FOOTER_OPTIONS.FLEXIBLE) {
+            return { ...opt, isHidden: false };
+          }
+          return opt;
+        });
+      }
+      
+      // Update calendar to range mode
+      const dateInput = this.inputConfigs.find(c => c.type === ESharedInputType.PICKER_DATES);
+      if (dateInput) {
+        dateInput.isOneWay = false;
+        // Update the row component
+        this.inputsRow?.updateValues();
+      }
     }
   }
 

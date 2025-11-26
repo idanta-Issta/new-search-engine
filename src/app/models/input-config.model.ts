@@ -8,4 +8,5 @@ export interface InputConfig {
   position: EDropdownPosition;
   value?: any;
   excludeValues?: string[];
+  isOneWay?: boolean;
 }

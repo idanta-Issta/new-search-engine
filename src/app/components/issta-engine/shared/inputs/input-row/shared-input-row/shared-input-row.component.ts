@@ -91,6 +91,11 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
         instance.excludeValues = config.excludeValues;
       }
 
+      // העברת singleDateMode עבור קלנדר
+      if (config.isOneWay !== undefined && 'singleDateMode' in instance) {
+        instance.singleDateMode = config.isOneWay;
+      }
+
       // הרשמה לאירוע אחד בלבד כדי למנוע כפילות
       if (instance.optionPicked?.subscribe) {
         instance.optionPicked.subscribe((value: any) =>
@@ -120,6 +125,11 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
         // עדכון excludeValues
         if (config.excludeValues !== undefined) {
           inst.excludeValues = config.excludeValues;
+        }
+        
+        // עדכון singleDateMode עבור קלנדר
+        if (config.isOneWay !== undefined && 'singleDateMode' in inst) {
+          inst.singleDateMode = config.isOneWay;
         }
         
         ref.changeDetectorRef.detectChanges();
