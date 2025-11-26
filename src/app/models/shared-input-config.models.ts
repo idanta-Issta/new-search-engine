@@ -8,6 +8,13 @@ export interface CustomMenuHeaderAction {
   displayValue: string;
 }
 
+export interface CustomMenuHeaderConfig {
+  text: string;
+  label?: string;
+  value?: string;
+  icon?: string;
+}
+
 export interface SharedInputConfig<T = any> {
   requestUrl?: string;
   autocompleteUrl?: string;
@@ -25,6 +32,7 @@ export interface SharedInputConfig<T = any> {
   dataConfig?: T;
   component?: Type<any> | (() => Promise<Type<any>>);
   customMenuHeaderComponent?: Type<any> | (() => Promise<Type<any>>);
+  customMenuHeaderConfig?: CustomMenuHeaderConfig;
 }
 
 

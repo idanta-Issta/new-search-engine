@@ -178,6 +178,16 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
 
     const componentRef = this.customHeaderContainer.createComponent(componentType);
     
+    // Pass config if exists
+    const registryEntry = SharedInputRegistry[this.type];
+    if (registryEntry.customMenuHeaderConfig) {
+      const config = registryEntry.customMenuHeaderConfig;
+      if (config.text) componentRef.instance.text = config.text;
+      if (config.label) componentRef.instance.label = config.label;
+      if (config.value) componentRef.instance.value = config.value;
+      if (config.icon) componentRef.instance.icon = config.icon;
+    }
+    
     // Listen to optionSelected output if it exists
     if (componentRef.instance.optionSelected) {
       componentRef.instance.optionSelected.subscribe((option: MenuOption) => {

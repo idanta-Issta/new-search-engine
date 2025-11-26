@@ -47,6 +47,13 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       titleMenuOptions: TEXTS.SEARCH.MENU_TITLES.POPULAR_DESTINATIONS,
       allowAutoComplete: false,
     },
+      customMenuHeaderComponent: () => import('../components/issta-engine/shared/buttons/custom-menu-header-button/custom-menu-header-button.component').then(m => m.CustomMenuHeaderButtonComponent),
+    customMenuHeaderConfig: {
+      text: 'כל המלונות באילת',
+      label: 'כל המלונות באילת',
+      value: 'all-hotels-eilat',
+      icon: 'icon-Calender1'
+    },
     component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
   },
 
@@ -73,7 +80,13 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       titleMenuOptions: TEXTS.SEARCH.MENU_TITLES.POPULAR_DESTINATIONS,
       allowAutoComplete: true,
     },
-    customMenuHeaderComponent: () => import('../components/issta-engine/engines/flights/map-price-search-header/map-price-search-header.component').then(m => m.MapPriceSearchHeaderComponent),
+    customMenuHeaderComponent: () => import('../components/issta-engine/shared/buttons/custom-menu-header-button/custom-menu-header-button.component').then(m => m.CustomMenuHeaderButtonComponent),
+    customMenuHeaderConfig: {
+      text: 'חיפוש בעזרת מפת מחירים',
+      label: 'כל היעדים',
+      value: 'search-with-map-price',
+      icon: 'icon-Calender1'
+    },
     component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
   },
 

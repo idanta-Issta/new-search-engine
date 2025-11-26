@@ -7,13 +7,13 @@ import { MenuOption } from '../../../../../models/shared-options-input.models';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <button class="map-search-btn" (click)="onMapSearchClick()">
+    <button class="map-addition-btn" (click)="onMapSearchClick()">
       <i class="icon-Calender1"></i>
       <span>חיפוש בעזרת מפת מחירים</span>
     </button>
   `,
   styles: [`
-    .map-search-btn {
+    .map-addition-btn {
       width: 100%;
       padding: 12px 16px;
       background: white;
