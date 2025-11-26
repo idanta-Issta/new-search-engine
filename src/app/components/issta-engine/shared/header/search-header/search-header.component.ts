@@ -21,6 +21,7 @@ export class SearchHeaderComponent implements OnInit, OnChanges {
   @Input() choices?: ChoiceOption[];
   @Input() routeType?: DropdownOption[];
   @Input() classOptions?: DropdownOption[];
+  @Input() initialState?: HeaderState;
 
   @Output() stateChange = new EventEmitter<HeaderState>();
 
@@ -29,32 +30,54 @@ export class SearchHeaderComponent implements OnInit, OnChanges {
   selectedClass: DropdownOption | undefined = undefined;
 
   ngOnInit() {
-    // Set defaults
+    // Set defaults or use initial state
     if (this.choices?.length) {
-      const defaultChoice = this.choices.find(c => c.isDefault) || this.choices[0];
+      const defaultChoice = this.initialState?.selectedChoice || 
+        this.choices.find(c => c.isDefault) || 
+        this.choices[0];
       this.selectedChoice = defaultChoice;
     }
     if (this.routeType?.length) {
-      const defaultTripType = this.routeType.find(t => t.isDefault) || this.routeType[0];
+      const defaultTripType = this.initialState?.selectedTripType || 
+        this.routeType.find(t => t.isDefault) || 
+        this.routeType[0];
       this.selectedTripType = defaultTripType;
     }
     if (this.classOptions?.length) {
-      const defaultClass = this.classOptions.find(c => c.isDefault) || this.classOptions[0];
+      const defaultClass = this.initialState?.selectedClass || 
+        this.classOptions.find(c => c.isDefault) || 
+        this.classOptions[0];
       this.selectedClass = defaultClass;
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // התעלם משינויים ב-initialState כדי למנוע לולאה אינסופית
+    if (changes['initialState']) {
+      return;
+    }
+    
     if (changes['choices'] && this.choices?.length) {
-      const defaultChoice = this.choices.find(c => c.isDefault) || this.choices[0];
+      const defaultChoice = this.initialState?.selectedChoice ||
+        this.choices.find(c => c.isDefault) || 
+        this.choices[0];
       this.selectedChoice = defaultChoice;
     }
     if (changes['routeType'] && this.routeType?.length) {
-      const defaultTripType = this.routeType.find(t => t.isDefault) || this.routeType[0];
+      // אם יש initialState עם tripType תואם, השתמש בו
+      let defaultTripType = this.routeType.find(t => t.isDefault) || this.routeType[0];
+      if (this.initialState?.selectedTripType) {
+        const matching = this.routeType.find(t => t.value === this.initialState?.selectedTripType?.value);
+        if (matching) {
+          defaultTripType = matching;
+        }
+      }
       this.selectedTripType = defaultTripType;
     }
     if (changes['classOptions'] && this.classOptions?.length) {
-      const defaultClass = this.classOptions.find(c => c.isDefault) || this.classOptions[0];
+      const defaultClass = this.initialState?.selectedClass ||
+        this.classOptions.find(c => c.isDefault) || 
+        this.classOptions[0];
       this.selectedClass = defaultClass;
     }
     this.emitState();

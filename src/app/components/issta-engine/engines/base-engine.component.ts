@@ -92,13 +92,28 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
     this.footerState[event.value] = event.checked;
   }
 
-  private switchEngine(targetEngine: any): void {
+  private async switchEngine(targetEngine: any): Promise<void> {
+    // שמור את ה-state הנוכחי של ה-header
+    const previousHeaderState = { ...this.headerState };
+    
     this.animateTransition(async () => {
       const result = targetEngine
         ? this.engineService.switchTo(targetEngine)
         : this.engineService.resetToOriginal();
 
       this.applyEngine(result);
+      
+      // שחזר את ה-state של routeType אם המנוע החדש תומך בו
+      if (previousHeaderState.selectedTripType && result.header.routeType) {
+        const matchingRoute = result.header.routeType.find(
+          (r: any) => r.value === previousHeaderState.selectedTripType?.value
+        );
+        if (matchingRoute) {
+          // עדכן את headerState עם הבחירה הקיימת
+          this.headerState.selectedTripType = matchingRoute;
+        }
+      }
+      
       await this.loadCustomComponent(result.customComponent);
       this.onEngineLoaded();
     });
