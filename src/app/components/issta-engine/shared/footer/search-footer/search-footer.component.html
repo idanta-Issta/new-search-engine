@@ -1,11 +1,24 @@
 <div class="search-footer">
     <div class="left">
+        <!-- Popular Links -->
+        <div class="popular-links" *ngIf="popular && popular.length > 0">
+            <a 
+                *ngFor="let item of popular" 
+                [href]="getFullUrl(item.link)" 
+                target="_blank"
+                class="popular-link"
+            >
+                {{ item.label }}
+            </a>
+        </div>
+        
+        <!-- Footer Options -->
         <app-footer-options 
-        [options]="options || []"
-        (optionChange)="onOptionChange($event)">
-    </app-footer-options>
-</div>
-<div class="right">
-  <app-footer-info [items]="infoItems || []"></app-footer-info>
-</div>
+            [options]="options || []"
+            (optionChange)="onOptionChange($event)">
+        </app-footer-options>
+    </div>
+    <div class="right">
+        <app-footer-info [items]="infoItems || []"></app-footer-info>
+    </div>
 </div>

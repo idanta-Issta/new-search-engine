@@ -158,4 +158,12 @@ searchAutocomplete(type: ESharedInputType, term: string): Observable<MenuOption[
   private normalizeTerm(term: string): string {
     return term.trim().toLowerCase();
   }
+
+  /** 🗑️ מנקה cache עבור סוג input ספציפי */
+  clearCacheForType(type: ESharedInputType): void {
+    const prefix = `${type}_`;
+    Object.keys(this.cache)
+      .filter(key => key.startsWith(prefix))
+      .forEach(key => delete this.cache[key]);
+  }
 }

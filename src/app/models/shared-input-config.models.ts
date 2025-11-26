@@ -21,6 +21,7 @@ export interface SharedInputConfig<T = any> {
   mapper?: (data: any) => any;
   listMenuOption?: MenuOption[];
   excludeValues?: string[];
+  isDisabled?: boolean;
   uiConfig: {
     title: string;
     placeholder?: string;
@@ -28,6 +29,7 @@ export interface SharedInputConfig<T = any> {
     icon?: string;
     allowAutoComplete?: boolean;
     defaultValue?: any;
+    isBoldIcon?: boolean;
   };
   dataConfig?: T;
   component?: Type<any> | (() => Promise<Type<any>>);
@@ -45,4 +47,5 @@ export interface SharedInputUIConfig {
   icon?: string | null;
   allowAutoComplete?: boolean;
   defaultValue?: any;
+  isBoldIcon?: boolean;
 }

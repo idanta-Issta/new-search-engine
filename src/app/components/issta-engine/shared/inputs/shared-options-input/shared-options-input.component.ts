@@ -47,6 +47,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
     this._value = val;
     if (val) {
       this.searchTerm = val.label || '';
+      this.cdr.markForCheck();
     }
   }
   get value(): MenuOption | undefined {
@@ -56,6 +57,16 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   @Input() width: string = '100%';
   @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
   @Input() excludeValues?: string[];
+  
+  private _isDisabled: boolean = false;
+  @Input() 
+  set isDisabled(val: boolean) {
+    this._isDisabled = val;
+    this.cdr.markForCheck();
+  }
+  get isDisabled(): boolean {
+    return this._isDisabled;
+  }
 
   @Output() valueChange = new EventEmitter<MenuOption>();
   @Output() optionPicked = new EventEmitter<MenuOption>();
@@ -86,6 +97,11 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
 
     this.config = registryEntry.uiConfig;
     this.customHeaderComponent = registryEntry.customMenuHeaderComponent;
+    
+    // Check if disabled from registry
+    if (registryEntry.isDisabled !== undefined) {
+      this.isDisabled = registryEntry.isDisabled;
+    }
 
     // Set search term from value if provided
     if (this.value) {
@@ -145,6 +161,9 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
 
   /** למה: מאפשר פתיחה מתוכנתית מהסבא דרך הבן */
   open() {
+    if (this.isDisabled) {
+      return; // Don't open if disabled
+    }
     this.isOpen = true;
     this.reloadOptions();
     this.cdr.markForCheck();

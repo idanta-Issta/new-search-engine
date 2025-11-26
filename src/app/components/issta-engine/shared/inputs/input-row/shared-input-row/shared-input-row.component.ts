@@ -118,18 +118,23 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
         const inst = ref.instance as any;
         
         // עדכון value
-        if (config.value !== undefined) {
+        if (config.value !== undefined && 'value' in inst) {
           inst.value = config.value;
         }
         
         // עדכון excludeValues
-        if (config.excludeValues !== undefined) {
+        if (config.excludeValues !== undefined && 'excludeValues' in inst) {
           inst.excludeValues = config.excludeValues;
         }
         
         // עדכון singleDateMode עבור קלנדר
         if (config.isOneWay !== undefined && 'singleDateMode' in inst) {
           inst.singleDateMode = config.isOneWay;
+        }
+        
+        // עדכון isDisabled - תמיד, גם אם false
+        if ('isDisabled' in inst) {
+          inst.isDisabled = config.isDisabled ?? false;
         }
         
         ref.changeDetectorRef.detectChanges();

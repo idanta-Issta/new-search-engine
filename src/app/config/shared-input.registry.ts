@@ -2,6 +2,7 @@ import { ESharedInputType } from '../enums/ESharedInputType';
 import { FlightsMapper } from '../mappers/flights.mapper';
 import { HotelsMapper } from '../mappers/hotels.mapper';
 import { DomesticVacationMapper } from '../mappers/domestic-vacation.mapper';
+import { SportMapper } from '../mappers/sport.mapper';
 import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
 import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
@@ -207,6 +208,57 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       allowAutoComplete: false,
     },
     component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
+  },
+
+  [ESharedInputType.SPORT_EVENT_TYPE]: {
+    isDisabled: true,
+
+    mapper: (data: any) => data,
+    uiConfig: {
+      title: 'סוג אירוע',
+      icon: 'ist-icon-soccer',
+      isBoldIcon: true,
+      placeholder: 'סוג אירוע',
+      titleMenuOptions: '',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.SPORT_LEAGUES]: {
+    requestUrl: `${AppExternalConfig.baseUrl}sport/leagues`,
+    mapper: SportMapper.mapLeagues,
+    uiConfig: {
+      title: 'ליגה',
+      placeholder: 'בחר ליגה',
+      titleMenuOptions: 'ליגות',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.SPORT_TEAMS]: {
+    mapper: SportMapper.mapTeams,
+    uiConfig: {
+      title: 'קבוצה',
+      placeholder: 'בחר קבוצה',
+      titleMenuOptions: 'קבוצות',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.SPORT_MONTHS]: {
+    listMenuOption: SportMapper.mapMonths(),
+    mapper: (data: any) => data,
+    uiConfig: {
+      title: 'חודש',
+      icon: ICONS.CALENDAR,
+      placeholder: 'בחר חודש',
+      titleMenuOptions: 'חודשים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
   },
 
 }

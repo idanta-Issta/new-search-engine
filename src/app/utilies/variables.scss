@@ -34,7 +34,8 @@ $box-shadow-focus: 0 0 0 2px rgba(0, 166, 81, 0.1);
 $main-font-family: 'Rubik';
 
 :root {
-  --search-engine-border-menu: #{$search-engine-secondary-color};   
+  --search-engine-border-menu: #{$search-engine-secondary-color}; 
+  --search-engine-bold-text-dropdown-color: #{$search-engine-secondary-color};  
   --search-engine-bold-text-dropdown-color: #{$search-engine-main-color}; 
   --main-font-family: #{$main-font-family};  
 }

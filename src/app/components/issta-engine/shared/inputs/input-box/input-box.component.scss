@@ -44,6 +44,11 @@ i::before {
   font-size: 22px;
 }
 
+i.bold::before {
+  font-weight: 900;
+  color: var(--search-engine-bold-text-dropdown-color);
+}
+
 .input-title {
   font-size: 15px;
   color: #6b7280; /* אפור בהיר */

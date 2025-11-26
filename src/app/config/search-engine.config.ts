@@ -8,6 +8,11 @@ import { EInputSize } from '../enums/EInputSize';
 import { EDropdownPosition } from '../enums/EDropdownPosition';
 import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
 
+export interface PopularLink {
+  label: string;
+  link: string;
+}
+
 export interface SearchEngineConfig {
   engineType: ETypeSearchEngine;
   customInputsComponent?: any;
@@ -20,7 +25,7 @@ export interface SearchEngineConfig {
   footer: {
     infoItems?: string[];
     options?: FooterOption[];
-   
+    popular?: PopularLink[];
   };
   inputs?: InputConfig[];
 }
@@ -261,13 +266,60 @@ export const FLIGHTS_AND_HOTELS_TO_EILAT_CONFIG: SearchEngineConfig = {
   ]
 };
 
+export const SPORT_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.SPORT,
+  header: {
+    title: "חיפוש חבילות ספורט"
+  },
+  footer: {
+    infoItems: [
+      TEXTS.FOOTER.INFO.RECOMMENDED_HOTELS,
+      TEXTS.FOOTER.INFO.FREE_CANCELLATION,
+      TEXTS.FOOTER.INFO.SPECIAL_PRICES
+    ],
+    popular: [
+      { label: 'ליגה ספרדית', link: '/sportcategory/soccer/spanish-league' },
+      { label: 'ליגת האלופות', link: '/soccer/champions-league' },
+      { label: 'יורובאסקט', link: '/sportcategory/basketball/eurobasket' }
+    ]
+  },
+  inputs: [
+    {
+      type: ESharedInputType.SPORT_EVENT_TYPE,
+      size: EInputSize.MEDIUM,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'אירועי ספורט', key: 'sport-events' }
+    },
+    {
+      type: ESharedInputType.SPORT_LEAGUES,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'כל הליגות', key: 'all' }
+    },
+    {
+      type: ESharedInputType.SPORT_TEAMS,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'כל הקבוצות', key: 'all' }
+    },
+    {
+      type: ESharedInputType.SPORT_MONTHS,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { label: 'כל התאריכים', key: 'all' }
+    },
+
+  ]
+};
+
 export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_CONFIG,
   HOTEL_ABROAD_CONFIG,
   FLIGHTS_MULTI_DESTINATIONS_CONFIG,
   FLIGHTS_TO_EILAT_CONFIG,
   FLIGHTS_AND_HOTELS_TO_EILAT_CONFIG,
-  DOMESTIC_VACATION_CONFIG
+  DOMESTIC_VACATION_CONFIG,
+  SPORT_CONFIG
 ];
 
 export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 

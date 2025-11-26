@@ -13,6 +13,7 @@ export interface TabsSearchEngine {
   icon?: string;
   imagePath?: string;
   searchEngine: TypeTabSearchEngine;
+  url?: string;
 }
 
 export interface SearchEngine {

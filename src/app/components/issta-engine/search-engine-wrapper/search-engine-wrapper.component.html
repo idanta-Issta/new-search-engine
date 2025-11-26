@@ -1,15 +1,17 @@
 <div class="search-engine">
   <div class="tabs" *ngIf="options?.showTabs">
-    <div
-      class="tab"
+    <a
       *ngFor="let tab of options?.tabs"
-      (click)="selectTab(tab)"
+      class="tab"
+      [href]="tab.url || null"
+      [target]="tab.url ? '_blank' : null"
+      (click)="onTabClick(tab, $event)"
       [class.active]="tab === activeTab"
     >
       <img *ngIf="tab.imagePath" [src]="tab.imagePath" [alt]="tab.title" />
       <i *ngIf="!tab.imagePath && tab.icon" [class]="tab.icon"></i>
       <span>{{ tab.title }}</span>
-    </div>
+    </a>
   </div>
 
  <div class="tab-content" [class.animating]="isAnimating">
@@ -24,5 +26,9 @@
     <app-domestic-vacation
       *ngIf="getActiveType() === ETypeSearchEngine.DOMESTIC_VACATIONS"
     ></app-domestic-vacation>
+
+    <app-sport
+      *ngIf="getActiveType() === ETypeSearchEngine.SPORT"
+    ></app-sport>
   </div>
 </div>

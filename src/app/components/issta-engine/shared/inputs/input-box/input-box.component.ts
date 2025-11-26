@@ -18,6 +18,7 @@ export class InputBoxComponent {
   @Input() allowAutoComplete = true;
   @Input() isOpen = false;
   @Input() width: string = '100%';
+  @Input() isBoldIcon: boolean = false;
   
   @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
 

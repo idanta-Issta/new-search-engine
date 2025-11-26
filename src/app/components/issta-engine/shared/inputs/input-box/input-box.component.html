@@ -1,5 +1,5 @@
 <div class="input-box" [class.open]="isOpen" [style.width]="width" (click)="onBoxClick()">
-  <i *ngIf="icon" [class]="icon"></i>
+  <i *ngIf="icon" [class]="icon" [class.bold]="isBoldIcon"></i>
 
   <div class="input-meta">
     <div class="input-title" *ngIf="title">{{ title }}</div>

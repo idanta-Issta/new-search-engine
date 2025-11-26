@@ -9,4 +9,5 @@ export interface InputConfig {
   value?: any;
   excludeValues?: string[];
   isOneWay?: boolean;
+  isDisabled?: boolean;
 }

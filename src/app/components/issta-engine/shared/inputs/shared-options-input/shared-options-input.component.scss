@@ -6,6 +6,11 @@
   width: 100%;
   font-family: inherit;
 
+  &.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
   .dropdown-container {
     width: 349px;
     padding: 12px;

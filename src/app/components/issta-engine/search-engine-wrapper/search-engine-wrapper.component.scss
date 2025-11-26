@@ -26,6 +26,7 @@ justify-content: flex-end;
       cursor: pointer;
       color: #555;
       transition: all 0.3s ease; // מעבר רך
+      text-decoration: none; // הסרת קו תחתון מקישור
 
       span{
             text-align: center;

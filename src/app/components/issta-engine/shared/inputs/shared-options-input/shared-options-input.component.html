@@ -1,11 +1,12 @@
-<div class="shared-input" [class.open]="isOpen" #anchor>
+<div class="shared-input" [class.open]="isOpen" [class.disabled]="isDisabled" #anchor>
   <app-input-box
     [icon]="config.icon ?? ''"
     [title]="config.title"
     [placeholder]="config.placeholder ?? ''"
-    [isOpen]="isOpen"
+    [isOpen]="isOpen && !isDisabled"
     [(model)]="searchTerm"
     [width]="width"
+    [isBoldIcon]="config.isBoldIcon ?? false"
     (opened)="onInputOpened()"
     (closed)="isOpen = false"
     (inputChange)="onSearchChange($event)"
