@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { SearchEngineComponent } from './components/issta-engine/main-search-engine/search-engine.component';
+import { SearchEngineComponent } from './components/issta-engine/search-engine-wrapper/search-engine-wrapper.component';
 
 @Component({
   selector: 'app-root',

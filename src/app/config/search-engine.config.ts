@@ -14,7 +14,7 @@ export interface SearchEngineConfig {
   header: {
     title: string;
     choices?: ChoiceOption[];
-    tripTypeOptions?: DropdownOption[];
+    routeType?: DropdownOption[];
     classOptions?: DropdownOption[];
   };
   footer: {
@@ -34,7 +34,7 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
       { label: TEXTS.CHOICES.FLIGHT_HOTEL, value: VALUES.CHOICES.FLIGHT_HOTEL, promotionText: TEXTS.PROMOTION.BEST_DEAL, 
         useEngine: ETypeSearchEngine.HOTELS_ABROAD }
     ],
-    tripTypeOptions: [
+    routeType: [
       { label: TEXTS.TRIP_TYPE.ROUND_TRIP, value: VALUES.TRIP_TYPE.ROUND_TRIP, isDefault: true},
       { label: TEXTS.TRIP_TYPE.ONE_WAY, value: VALUES.TRIP_TYPE.ONE_WAY },
       { label: TEXTS.TRIP_TYPE.MULTI_CITY, value: VALUES.TRIP_TYPE.MULTI_CITY, useEngine: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS }
@@ -121,10 +121,10 @@ export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
 
 export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS,
-  customInputsComponent: () => import('../components/issta-engine/regional-engines/flights_multi_destinations/flights_multi_destinations.component').then(m => m.FlightsMultiDestinationsComponent),
+  customInputsComponent: () => import('../components/issta-engine/engines/flights/flights_multi_destinations/flights_multi_destinations.component').then(m => m.FlightsMultiDestinationsComponent),
   header: {
     title: "ריבוי יעדים",
-    tripTypeOptions: [
+    routeType: [
       { label: TEXTS.TRIP_TYPE.ROUND_TRIP, value: VALUES.TRIP_TYPE.ROUND_TRIP, isDefault: true },
       { label: TEXTS.TRIP_TYPE.ONE_WAY, value: VALUES.TRIP_TYPE.ONE_WAY },
       { label: TEXTS.TRIP_TYPE.MULTI_CITY, value: VALUES.TRIP_TYPE.MULTI_CITY, useEngine: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS }
@@ -141,14 +141,24 @@ export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
 
 export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.DOMESTIC_VACATIONS,
+  
   header: {
-    title: TEXTS.HEADER.DOMESTIC_VACATION_TITLE
+    title: TEXTS.HEADER.DOMESTIC_VACATION_TITLE,
+     choices: [
+      { label: "מלונות בארץ", value: "hotel_domestic", isDefault: true },
+      { label: "חיפוש טיסות לאילת", value: "flight_to_eilat", isDefault: true, useEngine: ETypeSearchEngine.FLIGHTS_TO_EILAT },
+      { label: "טיסה ומלון לאילת", value: "flight_hotel_eilat", isDefault: true ,  promotionText: TEXTS.PROMOTION.BEST_DEAL}
+
+    ],
   },
   footer: {
     infoItems: [
       TEXTS.FOOTER.INFO.RECOMMENDED_HOTELS,
       TEXTS.FOOTER.INFO.FREE_CANCELLATION,
       TEXTS.FOOTER.INFO.SPECIAL_PRICES
+    ],
+    options: [
+      { label: "הוספת טיסה", value: "add_flight", checked: false, isHidden: true }
     ]
   },
   inputs: [
@@ -173,10 +183,55 @@ export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
   ]
 };
 
+export const FLIGHTS_TO_EILAT_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.FLIGHTS_TO_EILAT,
+  header: {
+    title: 'טיסות לאילת',
+    routeType: [
+      { label: TEXTS.TRIP_TYPE.ROUND_TRIP, value: VALUES.TRIP_TYPE.ROUND_TRIP, isDefault: true },
+      { label: TEXTS.TRIP_TYPE.ONE_WAY, value: VALUES.TRIP_TYPE.ONE_WAY }
+    ]
+  },
+  footer: {
+    infoItems: [
+      TEXTS.FOOTER.INFO.ANY_VACATION,
+      TEXTS.FOOTER.INFO.PAYMENT_PLAN,
+      TEXTS.FOOTER.INFO.AVAILABLE
+    ]
+  },
+  inputs: [
+    {
+      type: ESharedInputType.DESTINATIONS_FLIGHTS,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'תל אביב, שדה תעופה (TLV)', value: 'TLV' }
+    },
+    {
+      type: ESharedInputType.ORIGINS_FLIGHTS,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: null
+    },
+    {
+      type: ESharedInputType.PICKER_DATES,
+      size: EInputSize.MEDIUM,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { start: null as Date | null, end: null as Date | null }
+    },
+    {
+      type: ESharedInputType.PASSANGERS_FLIGHTS,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_RIGHT,
+      value: null
+    }
+  ]
+};
+
 export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_CONFIG,
   HOTEL_ABROAD_CONFIG,
   FLIGHTS_MULTI_DESTINATIONS_CONFIG,
+  FLIGHTS_TO_EILAT_CONFIG,
   DOMESTIC_VACATION_CONFIG
 ];
 

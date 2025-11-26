@@ -1,10 +1,12 @@
 <div class="header-choices">
-  <button 
-    *ngFor="let choice of choices"
-    class="choice-button"
-    [class.selected]="choice.value === selectedValue"
-    (click)="selectChoice(choice)">
-    <span class="label">{{ choice.label }}</span>
-    <span class="promotion" *ngIf="choice.promotionText">{{ choice.promotionText }}</span>
-  </button>
+  <ng-container *ngFor="let choice of choices">
+    <button 
+      class="choice-button"
+      [class.selected]="choice.value === selectedValue"
+      (click)="selectChoice(choice)"
+      *ngIf="!choice.isHidden">
+      <span class="label">{{ choice.label }}</span>
+      <span class="promotion" *ngIf="choice.promotionText">{{ choice.promotionText }}</span>
+    </button>
+  </ng-container>
 </div>

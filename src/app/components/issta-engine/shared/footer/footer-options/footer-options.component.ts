@@ -6,6 +6,7 @@ export interface FooterOption {
   label: string;
   value: string;
   checked?: boolean;
+  isHidden?: boolean; // מוסתר עד שמופעל תנאי לחשיפה
 }
 
 @Component({

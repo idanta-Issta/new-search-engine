@@ -9,6 +9,7 @@ export interface ChoiceOption {
   active?: boolean;
   isDefault?: boolean;
   useEngine?: ETypeSearchEngine;
+  isHidden?: boolean; // אם true הבחירה מוסתרת עד שמופעלת לוגיקה לחשיפה
 }
 
 @Component({

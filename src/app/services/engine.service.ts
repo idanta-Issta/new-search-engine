@@ -29,7 +29,7 @@ export class BaseEngineService {
     if (!this.originalConfig) return null;
 
     const defaultChoice = this.originalConfig.header.choices?.find(c => c.isDefault);
-    const defaultTripType = this.originalConfig.header.tripTypeOptions?.find(t => t.isDefault);
+    const defaultTripType = this.originalConfig.header.routeType?.find(t => t.isDefault);
     const defaultClass = this.originalConfig.header.classOptions?.find(c => c.isDefault);
 
     const defaultEngine = 

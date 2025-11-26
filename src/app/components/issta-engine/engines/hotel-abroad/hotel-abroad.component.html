@@ -2,15 +2,13 @@
   <app-search-header
     [title]="header.title"
     [choices]="header.choices"
-    [tripTypeOptions]="header.tripTypeOptions"
+    [routeType]="header.routeType"
     [classOptions]="header.classOptions"
     (stateChange)="onHeaderStateChange($event)">
   </app-search-header>
 
-  <div class="inputs-wrapper" [class.transitioning]="isTransitioning">
-    <ng-container #customContainer></ng-container>
+  <div class="hotel-abroad-box">
     <app-shared-input-row
-      *ngIf="!hasCustomComponent"
       #inputsRow
       [configs]="inputConfigs"
       buttonText="חיפוש"

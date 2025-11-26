@@ -1,16 +1,16 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlightsComponent } from '../sub-engines/flights/flights.component';
-import { HotelAbroadComponent } from '../sub-engines/hotel-abroad/hotel-abroad.component';
-import { DomesticVacationComponent } from '../sub-engines/domestic-vacation/domestic-vacation.component';
+import { FlightsComponent } from '../engines/flights/flights.component';
+import { HotelAbroadComponent } from '../engines/hotel-abroad/hotel-abroad.component';
+import { DomesticVacationComponent } from '../engines/domestic-vacation/domestic-vacation.component';
 import { ETypeSearchEngine } from '../../../enums/ETypeSearchEngine';
 
 @Component({
   selector: 'app-search-engine',
   standalone: true,
   imports: [CommonModule, FlightsComponent, HotelAbroadComponent, DomesticVacationComponent],
-  templateUrl: './search-engine.component.html',
-  styleUrls: ['./search-engine.component.scss']
+  templateUrl: './search-engine-wrapper.component.html',
+  styleUrls: ['./search-engine-wrapper.component.scss']
 })
 export class SearchEngineComponent implements AfterViewInit {
   @Input() options: any;
@@ -30,7 +30,7 @@ export class SearchEngineComponent implements AfterViewInit {
             (t: any) =>
               t.searchEngine?.typeTravel ===
               this.options.defaultTab?.typeTravel
-          ) ?? this.options.tabs[0]; // fallback לטאב הראשון
+          ) ?? this.options.tabs[0]; 
       }
 
       console.log('✅ Tabs loaded:', this.options?.tabs);

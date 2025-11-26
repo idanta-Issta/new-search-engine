@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderChoicesComponent, ChoiceOption } from '../header-choices/header-choices.component';
 import { HeaderDropdownComponent, DropdownOption } from '../header-dropdown/header-dropdown.component';
@@ -16,10 +16,10 @@ export interface HeaderState {
   templateUrl: './search-header.component.html',
   styleUrls: ['./search-header.component.scss']
 })
-export class SearchHeaderComponent implements OnInit {
+export class SearchHeaderComponent implements OnInit, OnChanges {
   @Input() title: string = '';
   @Input() choices?: ChoiceOption[];
-  @Input() tripTypeOptions?: DropdownOption[];
+  @Input() routeType?: DropdownOption[];
   @Input() classOptions?: DropdownOption[];
 
   @Output() stateChange = new EventEmitter<HeaderState>();
@@ -34,14 +34,30 @@ export class SearchHeaderComponent implements OnInit {
       const defaultChoice = this.choices.find(c => c.isDefault) || this.choices[0];
       this.selectedChoice = defaultChoice;
     }
-    if (this.tripTypeOptions?.length) {
-      const defaultTripType = this.tripTypeOptions.find(t => t.isDefault) || this.tripTypeOptions[0];
+    if (this.routeType?.length) {
+      const defaultTripType = this.routeType.find(t => t.isDefault) || this.routeType[0];
       this.selectedTripType = defaultTripType;
     }
     if (this.classOptions?.length) {
       const defaultClass = this.classOptions.find(c => c.isDefault) || this.classOptions[0];
       this.selectedClass = defaultClass;
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['choices'] && this.choices?.length) {
+      const defaultChoice = this.choices.find(c => c.isDefault) || this.choices[0];
+      this.selectedChoice = defaultChoice;
+    }
+    if (changes['routeType'] && this.routeType?.length) {
+      const defaultTripType = this.routeType.find(t => t.isDefault) || this.routeType[0];
+      this.selectedTripType = defaultTripType;
+    }
+    if (changes['classOptions'] && this.classOptions?.length) {
+      const defaultClass = this.classOptions.find(c => c.isDefault) || this.classOptions[0];
+      this.selectedClass = defaultClass;
+    }
+    this.emitState();
   }
 
   onChoiceSelected(choice: ChoiceOption) {

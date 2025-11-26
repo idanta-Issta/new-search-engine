@@ -14,8 +14,8 @@
 
       <div class="dropdowns-section">
         <app-header-dropdown
-          *ngIf="tripTypeOptions?.length"
-          [options]="tripTypeOptions || []"
+          *ngIf="routeType?.length"
+          [options]="routeType || []"
           [selectedValue]="selectedTripType?.value || ''"
           (optionSelected)="onTripTypeSelected($event)">
         </app-header-dropdown>

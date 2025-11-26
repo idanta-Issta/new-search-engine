@@ -1,14 +1,15 @@
 import { Component, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuOption } from '../../../../models/shared-options-input.models';
-import { ESharedInputType } from '../../../../enums/ESharedInputType';
-import { SharedOptionsInputComponent } from '../../shared/inputs/shared-options-input/shared-options-input.component';
-import { SharedCalendarInputComponent } from '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
-import { SharedPassangerInputComponent } from '../../shared/inputs/shared-passanger-input/shared-passanger-input.component';
-import { PassangersInput } from '../../../../models/shared-passanger-input.models';
-import { EDropdownPosition } from '../../../../enums/EDropdownPosition';
-import { EInputSize } from '../../../../enums/EInputSize';
-import { InputSizeHelper } from '../../../../utilies/input-size.helper';
+import { MenuOption } from '../../../../../models/shared-options-input.models';
+import { SharedOptionsInputComponent } from '../../../shared/inputs/shared-options-input/shared-options-input.component';
+import { SharedCalendarInputComponent } from '../../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
+import { SharedPassangerInputComponent } from '../../../shared/inputs/shared-passanger-input/shared-passanger-input.component';
+import { ESharedInputType } from '../../../../../enums/ESharedInputType';
+import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
+import { InputSizeHelper } from '../../../../../utilies/input-size.helper';
+import { EInputSize } from '../../../../../enums/EInputSize';
+import { PassangersInput } from '../../../../../models/shared-passanger-input.models';
+
 
 interface FlightSegment {
   id: number;

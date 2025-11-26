@@ -4,6 +4,7 @@ export interface DomesticVacationSearchParams {
   destination: any;
   dates: { start: Date | null; end: Date | null };
   passengers: PassangersInput | null;
+  addFlight?: boolean;
 }
 
 export class DomesticVacationManager {
@@ -18,6 +19,9 @@ export class DomesticVacationManager {
     }
     if (params.passengers) {
       urlParams.append('passengers', JSON.stringify(params.passengers));
+    }
+    if (params.addFlight) {
+      urlParams.append('addFlight', 'true');
     }
 
     return `https://www.issta.co.il/domestic-vacation?${urlParams.toString()}`;
