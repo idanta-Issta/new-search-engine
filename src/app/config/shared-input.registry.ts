@@ -3,6 +3,8 @@ import { FlightsMapper } from '../mappers/flights.mapper';
 import { HotelsMapper } from '../mappers/hotels.mapper';
 import { DomesticVacationMapper } from '../mappers/domestic-vacation.mapper';
 import { SportMapper } from '../mappers/sport.mapper';
+import { OrganizedToursMapper } from '../mappers/organized-tours.mapper';
+import { DatesPickerMapper } from '../mappers/dates-picker.mapper';
 import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
 import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
@@ -248,8 +250,43 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
   },
 
-  [ESharedInputType.SPORT_MONTHS]: {
-    listMenuOption: SportMapper.mapMonths(),
+  [ESharedInputType.ORGANIZED_REGIONS]: {
+    requestUrl: `${AppExternalConfig.baseUrl}trips/worldregions`,
+    mapper: OrganizedToursMapper.mapRegions,
+    uiConfig: {
+      title: 'יעד',
+      placeholder: 'בחר יעד',
+      titleMenuOptions: 'יעדים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.ORGANIZED_COUNTRIES]: {
+    mapper: OrganizedToursMapper.mapCountries,
+    uiConfig: {
+      title: 'מדינה',
+      placeholder: 'בחר מדינה',
+      titleMenuOptions: 'מדינות',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.ORGANIZED_CATEGORIES]: {
+    requestUrl: `${AppExternalConfig.baseUrl}trips/tourtypes`,
+    mapper: OrganizedToursMapper.mapCategories,
+    uiConfig: {
+      title: 'קטגוריה',
+      placeholder: 'בחר קטגוריה',
+      titleMenuOptions: 'קטגוריות',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.DATES_PICKER_MONTHS]: {
+    listMenuOption: DatesPickerMapper.mapMonths(),
     mapper: (data: any) => data,
     uiConfig: {
       title: 'חודש',

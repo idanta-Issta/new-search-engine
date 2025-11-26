@@ -1,0 +1,27 @@
+<div class="engine-container">
+  <app-search-header
+    [title]="header.title"
+    [choices]="header.choices"
+    [routeType]="header.routeType"
+    [classOptions]="header.classOptions"
+    [initialState]="headerState"
+    (stateChange)="onHeaderStateChange($event)">
+  </app-search-header>
+
+  <div class="engine-inputs">
+    <app-shared-input-row
+      #inputsRow
+      [configs]="inputConfigs"
+      buttonText="חיפוש"
+      (inputPicked)="onInputPicked($event)"
+      (searchClicked)="onSearch()">
+    </app-shared-input-row>
+  </div>
+  
+  <app-search-footer
+    [infoItems]="footer.infoItems"
+    [options]="footer.options"
+    [popular]="footer.popular"
+    (optionChange)="onFooterOptionChange($event)">
+  </app-search-footer>
+</div>

@@ -40,7 +40,7 @@ export function getSearchEngineTabsConfig(): SearchEngine {
       {
         title: "טיולים מאורגנים",
         icon: 'icon-adult-room',
-        searchEngine: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false }
+        searchEngine: { typeTravel: ETypeSearchEngine.ORGANIZED_TOURS, isPartial: false }
       },
       {
         title: "נופש בארץ",

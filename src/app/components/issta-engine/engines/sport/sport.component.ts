@@ -63,7 +63,7 @@ export class SportComponent extends BaseEngineComponent {
       case ESharedInputType.SPORT_TEAMS:
         this.selectedTeam = value;
         break;
-      case ESharedInputType.SPORT_MONTHS:
+      case ESharedInputType.DATES_PICKER_MONTHS:
         this.selectedMonth = value;
         break;
       case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
@@ -139,7 +139,7 @@ export class SportComponent extends BaseEngineComponent {
         break;
       case ESharedInputType.SPORT_TEAMS:
         if (value) {
-          this.inputsRow?.openInputDelayed(ESharedInputType.SPORT_MONTHS);
+          this.inputsRow?.openInputDelayed(ESharedInputType.DATES_PICKER_MONTHS);
         }
         break;
     }

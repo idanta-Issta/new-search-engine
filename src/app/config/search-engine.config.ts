@@ -303,12 +303,57 @@ export const SPORT_CONFIG: SearchEngineConfig = {
       value: { label: 'כל הקבוצות', key: 'all' }
     },
     {
-      type: ESharedInputType.SPORT_MONTHS,
+      type: ESharedInputType.DATES_PICKER_MONTHS,
       size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_CENTER,
       value: { label: 'כל התאריכים', key: 'all' }
     },
 
+  ]
+};
+
+export const ORGANIZED_TOURS_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.ORGANIZED_TOURS,
+  header: {
+    title: "חיפוש טיולים מאורגנים"
+  },
+  footer: {
+    infoItems: [
+      TEXTS.FOOTER.INFO.RECOMMENDED_HOTELS,
+      TEXTS.FOOTER.INFO.FREE_CANCELLATION,
+      TEXTS.FOOTER.INFO.SPECIAL_PRICES
+    ],
+    popular: [
+      { label: 'איטליה', link: '/trips/to-italy.aspx' },
+      { label: 'גאורגיה', link: 'trips/results.aspx?region=2&rname=מזרח%20אירופה&country=74&cname=גאורגיה' },
+      { label: 'משפחות', link: '/trips/family.aspx' }
+    ]
+  },
+  inputs: [
+    {
+      type: ESharedInputType.ORGANIZED_REGIONS,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'כל היעדים', key: 'all' }
+    },
+    {
+      type: ESharedInputType.ORGANIZED_COUNTRIES,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'כל המדינות', key: 'all' }
+    },
+    {
+      type: ESharedInputType.ORGANIZED_CATEGORIES,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'כל הקטגוריות', key: 'all' }
+    },
+    {
+      type: ESharedInputType.DATES_PICKER_MONTHS,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { label: 'כל התאריכים', key: 'all' }
+    },
   ]
 };
 
@@ -319,7 +364,8 @@ export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_TO_EILAT_CONFIG,
   FLIGHTS_AND_HOTELS_TO_EILAT_CONFIG,
   DOMESTIC_VACATION_CONFIG,
-  SPORT_CONFIG
+  SPORT_CONFIG,
+  ORGANIZED_TOURS_CONFIG
 ];
 
 export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 
