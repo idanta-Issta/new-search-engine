@@ -22,6 +22,8 @@ export class InputBoxComponent {
   
   @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
 
+  private _blurTimeout: any = null;
+
   @Input() model: string = '';
   @Output() modelChange = new EventEmitter<string>();
   @Output() inputChange = new EventEmitter<string>();
@@ -32,6 +34,11 @@ export class InputBoxComponent {
 
   /** פונקציות לשליטה פנימית */
   open() {
+    // cancel any pending blur-close when explicitly opening
+    if (this._blurTimeout) {
+      clearTimeout(this._blurTimeout);
+      this._blurTimeout = null;
+    }
     if (!this.isOpen) {
       this.isOpen = true;
       this.opened.emit();
@@ -51,6 +58,11 @@ export class InputBoxComponent {
   }
 
 onFocus(event: FocusEvent) {
+  // cancel pending close and open
+  if (this._blurTimeout) {
+    clearTimeout(this._blurTimeout);
+    this._blurTimeout = null;
+  }
   this.open();
 
   // מסמן את כל הטקסט
@@ -62,7 +74,15 @@ onFocus(event: FocusEvent) {
 
   onBlur() {
     // כדי לא לרדת מייד - נותן זמן לקליק בדפדפן
-    setTimeout(() => this.close(), 150);
+    // store the timeout so it can be cancelled if focus returns or
+    // a programmatic open happens (prevents flicker / premature close)
+    if (this._blurTimeout) {
+      clearTimeout(this._blurTimeout);
+    }
+    this._blurTimeout = setTimeout(() => {
+      this._blurTimeout = null;
+      this.close();
+    }, 150);
   }
 
 onInput(value: string) {

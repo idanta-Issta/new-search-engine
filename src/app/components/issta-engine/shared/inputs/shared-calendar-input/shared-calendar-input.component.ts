@@ -7,7 +7,8 @@ import {
   OnChanges,
   SimpleChanges,
   HostListener,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -59,6 +60,7 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   dataConfig!: SharedCalendarInputConfig;
 
   @Input() value: { start?: Date | null; end?: Date | null } | null = null;
+  @Input() loadingSuggestions: boolean = false;
 
   @Output() valueChange =
     new EventEmitter<{ start?: Date | null; end?: Date | null } | null>();
@@ -82,7 +84,10 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
     private el: ElementRef<HTMLElement>
   ) {}
 
+  @ViewChild(InputBoxComponent) inputBox?: InputBoxComponent;
+
   ngOnInit() {
+
     const registryEntry = SharedInputRegistry[this.type];
     if (!registryEntry) {
       console.error('SharedCalendarInput: invalid type', this.type);
@@ -104,50 +109,66 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
     this.renderCalendars();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('🔄 ngOnChanges called:', changes);
-    
-    // כאשר minDate משתנה - צריך לרנדר מחדש את הלוחות
-    if (changes['minDate'] && !changes['minDate'].firstChange) {
-      console.log('📅 minDate changed, rendering calendars');
+ ngOnChanges(changes: SimpleChanges): void {
+  console.log('🔄 ngOnChanges called:', changes);
+
+  if (changes['minDate'] && !changes['minDate'].firstChange) {
+    console.log('📅 minDate changed, rendering calendars');
+    this.renderCalendars();
+  }
+
+  // ⭐ בדיקה האם suggestedDates התעדכן כך שה־start כבר לא נמצא שם
+  if (this.value?.start && this.dataConfig?.suggestedDates) {
+
+    const stillInSuggestions = this.dataConfig.suggestedDates.some(
+      s => this.calendarSrv.isSameDate(new Date(s.date), this.value!.start!)
+    );
+
+    if (!stillInSuggestions && this.loadingSuggestions) {
+      console.log('🎉 departure removed from suggestions → loadingSuggestions = false');
+      this.loadingSuggestions = false;
       this.renderCalendars();
     }
-    
-    // כאשר isDisabled משתנה מ-true ל-false - הטעינה הסתיימה
-    // צריך לטעון מחדש את dataConfig מה-registry ולרנדר מחדש
-    if (changes['isDisabled']) {
-      console.log('🔓 isDisabled changed:', {
-        previousValue: changes['isDisabled'].previousValue,
-        currentValue: changes['isDisabled'].currentValue,
-        firstChange: changes['isDisabled'].firstChange
-      });
-      
-      if (!changes['isDisabled'].firstChange) {
-        const wasDisabled = changes['isDisabled'].previousValue;
-        const isNowEnabled = !changes['isDisabled'].currentValue;
-        
-        console.log('🔍 Checking transition:', { wasDisabled, isNowEnabled });
-        
-        if (wasDisabled && isNowEnabled) {
-          console.log('✅ Loading completed! Reloading dataConfig from registry...');
-          // טען מחדש את dataConfig מה-registry (כולל suggestedDates המעודכנים)
-          const registryEntry = SharedInputRegistry[this.type];
-          if (registryEntry) {
-            console.log('📦 Old suggestedDates:', this.dataConfig?.suggestedDates?.length || 0);
-            this.dataConfig = registryEntry.dataConfig;
-            console.log('📦 New suggestedDates:', this.dataConfig?.suggestedDates?.length || 0, this.dataConfig.suggestedDates);
-            this.renderCalendars();
-            console.log('🎨 Calendars rendered!');
-          }
+  }
+
+  if (changes['isDisabled']) {
+    console.log('🔓 isDisabled changed:', {
+      previousValue: changes['isDisabled'].previousValue,
+      currentValue: changes['isDisabled'].currentValue,
+      firstChange: changes['isDisabled'].firstChange
+    });
+
+    if (!changes['isDisabled'].firstChange) {
+      const wasDisabled = changes['isDisabled'].previousValue;
+      const isNowEnabled = !changes['isDisabled'].currentValue;
+
+      console.log('🔍 Checking transition:', { wasDisabled, isNowEnabled });
+
+      if (wasDisabled && isNowEnabled) {
+        console.log('✅ Loading completed! Reloading dataConfig from registry...');
+
+        const registryEntry = SharedInputRegistry[this.type];
+        if (registryEntry) {
+          console.log('📦 Old suggestedDates:', this.dataConfig?.suggestedDates?.length || 0);
+          this.dataConfig = registryEntry.dataConfig;
+          console.log('📦 New suggestedDates:', this.dataConfig?.suggestedDates?.length || 0, this.dataConfig.suggestedDates);
+          this.renderCalendars();
+          console.log('🎨 Calendars rendered!');
         }
       }
     }
   }
+}
+
 
   get departureDate() { return this.value?.start ?? null; }
   get returnDate() { return this.value?.end ?? null; }
 
-  toggleDropdown() { this.isOpen = !this.isOpen; }
+  toggleDropdown() { 
+    
+    this.isOpen = !this.isOpen; 
+  
+  }
 
   private reloadDataFromRegistry(): void {
     const registryEntry = SharedInputRegistry[this.type];
@@ -185,7 +206,6 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
       console.error('❌ dataConfig is undefined!');
       return;
     }
-    
     // שימוש ב-minDate חיצוני אם קיים, אחרת מה-dataConfig
     const effectiveMinDate = this.minDate ?? this.dataConfig.minDate;
     
@@ -209,6 +229,17 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
       const leftMonthCount = this.leftMonthDays.filter(d => !!d.suggested && !d.other).length;
       const rightMonthCount = this.rightMonthDays.filter(d => !!d.suggested && !d.other).length;
       console.log('renderCalendars: matches left/right', leftMonthCount, rightMonthCount);
+      // If we have suggested dates and a departure is already selected,
+      // keep the calendar open so the user sees the suggested return dates.
+      try {
+        const hasSuggestions = Array.isArray(this.dataConfig?.suggestedDates) && this.dataConfig.suggestedDates.length > 0;
+        if (hasSuggestions && this.value?.start) {
+          
+          this.isOpen = true;
+        }
+      } catch (e) {
+        // ignore
+      }
     } catch (e) {
       // ignore
     }
@@ -223,41 +254,83 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
 
   onInputClosed() {
     setTimeout(() => { // למה: מונע סגירה לפני קליק פנימי
+      // אם אנחנו בטעינת הצעות חזור - אל נסגור את הקלנדר
+      if (this.loadingSuggestions) {
+        return;
+      }
       if (!this.value?.start || this.value?.end) {
+        
         this.isOpen = false;
       }
     }, 0);
   }
 
-  selectDate(day: CalendarDay) {
-    // מניעת בחירת תאריכים disabled
-    if (day.disabled || day.other) return;
+ selectDate(day: CalendarDay) {
+  if (day.disabled || day.other) return;
 
-    const date = day.date;
+  const date = day.date;
 
-    // במצב single date - רק תאריך התחלה
-    if (this.singleDateMode) {
-      this.value = { start: date, end: null };
-      this.valueChange.emit(this.value);
-      this.isOpen = false; // סגירה מיידית
-      return;
-    }
-
-    // מצב רגיל - טווח תאריכים
-    if (!this.value || !this.value.start) {
-      this.value = { start: date, end: undefined };
-    } else if (!this.value.end) {
-      if (date < this.value.start) {
-        this.value = { start: date, end: undefined };
-      } else {
-        this.value = { start: this.value.start, end: date };
-        this.isOpen = false;
-      }
-    } else {
-      this.value = { start: date, end: undefined };
-    }
+  // single date mode
+  if (this.singleDateMode) {
+    this.value = { start: date, end: null };
     this.valueChange.emit(this.value);
+    
+    this.isOpen = false;
+    return;
   }
+
+if (!this.value?.start) {
+
+  this.value = { start: date, end: null };
+  this.valueChange.emit(this.value);
+
+  // ⭐ בדיקה אם התאריך שנבחר נמצא ב-suggestedDates
+  const isDepartureInSuggestions = this.dataConfig?.suggestedDates?.some(
+    s => this.calendarSrv.isSameDate(new Date(s.date), date)
+  );
+
+  if (isDepartureInSuggestions) {
+    console.log('⏳ departure selected is in suggestions → loadingSuggestions = true');
+    this.loadingSuggestions = true;
+  }
+
+  try { this.inputBox?.open(); } catch (e) {}
+  return;
+}
+
+
+// בחירת תאריך שני (חזור)
+if (!this.value.end) {
+
+  // ❗ למנוע תאריך חזור זהה לתאריך הלוך
+  if (date.getTime() === this.value.start!.getTime()) {
+    return; // מתעלם
+  }
+
+  // אם חזור קטן מהלוך – הפוך את הסדר
+  if (date < this.value.start) {
+    this.value = { start: date, end: null };
+  } else {
+    this.value = { start: this.value.start, end: date };
+
+    if (!this.loadingSuggestions) {
+      this.isOpen = false;
+    } else {
+      try { this.inputBox?.open(); } catch (e) {}
+    }
+  }
+
+  this.valueChange.emit(this.value);
+  return;
+}
+
+
+  // אם היה טווח שנבחר כבר → התחל מחדש
+  this.value = { start: date, end: null };
+  this.valueChange.emit(this.value);
+}
+
+
 
   formatFullHebrewDate(d: Date | null): string {
     if (!d) return '';

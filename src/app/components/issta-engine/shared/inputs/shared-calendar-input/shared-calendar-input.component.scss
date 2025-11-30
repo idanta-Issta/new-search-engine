@@ -20,6 +20,19 @@
   &::-webkit-scrollbar {
     display: none;
   }
+
+  .calendar-loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.9);
+    z-index: 10;
+    font-weight: 700;
+    color: #2aae54;
+    border-radius: 20px;
+  }
 }
 
 .calendar-header {

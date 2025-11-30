@@ -372,13 +372,13 @@ export const DYNAMIC_PACKAGES_CONFIG: SearchEngineConfig = {
   inputs: [
     {
       type: ESharedInputType.DYNAMIC_PACKAGES_DESTINATION,
-      size: EInputSize.LARGE,
+      size: EInputSize.HUGE,
       position: EDropdownPosition.BOTTOM_LEFT,
       value: null
     },
     {
       type: ESharedInputType.DYNAMIC_PACKAGES_DATES,
-      size: EInputSize.MEDIUM,
+      size: EInputSize.LARGE,
       position: EDropdownPosition.BOTTOM_CENTER,
       value: { start: null as Date | null, end: null as Date | null }
     },

@@ -11,4 +11,6 @@ export interface InputConfig {
   isOneWay?: boolean;
   isDisabled?: boolean;
   loadingText?: string;
+  loadingSuggestions?: boolean;
+  dataConfig?: any;
 }

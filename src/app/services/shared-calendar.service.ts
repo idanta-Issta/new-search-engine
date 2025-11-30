@@ -58,18 +58,24 @@ export class SharedCalendarService {
         this.isSameDate(new Date(s.date), date)
       );
 
-      // בדיקה אם התאריך מחוץ לטווח המותר
-      let disabled = false;
-      if (minDate) {
-        const minDateOnly = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
-        const currentDateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        if (currentDateOnly < minDateOnly) disabled = true;
-      }
-      if (maxDate && !disabled) {
-        const maxDateOnly = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate());
-        const currentDateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        if (currentDateOnly > maxDateOnly) disabled = true;
-      }
+    // בדיקה אם התאריך מחוץ לטווח המותר
+let disabled = false;
+if (minDate) {
+  const minDateOnly = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
+  const currentDateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  if (currentDateOnly < minDateOnly) disabled = true;
+}
+if (maxDate && !disabled) {
+  const maxDateOnly = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate());
+  const currentDateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  if (currentDateOnly > maxDateOnly) disabled = true;
+}
+
+// ❗ אם יש suggestedDates — רק suggested יהיו זמינים
+if (suggested.length > 0 && !match) {
+  disabled = true;
+}
+
 
       days.push({
         date,

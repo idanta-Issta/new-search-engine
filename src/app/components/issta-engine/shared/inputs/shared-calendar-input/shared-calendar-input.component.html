@@ -22,6 +22,9 @@
     [position]="position"
   >
     <div class="dropdown-panel calendar-dropdown">
+      <div *ngIf="loadingSuggestions" class="calendar-loading-overlay">
+  טוען תאריכים...
+      </div>
       <div class="calendar-wrapper">
         <div class="calendar-header">
           <div class="calendar-pill">

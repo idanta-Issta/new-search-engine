@@ -112,6 +112,7 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   }
 
   private applyValuesToInstances(): void {
+    debugger
     this.configs.forEach(config => {
       const ref = this.componentRefs.get(config.type);
       if (ref) {
@@ -130,10 +131,43 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
         if (config.isOneWay !== undefined && 'singleDateMode' in inst) {
           inst.singleDateMode = config.isOneWay;
         }
+
+        // עדכון dataConfig אם הקומפוננט תומך בכך (כמו קלנדר)
+        if ('dataConfig' in inst) {
+          const reg = SharedInputRegistry[config.type];
+          if (reg && reg.dataConfig) {
+            inst.dataConfig = reg.dataConfig;
+            try {
+              // If calendar component, ensure it re-renders with new suggestions
+              const suggestions: any[] = reg.dataConfig.suggestedDates || [];
+              if (Array.isArray(suggestions) && suggestions.length > 0) {
+                const earliest = suggestions.map(s => new Date(s.date)).sort((a,b)=>a.getTime()-b.getTime())[0];
+                if ('displayedMonthLeft' in inst) {
+                  inst.displayedMonthLeft = new Date(earliest.getFullYear(), earliest.getMonth(), 1);
+                  inst.displayedMonthRight = new Date(inst.displayedMonthLeft.getFullYear(), inst.displayedMonthLeft.getMonth()+1, 1);
+                }
+              } else if (reg.dataConfig.minDate && 'displayedMonthLeft' in inst) {
+                inst.displayedMonthLeft = new Date(reg.dataConfig.minDate.getFullYear(), reg.dataConfig.minDate.getMonth(), 1);
+                inst.displayedMonthRight = new Date(inst.displayedMonthLeft.getFullYear(), inst.displayedMonthLeft.getMonth()+1, 1);
+              }
+              if ('renderCalendars' in inst && typeof inst.renderCalendars === 'function') {
+                inst.renderCalendars();
+                console.log('applyValuesToInstances: renderCalendars called for', config.type);
+              }
+            } catch (e) {
+              // ignore
+            }
+          }
+        }
         
         // עדכון isDisabled - תמיד, גם אם false
         if ('isDisabled' in inst) {
-          inst.isDisabled = config.isDisabled ?? false;
+          inst['isDisabled'] = config.isDisabled ?? false;
+        }
+        // עדכון loadingSuggestions אם קיים
+        if ('loadingSuggestions' in inst) {
+          inst['loadingSuggestions'] = config.loadingSuggestions ?? false;
+          console.log('applyValuesToInstances: loadingSuggestions for', config.type, '=>', inst['loadingSuggestions']);
         }
         
         ref.changeDetectorRef.detectChanges();
@@ -144,6 +178,46 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   /** עדכון ערכים בלי לבנות מחדש את הקומפוננטים */
   updateValues(): void {
     this.applyValuesToInstances();
+  }
+
+  /**
+   * Update only part of an instance's dataConfig (e.g., suggestedDates)
+   * without rebuilding or applying the full configs list. This avoids
+   * toggling default states (like closed) and keeps the instance open.
+   */
+  updateInstanceDataConfigPartial(type: ESharedInputType, partial: Partial<any>) {
+    const ref = this.componentRefs.get(type);
+    if (!ref) return;
+    const inst = ref.instance as any;
+    try {
+      inst.dataConfig = inst.dataConfig || {};
+      Object.assign(inst.dataConfig, partial);
+
+      // If we updated suggestedDates, try to focus displayed months on earliest suggestion
+      const suggestions: any[] = inst.dataConfig.suggestedDates || [];
+      if (Array.isArray(suggestions) && suggestions.length > 0) {
+        const earliest = suggestions.map(s => new Date(s.date)).sort((a,b)=>a.getTime()-b.getTime())[0];
+        if ('displayedMonthLeft' in inst) {
+          inst.displayedMonthLeft = new Date(earliest.getFullYear(), earliest.getMonth(), 1);
+          inst.displayedMonthRight = new Date(inst.displayedMonthLeft.getFullYear(), inst.displayedMonthLeft.getMonth()+1, 1);
+        }
+      }
+
+      // Update other flags if provided
+      if ('loadingSuggestions' in partial) inst['loadingSuggestions'] = (partial as any)['loadingSuggestions'];
+      if ('isDisabled' in partial) inst['isDisabled'] = (partial as any)['isDisabled'];
+      if ('value' in partial) inst['value'] = (partial as any)['value'];
+
+      // Re-render calendar days only (no re-creation)
+      if ('renderCalendars' in inst && typeof inst.renderCalendars === 'function') {
+        inst.renderCalendars();
+      }
+      ref.changeDetectorRef.detectChanges();
+    } catch (e) {
+      // ignore errors and fallback to full update
+      console.warn('updateInstanceDataConfigPartial failed for', type, e);
+      this.applyValuesToInstances();
+    }
   }
 
   /** פתיחה מתוכנתית מהסבא */
