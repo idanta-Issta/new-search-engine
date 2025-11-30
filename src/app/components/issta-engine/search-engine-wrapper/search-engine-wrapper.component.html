@@ -34,5 +34,9 @@
     <app-organized-tours
       *ngIf="getActiveType() === ETypeSearchEngine.ORGANIZED_TOURS"
     ></app-organized-tours>
+
+    <app-dynamic-packages
+      *ngIf="getActiveType() === ETypeSearchEngine.DYNAMIC_PACKAGES"
+    ></app-dynamic-packages>
   </div>
 </div>

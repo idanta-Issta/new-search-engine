@@ -5,13 +5,14 @@ import { HotelAbroadComponent } from '../engines/hotel-abroad/hotel-abroad.compo
 import { SportComponent } from '../engines/sport/sport.component';
 import { OrganizedToursComponent } from '../engines/organized-tours/organized-tours.component';
 import { DomesticVacationComponent } from '../engines/domestic-vacation/domestic-vacation.component';
+import { DynamicPackagesComponent } from '../engines/dynamic-packages/dynamic-packages.component';
 import { ETypeSearchEngine } from '../../../enums/ETypeSearchEngine';
 import { getSearchEngineTabsConfig } from '../../../config/search-engine-tabs.config';
 
 @Component({
   selector: 'app-search-engine',
   standalone: true,
-  imports: [CommonModule, FlightsComponent, HotelAbroadComponent, DomesticVacationComponent, SportComponent, OrganizedToursComponent],
+  imports: [CommonModule, FlightsComponent, HotelAbroadComponent, DomesticVacationComponent, SportComponent, OrganizedToursComponent, DynamicPackagesComponent],
   templateUrl: './search-engine-wrapper.component.html',
   styleUrls: ['./search-engine-wrapper.component.scss']
 })

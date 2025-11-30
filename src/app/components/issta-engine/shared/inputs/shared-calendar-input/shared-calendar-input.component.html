@@ -2,20 +2,20 @@
   <app-input-box
     [icon]="uiConfig.icon ?? 'ng-icon-calendar'"
     [title]="uiConfig.title || 'תאריכים'"
-    [placeholder]="uiConfig.placeholder || 'בחר תאריך'"
-    [isOpen]="isOpen"
+    [placeholder]="isDisabled ? '' : (uiConfig.placeholder || 'בחר תאריך')"
+    [isOpen]="isOpen && !isDisabled"
     [model]="valueAsString"
     [width]="width"
-    (opened)="onInputOpened()"
+    (opened)="!isDisabled && onInputOpened()"
     (closed)="onInputClosed()"
-    (select)="onInputOpened()"
-    (focusin)="onInputOpened()"
-    (click)="onInputOpened()"
+    (select)="!isDisabled && onInputOpened()"
+    (focusin)="!isDisabled && onInputOpened()"
+    (click)="!isDisabled && onInputOpened()"
   ></app-input-box>
 
   <!-- שימוש ב-dropdown המשותף -->
   <app-shared-dropdown
-    [isOpen]="isOpen"
+    [isOpen]="isOpen && !isDisabled"
     (closed)="onInputClosed()"
     [anchor]="anchor"
     [scrollable]="false"
@@ -62,7 +62,7 @@
               >
                 <span>{{ day.date.getDate() }}</span>
                 <span *ngIf="day.suggested" class="suggest-badge">
-                  {{ day.suggested.price }} {{ day.suggested.currency }}
+                   {{ day.suggested.currency }}{{ day.suggested.price }}
                 </span>
               </div>
             </div>
@@ -95,7 +95,7 @@
               >
                 <span>{{ day.date.getDate() }}</span>
                 <span *ngIf="day.suggested" class="suggest-badge">
-                  {{ day.suggested.price }} {{ day.suggested.currency }}
+                   {{ day.suggested.currency }}{{ day.suggested.price }}
                 </span>
               </div>
             </div>

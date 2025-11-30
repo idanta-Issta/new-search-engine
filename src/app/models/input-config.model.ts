@@ -10,4 +10,5 @@ export interface InputConfig {
   excludeValues?: string[];
   isOneWay?: boolean;
   isDisabled?: boolean;
+  loadingText?: string;
 }

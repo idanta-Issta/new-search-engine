@@ -34,7 +34,27 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
   @Input() singleDateMode: boolean = false; // מצב בחירת תאריך בודד בלבד
   @Input() minDate?: Date | null; // תאריך מינימום חיצוני
-
+  
+  // Using setter to detect changes when isDisabled is set directly
+  private _isDisabled: boolean = false;
+  @Input() 
+  set isDisabled(value: boolean) {
+    const wasDisabled = this._isDisabled;
+    this._isDisabled = value;
+    
+    // If changing from disabled to enabled, reload data and render
+    if (wasDisabled && !value) {
+      if (this.dataConfig) {
+        this.reloadDataFromRegistry();
+      }
+    } else if (!wasDisabled && !value) {
+    } else if (value) {
+    }
+  }
+  get isDisabled(): boolean {
+    return this._isDisabled;
+  }
+  
   uiConfig!: SharedInputUIConfig;
   dataConfig!: SharedCalendarInputConfig;
 
@@ -85,9 +105,42 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('🔄 ngOnChanges called:', changes);
+    
     // כאשר minDate משתנה - צריך לרנדר מחדש את הלוחות
     if (changes['minDate'] && !changes['minDate'].firstChange) {
+      console.log('📅 minDate changed, rendering calendars');
       this.renderCalendars();
+    }
+    
+    // כאשר isDisabled משתנה מ-true ל-false - הטעינה הסתיימה
+    // צריך לטעון מחדש את dataConfig מה-registry ולרנדר מחדש
+    if (changes['isDisabled']) {
+      console.log('🔓 isDisabled changed:', {
+        previousValue: changes['isDisabled'].previousValue,
+        currentValue: changes['isDisabled'].currentValue,
+        firstChange: changes['isDisabled'].firstChange
+      });
+      
+      if (!changes['isDisabled'].firstChange) {
+        const wasDisabled = changes['isDisabled'].previousValue;
+        const isNowEnabled = !changes['isDisabled'].currentValue;
+        
+        console.log('🔍 Checking transition:', { wasDisabled, isNowEnabled });
+        
+        if (wasDisabled && isNowEnabled) {
+          console.log('✅ Loading completed! Reloading dataConfig from registry...');
+          // טען מחדש את dataConfig מה-registry (כולל suggestedDates המעודכנים)
+          const registryEntry = SharedInputRegistry[this.type];
+          if (registryEntry) {
+            console.log('📦 Old suggestedDates:', this.dataConfig?.suggestedDates?.length || 0);
+            this.dataConfig = registryEntry.dataConfig;
+            console.log('📦 New suggestedDates:', this.dataConfig?.suggestedDates?.length || 0, this.dataConfig.suggestedDates);
+            this.renderCalendars();
+            console.log('🎨 Calendars rendered!');
+          }
+        }
+      }
     }
   }
 
@@ -95,6 +148,30 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   get returnDate() { return this.value?.end ?? null; }
 
   toggleDropdown() { this.isOpen = !this.isOpen; }
+
+  private reloadDataFromRegistry(): void {
+    const registryEntry = SharedInputRegistry[this.type];
+    if (registryEntry) {
+      this.dataConfig = registryEntry.dataConfig;
+      // Prefer the earliest suggested date (if any) to decide which month to show
+      const suggestions: any[] = this.dataConfig?.suggestedDates || [];
+      let startMonth: Date | null = null;
+      if (Array.isArray(suggestions) && suggestions.length > 0) {
+        // Find earliest date
+        const earliest = suggestions
+          .map(s => new Date(s.date))
+          .sort((a, b) => a.getTime() - b.getTime())[0];
+        startMonth = new Date(earliest.getFullYear(), earliest.getMonth(), 1);
+      } else if (this.dataConfig && this.dataConfig.minDate) {
+        startMonth = new Date(this.dataConfig.minDate.getFullYear(), this.dataConfig.minDate.getMonth(), 1);
+      }
+      if (startMonth) {
+        this.displayedMonthLeft = startMonth;
+        this.displayedMonthRight = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1, 1);
+      }
+      this.renderCalendars();
+    }
+  }
 
   @HostListener('document:mousedown', ['$event'])
   onOutsideClick(event: MouseEvent) {
@@ -105,7 +182,7 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
 
   renderCalendars() {
     if (!this.dataConfig) {
-      console.error('dataConfig is undefined!');
+      console.error('❌ dataConfig is undefined!');
       return;
     }
     
@@ -127,6 +204,14 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
       effectiveMinDate,
       this.dataConfig.maxDate
     );
+    // Temporary: count how many suggestions match each displayed month
+    try {
+      const leftMonthCount = this.leftMonthDays.filter(d => !!d.suggested && !d.other).length;
+      const rightMonthCount = this.rightMonthDays.filter(d => !!d.suggested && !d.other).length;
+      console.log('renderCalendars: matches left/right', leftMonthCount, rightMonthCount);
+    } catch (e) {
+      // ignore
+    }
   }
 
   get leftMonthName() { return this.monthsNames[this.displayedMonthLeft.getMonth()]; }
@@ -193,6 +278,11 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   }
 
   get valueAsString(): string {
+    // If disabled, show loading text
+    if (this.isDisabled) {
+      return 'טוען תאריכים...';
+    }
+    
     const s = this.value?.start ?? null;
     const e = this.value?.end ?? null;
     

@@ -344,7 +344,7 @@ export const ORGANIZED_TOURS_CONFIG: SearchEngineConfig = {
     },
     {
       type: ESharedInputType.ORGANIZED_CATEGORIES,
-      size: EInputSize.LARGE,
+      size: EInputSize.MEDIUM,
       position: EDropdownPosition.BOTTOM_LEFT,
       value: { label: 'כל הקטגוריות', key: 'all' }
     },
@@ -357,6 +357,40 @@ export const ORGANIZED_TOURS_CONFIG: SearchEngineConfig = {
   ]
 };
 
+export const DYNAMIC_PACKAGES_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.DYNAMIC_PACKAGES,
+  header: {
+    title: 'חבילות נופש',
+  },
+  footer: {
+    infoItems: [
+      'חבילות נופש משתלמות',
+      'טיסה + מלון במחיר אחד',
+      'תשלום בעד 36 תשלומים'
+    ],
+  },
+  inputs: [
+    {
+      type: ESharedInputType.DYNAMIC_PACKAGES_DESTINATION,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: null
+    },
+    {
+      type: ESharedInputType.DYNAMIC_PACKAGES_DATES,
+      size: EInputSize.MEDIUM,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { start: null as Date | null, end: null as Date | null }
+    },
+    {
+      type: ESharedInputType.PASSANGERS_DYNAMIC_PACKAGES,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_RIGHT,
+      value: null
+    }
+  ]
+};
+
 export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_CONFIG,
   HOTEL_ABROAD_CONFIG,
@@ -365,7 +399,8 @@ export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_AND_HOTELS_TO_EILAT_CONFIG,
   DOMESTIC_VACATION_CONFIG,
   SPORT_CONFIG,
-  ORGANIZED_TOURS_CONFIG
+  ORGANIZED_TOURS_CONFIG,
+  DYNAMIC_PACKAGES_CONFIG
 ];
 
 export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 

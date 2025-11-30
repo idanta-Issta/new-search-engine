@@ -116,7 +116,6 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
       const ref = this.componentRefs.get(config.type);
       if (ref) {
         const inst = ref.instance as any;
-        
         // עדכון value
         if (config.value !== undefined && 'value' in inst) {
           inst.value = config.value;

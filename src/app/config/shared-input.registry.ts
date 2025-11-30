@@ -5,6 +5,7 @@ import { DomesticVacationMapper } from '../mappers/domestic-vacation.mapper';
 import { SportMapper } from '../mappers/sport.mapper';
 import { OrganizedToursMapper } from '../mappers/organized-tours.mapper';
 import { DatesPickerMapper } from '../mappers/dates-picker.mapper';
+import { DynamicPackagesMapper } from '../mappers/dynamic-packages.mapper';
 import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
 import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
@@ -296,6 +297,53 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       allowAutoComplete: false,
     },
     component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.DYNAMIC_PACKAGES_DESTINATION]: {
+    requestUrl: `${AppExternalConfig.baseUrl}packages/populardestinations`,
+    autocompleteUrl: `${AppExternalConfig.baseUrl}packages/autocomplete`,
+    mapper: DynamicPackagesMapper.mapDestinations,
+    uiConfig: {
+      title: TEXTS.SEARCH.INPUT_TITLES.WHERE,
+      icon: ICONS.PLANE,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.DESTINATION,
+      titleMenuOptions: TEXTS.SEARCH.MENU_TITLES.POPULAR_DESTINATIONS,
+      allowAutoComplete: true,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.DYNAMIC_PACKAGES_DATES]: {
+    mapper: () => [],
+    uiConfig: {
+      title: TEXTS.SEARCH.INPUT_TITLES.WHEN,
+      icon: ICONS.CALENDAR,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.DATES,
+      titleMenuOptions: '',
+      allowAutoComplete: false,
+    },
+    dataConfig: new SharedCalendarInputConfig({
+      suggestedDates: [],
+      minDate: (() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today;
+      })(),
+      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      allowPickHours: false,
+    }),
+    component: () => import('../components/issta-engine/shared/inputs/shared-calendar-input/shared-calendar-input.component').then(m => m.SharedCalendarInputComponent),
+  },
+
+  [ESharedInputType.PASSANGERS_DYNAMIC_PACKAGES]: {
+    mapper: () => [],
+    uiConfig: {
+      title: TEXTS.PASSENGERS.LABEL,
+      icon: ICONS.PASSENGER,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.PASSENGERS,
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
   },
 
 }
