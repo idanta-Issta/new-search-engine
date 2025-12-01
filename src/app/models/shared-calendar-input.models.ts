@@ -9,6 +9,7 @@ export interface ISharedCalendarInputConfig {
   minDate?: Date | null;
   maxDate?: Date | null;
   allowPickHours?: boolean;
+  forcePickOnlySuggested?: boolean;
 }
 
 export class SharedCalendarInputConfig implements ISharedCalendarInputConfig {
@@ -17,6 +18,7 @@ export class SharedCalendarInputConfig implements ISharedCalendarInputConfig {
   minDate: Date | null = null;
   maxDate: Date | null = null;
   allowPickHours: boolean = false;
+  forcePickOnlySuggested: boolean = false;
 
   constructor(data?: Partial<ISharedCalendarInputConfig>) {
     Object.assign(this, data);

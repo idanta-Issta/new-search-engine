@@ -214,7 +214,9 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
       this.displayedMonthLeft.getMonth(),
       this.dataConfig.suggestedDates,
       effectiveMinDate,
-      this.dataConfig.maxDate
+      this.dataConfig.maxDate,
+      this.dataConfig.forcePickOnlySuggested,
+      this.value?.start
     );
 
     this.rightMonthDays = this.calendarSrv.generateMonthDays(
@@ -222,7 +224,9 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
       this.displayedMonthRight.getMonth(),
       this.dataConfig.suggestedDates,
       effectiveMinDate,
-      this.dataConfig.maxDate
+      this.dataConfig.maxDate,
+      this.dataConfig.forcePickOnlySuggested,
+      this.value?.start
     );
     // Temporary: count how many suggestions match each displayed month
     try {

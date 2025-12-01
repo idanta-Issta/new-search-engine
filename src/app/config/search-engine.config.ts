@@ -431,6 +431,39 @@ export const SKI_CONFIG: SearchEngineConfig = {
   ]
 };
 
+export const VILLAGE_RESORTS_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.VILLAGE_RESORTS,
+  header: {
+    title: 'כפרי נופש',
+  },
+  footer: {
+    infoItems: [
+      'כפרי נופש מובילים',
+      'חבילות משפחתיות',
+      'תשלום עד 36 תשלומים'
+    ],
+  },
+  inputs: [
+    {
+      type: ESharedInputType.VILLAGE_RESORTS_DESTINATION,
+      size: EInputSize.HUGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+    },
+    {
+      type: ESharedInputType.VILLAGE_RESORTS_DATES,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { start: null as Date | null, end: null as Date | null }
+    },
+    {
+      type: ESharedInputType.VILLAGE_RESORTS_PASSENGERS,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_RIGHT,
+      value: null
+    }
+  ]
+};
+
 export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_CONFIG,
   HOTEL_ABROAD_CONFIG,
@@ -441,7 +474,8 @@ export const ALL_CONFIGS: SearchEngineConfig[] = [
   SPORT_CONFIG,
   ORGANIZED_TOURS_CONFIG,
   DYNAMIC_PACKAGES_CONFIG,
-  SKI_CONFIG
+  SKI_CONFIG,
+  VILLAGE_RESORTS_CONFIG
 ];
 
 export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 

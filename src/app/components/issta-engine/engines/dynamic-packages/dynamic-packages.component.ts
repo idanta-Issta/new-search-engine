@@ -63,25 +63,19 @@ export class DynamicPackagesComponent extends BaseEngineComponent {
         }
         break;
       case ESharedInputType.DYNAMIC_PACKAGES_DATES:
-        this.selectedDates = value;
-        if (value?.start && !value?.end && this.selectedDestination?.key) {
-          const datesInput = this.inputConfigs.find(c => c.type === ESharedInputType.DYNAMIC_PACKAGES_DATES);
-          if (datesInput) {
-            datesInput.loadingSuggestions = true;
-            datesInput.value = { start: value.start, end: null };
-            
-          }
+         this.selectedDates = value;
+  if (value?.start && !value?.end && this.selectedDestination?.key) {
+    const datesInput = this.inputConfigs.find(c => c.type === ESharedInputType.DYNAMIC_PACKAGES_DATES);
+    if (datesInput) {
+      datesInput.loadingSuggestions = true;
+      datesInput.value = { start: value.start, end: null };
+    }
 
-          //keep the suggested dates in list, when keep return date, change the suggested dates to be the first options
+    this.inputsRow?.openInputDelayed(ESharedInputType.DYNAMIC_PACKAGES_DATES, 0);
 
-          //for example, first suggested date is [10/10, 12/10, 13/10], user select 10/10 as start date,
-          //  then load again, the suggested dates will change to [12/10, 13/10]. but when pick return date, the suggeted date return again to first option [10/10, 12/10, 13/10]
-
-          this.inputsRow?.openInputDelayed(ESharedInputType.DYNAMIC_PACKAGES_DATES, 0);
-
-          const departureDate = this.formatDateForAPI(value.start);
-          this.loadCalendarDates(this.selectedDestination.key, departureDate);
-        }
+    const departureDate = this.formatDateForAPI(value.start);
+    this.loadCalendarDates(this.selectedDestination.key, departureDate);
+  }
         break;
       case ESharedInputType.PASSANGERS_DYNAMIC_PACKAGES:
         this.selectedPassengers = value;

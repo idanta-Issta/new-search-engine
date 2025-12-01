@@ -36,7 +36,9 @@ export class SharedCalendarService {
     month: number,
     suggested: SuggestedDate[] = [],
     minDate?: Date | null,
-    maxDate?: Date | null
+    maxDate?: Date | null,
+    forcePickOnlySuggested: boolean = false,
+    selectedStart?: Date | null
   ): CalendarDay[] {
 
     const total = this.daysInMonth(year, month);
@@ -71,9 +73,12 @@ if (maxDate && !disabled) {
   if (currentDateOnly > maxDateOnly) disabled = true;
 }
 
-// ❗ אם יש suggestedDates — רק suggested יהיו זמינים
-if (suggested.length > 0 && !match) {
-  disabled = true;
+// ❗ אם forcePickOnlySuggested פעיל — רק suggested או תאריך הלוך שנבחר יהיו זמינים
+if (forcePickOnlySuggested) {
+  const isSelectedStart = selectedStart && this.isSameDate(date, selectedStart);
+  if (!match && !isSelectedStart) {
+    disabled = true;
+  }
 }
 
 

@@ -6,6 +6,7 @@ import { SportMapper } from '../mappers/sport.mapper';
 import { OrganizedToursMapper } from '../mappers/organized-tours.mapper';
 import { DatesPickerMapper } from '../mappers/dates-picker.mapper';
 import { DynamicPackagesMapper } from '../mappers/dynamic-packages.mapper';
+import { VillageResortsMapper } from '../mappers/village-resorts.mapper';
 import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
 import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
@@ -400,6 +401,56 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
   },
 
   [ESharedInputType.SKI_PASSENGERS]: {
+    mapper: () => [],
+    uiConfig: {
+      title: 'נוסעים',
+      icon: ICONS.PASSENGER,
+      placeholder: 'בחר מספר נוסעים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
+  },
+
+  [ESharedInputType.VILLAGE_RESORTS_DESTINATION]: {
+    requestUrl: `${AppExternalConfig.baseUrl}village-resorts/all-destinations`,
+    mapper: (data: any) => {
+      const { VillageResortsMapper } = require('../mappers/village-resorts.mapper');
+      return VillageResortsMapper.mapDestinations(data);
+    },
+    uiConfig: {
+      title: 'יעד',
+      icon: ICONS.PLANE,
+      placeholder: 'בחר יעד',
+      titleMenuOptions: 'יעדים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.VILLAGE_RESORTS_DATES]: {
+    mapper: () => [],
+    uiConfig: {
+      title: 'תאריך יציאה',
+      icon: ICONS.CALENDAR,
+      placeholder: 'בחר תאריך',
+      titleMenuOptions: '',
+      allowAutoComplete: false,
+    },
+    dataConfig: new SharedCalendarInputConfig({
+      suggestedDates: [],
+      minDate: (() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today;
+      })(),
+      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      allowPickHours: false,
+      forcePickOnlySuggested: true,
+    }),
+    component: () => import('../components/issta-engine/shared/inputs/shared-calendar-input/shared-calendar-input.component').then(m => m.SharedCalendarInputComponent),
+  },
+
+  [ESharedInputType.VILLAGE_RESORTS_PASSENGERS]: {
     mapper: () => [],
     uiConfig: {
       title: 'נוסעים',

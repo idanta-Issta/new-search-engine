@@ -13,13 +13,14 @@ import { DynamicPackagesComponent } from '../engines/dynamic-packages/dynamic-pa
 import { LeadFormExtraRoomsComponent } from '../shared/modals/lead-form-extra-rooms/lead-form-extra-rooms.component';
 import { LeadFormModalService } from '../../../services/lead-form-modal.service';
 import { SkiComponent } from '../engines/ski/ski.component';
+import { VillageResortsComponent } from '../engines/village-resorts/village-resorts.component';
 
 @Component({
   selector: 'app-search-engine',
   standalone: true,
   imports: [CommonModule, FlightsComponent, HotelAbroadComponent
     , DomesticVacationComponent, SportComponent, OrganizedToursComponent,
-     DynamicPackagesComponent, SkiComponent, LeadFormExtraRoomsComponent],
+     DynamicPackagesComponent, SkiComponent, VillageResortsComponent, LeadFormExtraRoomsComponent],
   templateUrl: './search-engine-wrapper.component.html',
   styleUrls: ['./search-engine-wrapper.component.scss']
 })

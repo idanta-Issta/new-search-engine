@@ -20,7 +20,7 @@ export function getSearchEngineTabsConfig(): SearchEngine {
       {
         title: "כפרי נופש",
         icon: 'icon-adult-room',
-        searchEngine: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false }
+        searchEngine: { typeTravel: ETypeSearchEngine.VILLAGE_RESORTS, isPartial: false }
       },
       {
         title: "שייט",
