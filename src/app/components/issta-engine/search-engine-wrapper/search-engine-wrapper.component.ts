@@ -9,13 +9,17 @@ import { DomesticVacationComponent } from '../engines/domestic-vacation/domestic
 import { ETypeSearchEngine } from '../../../enums/ETypeSearchEngine';
 import { getSearchEngineTabsConfig } from '../../../config/search-engine-tabs.config';
 import { DynamicPackagesComponent } from '../engines/dynamic-packages/dynamic-packages.component';
+
 import { LeadFormExtraRoomsComponent } from '../shared/modals/lead-form-extra-rooms/lead-form-extra-rooms.component';
 import { LeadFormModalService } from '../../../services/lead-form-modal.service';
+import { SkiComponent } from '../engines/ski/ski.component';
 
 @Component({
   selector: 'app-search-engine',
   standalone: true,
-  imports: [CommonModule, FlightsComponent, HotelAbroadComponent, DomesticVacationComponent, SportComponent, OrganizedToursComponent, DynamicPackagesComponent, LeadFormExtraRoomsComponent],
+  imports: [CommonModule, FlightsComponent, HotelAbroadComponent
+    , DomesticVacationComponent, SportComponent, OrganizedToursComponent,
+     DynamicPackagesComponent, SkiComponent, LeadFormExtraRoomsComponent],
   templateUrl: './search-engine-wrapper.component.html',
   styleUrls: ['./search-engine-wrapper.component.scss']
 })

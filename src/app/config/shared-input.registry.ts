@@ -346,4 +346,68 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
   },
 
+  [ESharedInputType.SKI_DESTINATION]: {
+    requestUrl: `${AppExternalConfig.baseUrl}ski/destinations`,
+    mapper: (data: any) => {
+      const { SkiMapper } = require('../mappers/ski.mapper');
+      return SkiMapper.mapDestinations(data);
+    },
+    uiConfig: {
+      title: 'יעד',
+      icon: ICONS.PLANE,
+      placeholder: 'בחר מדינה',
+      titleMenuOptions: 'מדינות',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.SKI_RESORT]: {
+    mapper: (data: any) => {
+      const { SkiMapper } = require('../mappers/ski.mapper');
+      return SkiMapper.mapResorts(data);
+    },
+    uiConfig: {
+      title: 'אתר סקי',
+      icon: ICONS.HOTEL,
+      placeholder: 'בחר אתר סקי',
+      titleMenuOptions: 'אתרי סקי',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.SKI_DEPARTURE_DATE]: {
+    mapper: () => [],
+    uiConfig: {
+      title: 'תאריך יציאה',
+      icon: ICONS.CALENDAR,
+      placeholder: 'בחר תאריך',
+      titleMenuOptions: '',
+      allowAutoComplete: false,
+    },
+    dataConfig: new SharedCalendarInputConfig({
+      suggestedDates: [],
+      minDate: (() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today;
+      })(),
+      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      allowPickHours: false,
+    }),
+    component: () => import('../components/issta-engine/shared/inputs/shared-calendar-input/shared-calendar-input.component').then(m => m.SharedCalendarInputComponent),
+  },
+
+  [ESharedInputType.SKI_PASSENGERS]: {
+    mapper: () => [],
+    uiConfig: {
+      title: 'נוסעים',
+      icon: ICONS.PASSENGER,
+      placeholder: 'בחר מספר נוסעים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
+  },
+
 }

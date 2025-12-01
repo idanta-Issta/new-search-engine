@@ -29,11 +29,12 @@ export class SharedPassengersService {
         return of(this.getAboardHotelPassengers());
       case ESharedInputType.PASSANGERS_DOMESTIC_VACATION:
         return of(this.getDomesticVacationPassengers(true, 36, 9, 4));
-          case ESharedInputType.PASSANGERS_FLIGHTS_EILAT:
-    return of(this.getDomesticVacationPassengers(false, 9, 0));
-
+      case ESharedInputType.PASSANGERS_FLIGHTS_EILAT:
+        return of(this.getDomesticVacationPassengers(false, 9, 0));
       case ESharedInputType.PASSANGERS_FLIGHTS_AND_HOTEL_EILAT:
         return of(this.getDomesticVacationPassengers(true, 7, 7, 1));
+      case ESharedInputType.SKI_PASSENGERS:
+        return of(this.getSkiPassengers());
       default:
         return of({ optionsAge: [], allowPickRoom: false });
     }
@@ -193,6 +194,48 @@ maxRoomsPick = 4): PassangersInput {
             note: '(גיל 12+)', 
             minCount: 1, 
             maxCount: 6,
+            defaultValue: 2,
+            requiresSpecificAge: false
+          },
+          { 
+            label: 'ילד', 
+            value: 'child', 
+            note: '(גיל 2-11)', 
+            minCount: 0, 
+            maxCount: 4,
+            defaultValue: 0,
+            requiresSpecificAge: false,
+            selectedAges: []
+          },
+          { 
+            label: 'תינוק', 
+            value: 'infant', 
+            note: '(מתחת ל-2)', 
+            minCount: 0, 
+            maxCount: 2,
+            defaultValue: 0,
+            requiresSpecificAge: false
+          }
+        ]
+      }
+    ]
+  };
+}
+
+private getSkiPassengers(): PassangersInput {
+  return {
+    allowPickRoom: false,
+    maxTotalPassengers: 9,
+    optionsAge: [
+      {
+        title: 'נוסעים',
+        options: [
+          { 
+            label: 'מבוגר', 
+            value: 'adult', 
+            note: '(מעל גיל 12)', 
+            minCount: 1, 
+            maxCount: 9,
             defaultValue: 2,
             requiresSpecificAge: false
           },

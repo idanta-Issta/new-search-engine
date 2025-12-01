@@ -391,6 +391,46 @@ export const DYNAMIC_PACKAGES_CONFIG: SearchEngineConfig = {
   ]
 };
 
+export const SKI_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.SKI,
+  header: {
+    title: 'חיפוש חבילות סקי',
+  },
+  footer: {
+    infoItems: [
+      'אתרי סקי מובילים',
+      'חבילות כולל ציוד',
+      'תשלום עד 36 תשלומים'
+    ],
+  },
+  inputs: [
+    {
+      type: ESharedInputType.SKI_DESTINATION,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'כל המדינות', key: 'all' }
+    },
+    {
+      type: ESharedInputType.SKI_RESORT,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: { label: 'כל האתרים', key: 'all' }
+    },
+    {
+      type: ESharedInputType.SKI_DEPARTURE_DATE,
+      size: EInputSize.MEDIUM,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { start: null as Date | null, end: null as Date | null }
+    },
+    {
+      type: ESharedInputType.SKI_PASSENGERS,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_RIGHT,
+      value: null
+    }
+  ]
+};
+
 export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_CONFIG,
   HOTEL_ABROAD_CONFIG,
@@ -400,7 +440,8 @@ export const ALL_CONFIGS: SearchEngineConfig[] = [
   DOMESTIC_VACATION_CONFIG,
   SPORT_CONFIG,
   ORGANIZED_TOURS_CONFIG,
-  DYNAMIC_PACKAGES_CONFIG
+  DYNAMIC_PACKAGES_CONFIG,
+  SKI_CONFIG
 ];
 
 export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 

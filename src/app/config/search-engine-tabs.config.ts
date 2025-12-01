@@ -30,7 +30,7 @@ export function getSearchEngineTabsConfig(): SearchEngine {
       {
         title: "חבילות סקי",
         icon: 'icon-adult-room',
-        searchEngine: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false }
+        searchEngine: { typeTravel: ETypeSearchEngine.SKI, isPartial: false }
       },
       {
         title: "השכרת רכב בחו\"ל",

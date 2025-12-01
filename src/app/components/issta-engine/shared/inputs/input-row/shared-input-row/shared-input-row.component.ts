@@ -112,7 +112,6 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   }
 
   private applyValuesToInstances(): void {
-    debugger
     this.configs.forEach(config => {
       const ref = this.componentRefs.get(config.type);
       if (ref) {
