@@ -6,7 +6,11 @@ import {
   OnInit,
   ElementRef,
   HostListener,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ComponentRef,
+  ApplicationRef,
+  Injector,
+  EnvironmentInjector
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +22,7 @@ import { PassangersInput, OptionAge, AgeGroup, RoomPassengers } from '../../../.
 import { SharedPassengersService } from '../../../../../services/shared-passengers.service';
 import { SharedDropdownComponent } from '../../dropdowns/shared-dropdown/shared-dropdown.component';
 import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
+import { LeadFormModalService } from '../../../../../services/lead-form-modal.service';
 
 @Component({
   selector: 'app-shared-passanger-input',
@@ -37,13 +42,22 @@ export class SharedPassangerInputComponent implements OnInit {
   isOpen = false;
   totalPassengers = 0;
   selectedRoomIndex = 0;
-  // Dynamic margin computed from service (no local mutation)
+
+
 
   constructor(
     private el: ElementRef,
     private passengersSrv: SharedPassengersService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private appRef: ApplicationRef,
+    private injector: Injector,
+    private envInjector: EnvironmentInjector,
+    private leadFormModal: LeadFormModalService
   ) {}
+
+  showExtraRoomModal() {
+    this.leadFormModal.open();
+  }
 
   ngOnInit() {
     const registryEntry = SharedInputRegistry[this.type];

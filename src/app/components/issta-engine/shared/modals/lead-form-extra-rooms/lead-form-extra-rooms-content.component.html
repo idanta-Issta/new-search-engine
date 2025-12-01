@@ -1,0 +1,50 @@
+<p class="subtitle">השאירו פרטים וסוכן/ת יחזרו אליך</p>
+
+<form (ngSubmit)="submit()" class="form-content">
+  <app-input
+    placeholder="שם פרטי"
+    [(ngModel)]="form.firstName"
+    name="firstName"
+    [validations]="firstNameValidations"
+  ></app-input>
+
+  <app-input
+    placeholder="שם משפחה"
+    [(ngModel)]="form.lastName"
+    name="lastName"
+    [validations]="lastNameValidations"
+  ></app-input>
+
+  <app-input
+    placeholder="טלפון"
+    type="tel"
+    [(ngModel)]="form.phone"
+    name="phone"
+    [mask]="'XXX-XXXXXXX'"
+    [validations]="phoneValidations"
+  ></app-input>
+
+  <app-input
+    placeholder="אימייל"
+    type="email"
+    [(ngModel)]="form.email"
+    name="email"
+    [validations]="emailValidations"
+  ></app-input>
+
+  <app-input
+    placeholder="מספר אנשים בחופשה"
+    type="number"
+    [(ngModel)]="form.peopleCount"
+    name="peopleCount"
+    [min]="1"
+    [max]="99"
+    [validations]="peopleCountValidations"
+  ></app-input>
+
+  <div class="success-message" *ngIf="success">הפרטים נשלחו בהצלחה!</div>
+
+  <button class="submit-btn" type="submit" [disabled]="success">
+    אשמח לדבר עם סוכן/ת
+  </button>
+</form>

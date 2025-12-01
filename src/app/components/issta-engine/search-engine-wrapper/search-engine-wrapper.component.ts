@@ -1,18 +1,21 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FlightsComponent } from '../engines/flights/flights.component';
 import { HotelAbroadComponent } from '../engines/hotel-abroad/hotel-abroad.component';
 import { SportComponent } from '../engines/sport/sport.component';
 import { OrganizedToursComponent } from '../engines/organized-tours/organized-tours.component';
 import { DomesticVacationComponent } from '../engines/domestic-vacation/domestic-vacation.component';
-import { DynamicPackagesComponent } from '../engines/dynamic-packages/dynamic-packages.component';
 import { ETypeSearchEngine } from '../../../enums/ETypeSearchEngine';
 import { getSearchEngineTabsConfig } from '../../../config/search-engine-tabs.config';
+import { DynamicPackagesComponent } from '../engines/dynamic-packages/dynamic-packages.component';
+import { LeadFormExtraRoomsComponent } from '../shared/modals/lead-form-extra-rooms/lead-form-extra-rooms.component';
+import { LeadFormModalService } from '../../../services/lead-form-modal.service';
 
 @Component({
   selector: 'app-search-engine',
   standalone: true,
-  imports: [CommonModule, FlightsComponent, HotelAbroadComponent, DomesticVacationComponent, SportComponent, OrganizedToursComponent, DynamicPackagesComponent],
+  imports: [CommonModule, FlightsComponent, HotelAbroadComponent, DomesticVacationComponent, SportComponent, OrganizedToursComponent, DynamicPackagesComponent, LeadFormExtraRoomsComponent],
   templateUrl: './search-engine-wrapper.component.html',
   styleUrls: ['./search-engine-wrapper.component.scss']
 })
@@ -21,6 +24,15 @@ export class SearchEngineComponent implements AfterViewInit {
   activeTab: any = null;
   ETypeSearchEngine = ETypeSearchEngine;
   isAnimating = false;
+  leadFormOpen$;
+
+  constructor(private leadFormService: LeadFormModalService) {
+    this.leadFormOpen$ = this.leadFormService.open$;
+  }
+
+  closeLeadForm() {
+    this.leadFormService.close();
+  }
 
   ngAfterViewInit() {
     setTimeout(() => {

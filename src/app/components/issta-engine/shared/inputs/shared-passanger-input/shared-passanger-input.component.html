@@ -88,11 +88,32 @@
 
       <!-- Footer section -->
       <div class="footer-section">
-             <div class="add-room-wrapper" *ngIf="canAddRoom()">
-            <button class="add-room-btn" (mousedown)="$event.stopPropagation()" (click)="addRoom(); $event.stopPropagation()">+ הוספת חדר</button>
-          </div>
-        <button class="confirm" (click)="isOpen = false">בחירה</button>
-      </div>
-    </div>
-  </app-shared-dropdown>
+             <div class="add-room-wrapper">
+  
+  <!-- כפתור רגיל אם אפשר להוסיף חדר -->
+  <button *ngIf="canAddRoom()"
+          class="add-room-btn"
+          (mousedown)="$event.stopPropagation()"
+          (click)="addRoom(); $event.stopPropagation()">
+    + הוספת חדר
+  </button>
+
+
+<div class="extra-room-contact"
+     *ngIf="!canAddRoom()"
+     (click)="showExtraRoomModal()">
+  רוצה יותר מחדר אחד? לחץ כאן
 </div>
+
+
+
+
+</div>
+
+
+<button class="confirm" (click)="isOpen = false">בחירה</button>
+</div>
+</div>
+</app-shared-dropdown>
+</div>
+

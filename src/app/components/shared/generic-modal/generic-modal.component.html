@@ -1,0 +1,12 @@
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal-container">
+    <button class="close-btn" (click)="close()">×</button>
+    
+    <h2 *ngIf="title" class="modal-title">{{ title }}</h2>
+    
+    <div class="modal-content">
+      <ng-container *ngIf="contentTemplate" [ngTemplateOutlet]="contentTemplate"></ng-container>
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 <div class="search-engine">
+  <app-lead-form-extra-rooms *ngIf="leadFormOpen$ | async" (closed)="closeLeadForm()"></app-lead-form-extra-rooms>
   <div class="tabs" *ngIf="options?.showTabs">
     <a
       *ngFor="let tab of options?.tabs"

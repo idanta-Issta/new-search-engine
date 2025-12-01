@@ -1,0 +1,16 @@
+<div class="input-wrapper">
+  <input
+    [type]="type"
+    [placeholder]="placeholder"
+    [value]="value"
+    [dir]="dir"
+    [class.error]="hasError"
+    [min]="min"
+    [max]="max"
+    (input)="onInputChange($any($event.target).value)"
+    (blur)="onBlur()"
+  />
+  <div class="error-message" *ngIf="hasError">
+    {{ errorMessage }}
+  </div>
+</div>
