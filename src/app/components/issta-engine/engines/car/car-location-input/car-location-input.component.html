@@ -27,6 +27,8 @@
             [type]="type"
             [value]="pickupCity"
             [isDisabled]="isDisabled"
+            [position]="centerPosition"
+            size="small"
             width="100%"
             (optionPicked)="onPickupCityPicked($event)"
           ></app-shared-options-input>
@@ -39,6 +41,8 @@
             [type]="type"
             [value]="returnCity"
             [isDisabled]="isDisabled"
+            [position]="centerPosition"
+            size="small"
             width="100%"
             (optionPicked)="onReturnCityPicked($event)"
           ></app-shared-options-input>

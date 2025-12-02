@@ -1,4 +1,4 @@
-<div class="input-box" [class.open]="isOpen" [style.width]="width" (click)="onBoxClick()">
+<div class="input-box" [class.open]="isOpen" [class.small]="size === 'small'" [class.large]="size === 'large'" [style.width]="width" (click)="onBoxClick()">
   <i *ngIf="icon" [class]="icon" [class.bold]="isBoldIcon"></i>
 
   <div class="input-meta">

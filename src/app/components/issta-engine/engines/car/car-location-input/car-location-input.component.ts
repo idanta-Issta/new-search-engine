@@ -35,6 +35,7 @@ export class CarLocationInputComponent implements OnInit {
   isOpen = false;
   displayValue = '';
   position = EDropdownPosition.BOTTOM_LEFT;
+  centerPosition = EDropdownPosition.BOTTOM_LEFT;
   
   pickupCity: MenuOption | undefined;
   returnCity: MenuOption | undefined;
@@ -53,6 +54,22 @@ export class CarLocationInputComponent implements OnInit {
       this.pickupCity = (this.value as any)._pickupCity;
       this.returnCity = (this.value as any)._returnCity;
     }
+  }
+
+  onPickupCityPicked(city: MenuOption) {
+    this.pickupCity = city;
+    
+    // Auto-fill return city on first selection
+    if (!this.returnCity) {
+      this.returnCity = city;
+    }
+    
+    this.cdr.markForCheck();
+  }
+
+  onReturnCityPicked(city: MenuOption) {
+    this.returnCity = city;
+    this.cdr.markForCheck();
   }
 
   onInputOpened() {
@@ -77,21 +94,7 @@ export class CarLocationInputComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  onPickupCityPicked(city: MenuOption) {
-    this.pickupCity = city;
-    
-    // Auto-fill return city on first selection
-    if (!this.returnCity) {
-      this.returnCity = city;
-    }
-    
-    this.cdr.markForCheck();
-  }
 
-  onReturnCityPicked(city: MenuOption) {
-    this.returnCity = city;
-    this.cdr.markForCheck();
-  }
 
   onContinue() {
     if (!this.pickupCity || !this.returnCity) return;
@@ -102,7 +105,6 @@ export class CarLocationInputComponent implements OnInit {
       key: `${this.pickupCity.key}_${this.returnCity.key}`,
       _pickupCity: this.pickupCity,
       _returnCity: this.returnCity,
-      CityCode: this.pickupCity.key, // For compatibility
     };
     
     this.displayValue = combinedValue.label;

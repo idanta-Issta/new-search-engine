@@ -19,6 +19,7 @@ export class InputBoxComponent {
   @Input() isOpen = false;
   @Input() width: string = '100%';
   @Input() isBoldIcon: boolean = false;
+  @Input() size: 'small' | 'medium' | 'large' = 'medium';
   
   @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
 

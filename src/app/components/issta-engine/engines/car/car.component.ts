@@ -91,28 +91,40 @@ export class CarComponent extends BaseEngineComponent {
       return;
     }
 
+    // Set loading state
+    const cityInput = this.inputConfigs.find(c => c.type === ESharedInputType.CAR_PICKUP_CITY);
+    if (cityInput) {
+      cityInput.value = { label: 'טוען ערים...', key: 'loading' };
+      cityInput.isDisabled = true;
+    }
+    this.inputsRow?.updateValues();
+
     // Load cities from API
     const url = `${AppExternalConfig.baseUrl}car/cities?countryCode=${countryCode}`;
     console.log('📡 Loading cities from URL:', url);
     
     this.http.get<any>(url).subscribe({
       next: (response) => {
-        console.log('✅ Cities loaded:', response);
+        console.log('✅ Cities loaded raw response:', response);
+        
+        // Use mapper to transform the data
+        const { CarMapper } = require('../../../../mappers/car.mapper');
+        const mappedCities = CarMapper.mapCities(response);
+        console.log('🗺️ Mapped cities:', mappedCities);
         
         // Clear cache for cities to force reload
         this.optionsService.clearCacheForType(ESharedInputType.CAR_PICKUP_CITY);
         
-        // Update registry with new URL
+        // Update registry with mapped cities as listMenuOption
         import('../../../../config/shared-input.registry').then(module => {
           const registry = module.SharedInputRegistry;
           if (registry[ESharedInputType.CAR_PICKUP_CITY]) {
-            registry[ESharedInputType.CAR_PICKUP_CITY].requestUrl = url;
-            console.log('📝 Updated registry with cities URL');
+            registry[ESharedInputType.CAR_PICKUP_CITY].listMenuOption = mappedCities;
+            console.log('📝 Updated registry with cities list:', mappedCities);
           }
         });
         
         // Re-enable input and reset to default
-        const cityInput = this.inputConfigs.find(c => c.type === ESharedInputType.CAR_PICKUP_CITY);
         if (cityInput) {
           cityInput.value = null;
           cityInput.isDisabled = false;
@@ -120,7 +132,7 @@ export class CarComponent extends BaseEngineComponent {
         this.selectedPickupCity = null;
         this.inputsRow?.updateValues();
         
-
+        // Open the city input automatically
         setTimeout(() => {
           this.inputsRow?.openInputDelayed(ESharedInputType.CAR_PICKUP_CITY, 0);
         }, 100);
@@ -129,7 +141,6 @@ export class CarComponent extends BaseEngineComponent {
       },
       error: (err) => {
         console.error('❌ Failed to load cities:', err);
-        const cityInput = this.inputConfigs.find(c => c.type === ESharedInputType.CAR_PICKUP_CITY);
         if (cityInput) {
           cityInput.value = { label: 'שגיאה בטעינה', key: 'error' };
           cityInput.isDisabled = false;

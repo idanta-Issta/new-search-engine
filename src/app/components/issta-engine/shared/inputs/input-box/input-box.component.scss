@@ -27,6 +27,39 @@
     border-radius: 8px;
   }
 
+  &.small {
+    height: 32px;
+    padding: 2px 12px 0px 0px;
+    
+    .input-title {
+      font-size: 12px;
+    }
+    
+    .input-field {
+      font-size: 14px;
+    }
+    
+    i::before {
+      font-size: 16px;
+    }
+  }
+
+  &.large {
+    height: 48px;
+    
+    .input-title {
+      font-size: 17px;
+    }
+    
+    .input-field {
+      font-size: 20px;
+    }
+    
+    i::before {
+      font-size: 26px;
+    }
+  }
+
   > * {
     position: relative;
     z-index: 1;
