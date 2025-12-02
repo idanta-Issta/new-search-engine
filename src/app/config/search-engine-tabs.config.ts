@@ -5,11 +5,12 @@ import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
 export function getSearchEngineTabsConfig(): SearchEngine {
   return {
     showTabs: true,
-    defaultTab: { typeTravel: ETypeSearchEngine.CAR_RENTAL, isPartial: false },
+    defaultTab: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false },
     tabs: [
       {
         title: "מתאים לי",
         imagePath: 'https://cstorage.zoomengage.com/images/19761202/za_a47e687e015d92d14.jpg',
+        htmlUrl: "https://localhost:51565/umbraco/ComponentService/Components/ReloadComponent?componentName=check",
         searchEngine: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false } // שנה את הסוג בהתאם
       },
       {

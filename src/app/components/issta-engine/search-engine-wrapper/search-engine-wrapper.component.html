@@ -16,40 +16,49 @@
   </div>
 
  <div class="tab-content" [class.animating]="isAnimating">
+    <!-- External HTML content -->
+    <div *ngIf="hasExternalHtml()" class="external-html-container">
+      <div *ngIf="isLoadingHtml" class="loading-spinner">
+        <span>טוען תוכן...</span>
+      </div>
+      <div #dynamicContainer id="dynamic-container" [style.display]="isLoadingHtml ? 'none' : 'block'"></div>
+    </div>
+
+    <!-- Built-in engines -->
     <app-flights
-      *ngIf="getActiveType() === ETypeSearchEngine.FLIGHTS"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.FLIGHTS"
     ></app-flights>
 
     <app-hotel-abroad
-      *ngIf="getActiveType() === ETypeSearchEngine.HOTELS_ABROAD"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.HOTELS_ABROAD"
     ></app-hotel-abroad>
 
     <app-domestic-vacation
-      *ngIf="getActiveType() === ETypeSearchEngine.DOMESTIC_VACATIONS"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.DOMESTIC_VACATIONS"
     ></app-domestic-vacation>
 
     <app-sport
-      *ngIf="getActiveType() === ETypeSearchEngine.SPORT"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.SPORT"
     ></app-sport>
 
     <app-organized-tours
-      *ngIf="getActiveType() === ETypeSearchEngine.ORGANIZED_TOURS"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.ORGANIZED_TOURS"
     ></app-organized-tours>
 
     <app-dynamic-packages
-      *ngIf="getActiveType() === ETypeSearchEngine.DYNAMIC_PACKAGES"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.DYNAMIC_PACKAGES"
     ></app-dynamic-packages>
 
     <app-ski
-      *ngIf="getActiveType() === ETypeSearchEngine.SKI"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.SKI"
     ></app-ski>
 
     <app-village-resorts
-      *ngIf="getActiveType() === ETypeSearchEngine.VILLAGE_RESORTS"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.VILLAGE_RESORTS"
     ></app-village-resorts>
 
     <app-car
-      *ngIf="getActiveType() === ETypeSearchEngine.CAR_RENTAL"
+      *ngIf="!hasExternalHtml() && getActiveType() === ETypeSearchEngine.CAR_RENTAL"
     ></app-car>
   </div>
 </div>

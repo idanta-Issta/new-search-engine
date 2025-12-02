@@ -14,6 +14,7 @@ export interface TabsSearchEngine {
   imagePath?: string;
   searchEngine: TypeTabSearchEngine;
   url?: string;
+  htmlUrl?: string;
 }
 
 export interface SearchEngine {

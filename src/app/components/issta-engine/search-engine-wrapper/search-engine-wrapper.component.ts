@@ -1,5 +1,6 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
+import { Component, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 import { FlightsComponent } from '../engines/flights/flights.component';
 import { HotelAbroadComponent } from '../engines/hotel-abroad/hotel-abroad.component';
@@ -32,8 +33,14 @@ export class SearchEngineComponent implements AfterViewInit {
   ETypeSearchEngine = ETypeSearchEngine;
   isAnimating = false;
   leadFormOpen$;
+  isLoadingHtml = false;
 
-  constructor(private leadFormService: LeadFormModalService) {
+  @ViewChild('dynamicContainer', { static: false }) dynamicContainer?: ElementRef<HTMLDivElement>;
+
+  constructor(
+    private leadFormService: LeadFormModalService,
+    private http: HttpClient
+  ) {
     this.leadFormOpen$ = this.leadFormService.open$;
   }
 
@@ -42,6 +49,7 @@ export class SearchEngineComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log('🔵 ngAfterViewInit started');
     setTimeout(() => {
       // קודם נסה לקבל מ-window אם קיים
       if (!this.options && (window as any).SearchEngineConfig) {
@@ -64,6 +72,16 @@ export class SearchEngineComponent implements AfterViewInit {
 
       console.log('✅ Tabs loaded:', this.options?.tabs);
       console.log('🎯 Active tab:', this.activeTab);
+      console.log('🔍 Has htmlUrl?', !!this.activeTab?.htmlUrl);
+      console.log('🔍 htmlUrl value:', this.activeTab?.htmlUrl);
+
+      // Load external HTML if the initial active tab has htmlUrl
+      if (this.activeTab?.htmlUrl) {
+        console.log('🚀 Loading external HTML from:', this.activeTab.htmlUrl);
+        this.loadExternalHtml(this.activeTab.htmlUrl);
+      } else {
+        console.log('⚠️ No htmlUrl found on active tab');
+      }
     });
   }
 
@@ -73,6 +91,16 @@ export class SearchEngineComponent implements AfterViewInit {
     this.isAnimating = true;
     setTimeout(() => {
       this.activeTab = tab;
+      
+      // Load external HTML if htmlUrl is specified
+      if (tab.htmlUrl) {
+        this.loadExternalHtml(tab.htmlUrl);
+      } else {
+        if (this.dynamicContainer) {
+          this.dynamicContainer.nativeElement.innerHTML = '';
+        }
+      }
+      
       setTimeout(() => {
         this.isAnimating = false;
       }, 20);
@@ -92,5 +120,112 @@ export class SearchEngineComponent implements AfterViewInit {
 
   getActiveType(): ETypeSearchEngine | undefined {
     return this.activeTab?.searchEngine?.typeTravel;
+  }
+
+  hasExternalHtml(): boolean {
+    const result = !!this.activeTab?.htmlUrl;
+    console.log('🔍 hasExternalHtml() called, result:', result, 'activeTab:', this.activeTab?.title);
+    return result;
+  }
+
+  private loadExternalHtml(url: string) {
+    console.log('📥 loadExternalHtml called with URL:', url);
+    this.isLoadingHtml = true;
+    console.log('⏳ isLoadingHtml set to true');
+    
+    this.http.get(url, { responseType: 'text' }).subscribe({
+      next: (htmlText: string) => {
+        console.log('✅ HTTP Response received, length:', htmlText.length);
+        console.log('📄 HTML Preview (first 200 chars):', htmlText.substring(0, 200));
+        
+        if (!this.dynamicContainer) {
+          console.error('❌ Dynamic container not found!');
+          this.isLoadingHtml = false;
+          return;
+        }
+        console.log('✅ Dynamic container exists:', this.dynamicContainer.nativeElement);
+
+        // Extract and inject CSS
+        const styles = this.extractStyles(htmlText);
+        console.log('🎨 Extracted', styles.length, 'style tags');
+        styles.forEach((css, index) => {
+          console.log(`🎨 Injecting style #${index + 1}, length:`, css.length);
+          this.loadCSS(css);
+        });
+
+        // Extract scripts
+        const scripts = this.extractScripts(htmlText);
+        console.log('📜 Extracted', scripts.length, 'script tags');
+        
+        // Remove <style> and <script> tags from HTML
+        const cleanHtml = this.sanitizeHtml(htmlText);
+        console.log('🧹 Clean HTML length:', cleanHtml.length);
+        console.log('🧹 Clean HTML preview:', cleanHtml.substring(0, 200));
+        
+        // Insert clean HTML into container
+        this.dynamicContainer.nativeElement.innerHTML = cleanHtml;
+        console.log('✅ HTML inserted into container');
+        
+        // Execute scripts AFTER HTML is inserted
+        setTimeout(() => {
+          scripts.forEach((js, index) => {
+            console.log(`📜 Executing script #${index + 1}, length:`, js.length);
+            this.loadScript(js);
+          });
+          console.log('✅ All scripts executed');
+        }, 0);
+        
+        this.isLoadingHtml = false;
+        console.log('✅ Loading complete, isLoadingHtml set to false');
+      },
+      error: (err) => {
+        console.error('❌ Failed to load external HTML:', err);
+        console.error('❌ Error details:', err.message, err.status);
+        if (this.dynamicContainer) {
+          this.dynamicContainer.nativeElement.innerHTML = 
+            '<div style="padding: 2rem; text-align: center; color: #666;">שגיאה בטעינת התוכן</div>';
+        }
+        this.isLoadingHtml = false;
+      }
+    });
+  }
+
+  private extractStyles(html: string): string[] {
+    const styles: string[] = [];
+    const styleRegex = /<style[^>]*>([\s\S]*?)<\/style>/gi;
+    let match;
+    while ((match = styleRegex.exec(html)) !== null) {
+      if (match[1]) styles.push(match[1]);
+    }
+    return styles;
+  }
+
+  private extractScripts(html: string): string[] {
+    const scripts: string[] = [];
+    const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
+    let match;
+    while ((match = scriptRegex.exec(html)) !== null) {
+      if (match[1]) scripts.push(match[1]);
+    }
+    return scripts;
+  }
+
+  private sanitizeHtml(html: string): string {
+    return html
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  }
+
+  private loadCSS(cssCode: string) {
+    const style = document.createElement('style');
+    style.innerHTML = cssCode;
+    document.head.appendChild(style);
+  }
+
+  private loadScript(jsCode: string) {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.text = jsCode;
+    document.body.appendChild(script);
   }
 }
