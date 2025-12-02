@@ -1,0 +1,77 @@
+.driver-age-input {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  font-family: inherit;
+
+  .dropdown-container {
+    width: 320px;
+    max-height: 400px;
+    padding: 1rem;
+  }
+
+  .dropdown-title {
+    font-family: Rubik;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 110%;
+    color: #7a7a7a;
+    padding: 0.4rem 0.5rem 0.8rem;
+    margin: 0;
+    text-align: right;
+  }
+
+  .age-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 0.5rem;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
+
+    .age-button {
+      padding: 0.6rem 0.8rem;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-family: Rubik;
+      font-size: 14px;
+      font-weight: 400;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+
+      &:hover {
+        background: #ECF8F0;
+        border-color: #2AAE54;
+        color: #2AAE54;
+      }
+
+      &.selected {
+        background: #2AAE54;
+        border-color: #2AAE54;
+        color: white;
+        font-weight: 500;
+      }
+    }
+  }
+}

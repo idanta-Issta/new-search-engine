@@ -1,0 +1,37 @@
+<div class="driver-age-input" [class.open]="isOpen" #anchor>
+  <app-input-box
+    [icon]="config.icon ?? ''"
+    [title]="config.title"
+    [placeholder]="config.placeholder ?? ''"
+    [isOpen]="isOpen"
+    [(model)]="displayValue"
+    [width]="width"
+    [allowAutoComplete]="false"
+    (opened)="onInputOpened()"
+    (closed)="isOpen = false"
+  ></app-input-box>
+
+  <app-shared-dropdown
+    [isOpen]="isOpen"
+    (closed)="isOpen = false"
+    [anchor]="anchor"
+    [scrollable]="false"
+    [position]="position"
+  >
+    <div class="dropdown-container">
+      <h4 class="dropdown-title">בחר גיל נהג</h4>
+      
+      <div class="age-grid">
+        <button
+          *ngFor="let age of ages"
+          class="age-button"
+          [class.selected]="age === selectedAge"
+          (click)="selectAge(age)"
+          type="button"
+        >
+          {{ age }}
+        </button>
+      </div>
+    </div>
+  </app-shared-dropdown>
+</div>

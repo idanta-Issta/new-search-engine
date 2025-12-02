@@ -1,0 +1,64 @@
+.car-location-input {
+  position: relative;
+  width: 100%;
+
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .dropdown-container {
+    width: 400px;
+    padding: 1.5rem;
+  }
+
+  .cities-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .city-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .input-label {
+      font-family: Rubik;
+      font-weight: 400;
+      font-size: 14px;
+      color: #333;
+      text-align: right;
+    }
+  }
+
+  .footer-button {
+    margin-top: 1rem;
+
+    .btn-continue {
+      width: 100%;
+      padding: 0.75rem 1.5rem;
+      background: #2AAE54;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-family: Rubik;
+      font-weight: 500;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: #248F46;
+      }
+
+      &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+     

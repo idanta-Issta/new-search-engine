@@ -1,0 +1,60 @@
+<div class="car-location-input" [class.open]="isOpen" [class.disabled]="isDisabled" #anchor>
+  <app-input-box
+    [icon]="config.uiConfig.icon ?? ''"
+    [title]="config.uiConfig.title"
+    [placeholder]="config.uiConfig.placeholder ?? ''"
+    [isOpen]="isOpen && !isDisabled"
+    [(model)]="displayValue"
+    [width]="width"
+    [allowAutoComplete]="false"
+    (opened)="onInputOpened()"
+    (closed)="isOpen = false"
+  ></app-input-box>
+
+  <app-shared-dropdown
+    [isOpen]="isOpen"
+    (closed)="isOpen = false"
+    [anchor]="anchor"
+    [scrollable]="true"
+    [position]="position"
+  >
+    <div class="dropdown-container">
+      <div class="cities-wrapper">
+        <!-- עיר איסוף -->
+        <div class="city-input-wrapper">
+          <label class="input-label">עיר איסוף הרכב</label>
+          <app-shared-options-input
+            [type]="type"
+            [value]="pickupCity"
+            [isDisabled]="isDisabled"
+            width="100%"
+            (optionPicked)="onPickupCityPicked($event)"
+          ></app-shared-options-input>
+        </div>
+
+        <!-- עיר החזרה -->
+        <div class="city-input-wrapper">
+          <label class="input-label">עיר החזרת הרכב</label>
+          <app-shared-options-input
+            [type]="type"
+            [value]="returnCity"
+            [isDisabled]="isDisabled"
+            width="100%"
+            (optionPicked)="onReturnCityPicked($event)"
+          ></app-shared-options-input>
+        </div>
+      </div>
+
+      <!-- Continue button -->
+      <div class="footer-button">
+        <button 
+          class="btn-continue"
+          [disabled]="!pickupCity || !returnCity"
+          (click)="onContinue()"
+        >
+          המשך
+        </button>
+      </div>
+    </div>
+  </app-shared-dropdown>
+</div>

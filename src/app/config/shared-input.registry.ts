@@ -396,6 +396,7 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       })(),
       maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       allowPickHours: false,
+         forcePickOnlySuggested: true,
     }),
     component: () => import('../components/issta-engine/shared/inputs/shared-calendar-input/shared-calendar-input.component').then(m => m.SharedCalendarInputComponent),
   },
@@ -459,6 +460,71 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       allowAutoComplete: false,
     },
     component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
+  },
+
+  [ESharedInputType.CAR_PICKUP_COUNTRY]: {
+    requestUrl: `${AppExternalConfig.baseUrl}car/countries`,
+    mapper: (data: any) => {
+      const { CarMapper } = require('../mappers/car.mapper');
+      return CarMapper.mapDestinations(data);
+    },
+    uiConfig: {
+      title: 'מדינת איסוף',
+      icon: ICONS.PLANE,
+      placeholder: 'בחר מדינה',
+      titleMenuOptions: 'מדינות',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
+  },
+
+  [ESharedInputType.CAR_PICKUP_CITY]: {
+    isDisabled: true,
+    mapper: (data: any) => {
+      const { CarMapper } = require('../mappers/car.mapper');
+      return CarMapper.mapCities(data);
+    },
+    uiConfig: {
+      title: 'עיר',
+      icon: 'ist-icon-car',
+      placeholder: 'בחר עיר',
+      titleMenuOptions: 'ערים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/engines/car/car-location-input/car-location-input.component').then(m => m.CarLocationInputComponent),
+  },
+
+  [ESharedInputType.CAR_DATES]: {
+    mapper: () => [],
+    uiConfig: {
+      title: 'תאריכי שכירות',
+      icon: ICONS.CALENDAR,
+      placeholder: 'בחר תאריכים',
+      titleMenuOptions: '',
+      allowAutoComplete: false,
+    },
+    dataConfig: new SharedCalendarInputConfig({
+      suggestedDates: [],
+      minDate: (() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today;
+      })(),
+      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      allowPickHours: true,
+    }),
+    component: () => import('../components/issta-engine/shared/inputs/shared-calendar-input/shared-calendar-input.component').then(m => m.SharedCalendarInputComponent),
+  },
+
+  [ESharedInputType.CAR_DRIVER_AGE]: {
+    mapper: () => [],
+    uiConfig: {
+      title: 'גיל הנהג',
+      icon: 'ist-icon-user',
+      placeholder: 'בחר גיל',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/engines/car/driver-age-input/driver-age-input.component').then(m => m.DriverAgeInputComponent),
   },
 
 }

@@ -5,7 +5,7 @@ import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
 export function getSearchEngineTabsConfig(): SearchEngine {
   return {
     showTabs: true,
-    defaultTab: { typeTravel: ETypeSearchEngine.DYNAMIC_PACKAGES, isPartial: false },
+    defaultTab: { typeTravel: ETypeSearchEngine.CAR_RENTAL, isPartial: false },
     tabs: [
       {
         title: "מתאים לי",
@@ -35,7 +35,7 @@ export function getSearchEngineTabsConfig(): SearchEngine {
       {
         title: "השכרת רכב בחו\"ל",
         icon: 'icon-adult-room',
-        searchEngine: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false }
+        searchEngine: { typeTravel: ETypeSearchEngine.CAR_RENTAL, isPartial: false }
       },
       {
         title: "טיולים מאורגנים",

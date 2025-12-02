@@ -464,6 +464,45 @@ export const VILLAGE_RESORTS_CONFIG: SearchEngineConfig = {
   ]
 };
 
+export const CAR_RENTAL_CONFIG: SearchEngineConfig = {
+  engineType: ETypeSearchEngine.CAR_RENTAL,
+  header: {
+    title: 'השכרת רכב',
+  },
+  footer: {
+    infoItems: [
+      'רכבים ממיטב החברות',
+      'ביטול חינם',
+      'תשלום עד 36 תשלומים'
+    ],
+  },
+  inputs: [
+    {
+      type: ESharedInputType.CAR_PICKUP_COUNTRY,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+    },
+    {
+      type: ESharedInputType.CAR_PICKUP_CITY,
+      size: EInputSize.LARGE,
+      position: EDropdownPosition.BOTTOM_LEFT,
+      value: null
+    },
+    {
+      type: ESharedInputType.CAR_DATES,
+      size: EInputSize.MEDIUM,
+      position: EDropdownPosition.BOTTOM_CENTER,
+      value: { start: null as Date | null, end: null as Date | null, startTime: '10:00', endTime: '10:00' }
+    },
+    {
+      type: ESharedInputType.CAR_DRIVER_AGE,
+      size: EInputSize.SMALL,
+      position: EDropdownPosition.BOTTOM_RIGHT,
+      value: null
+    }
+  ]
+};
+
 export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_CONFIG,
   HOTEL_ABROAD_CONFIG,
@@ -475,7 +514,8 @@ export const ALL_CONFIGS: SearchEngineConfig[] = [
   ORGANIZED_TOURS_CONFIG,
   DYNAMIC_PACKAGES_CONFIG,
   SKI_CONFIG,
-  VILLAGE_RESORTS_CONFIG
+  VILLAGE_RESORTS_CONFIG,
+  CAR_RENTAL_CONFIG
 ];
 
 export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 
