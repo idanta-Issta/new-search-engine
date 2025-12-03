@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from './api.service';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { MenuOption } from '../models/shared-options-input.models';
@@ -9,10 +9,10 @@ import { SkiMapper } from '../mappers/ski.mapper';
 export class SkiService {
   private readonly baseUrl = '/ski';
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   getDestinations(): Observable<MenuOption[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/destinations`).pipe(
+    return this.apiService.get<any[]>(`${this.baseUrl}/destinations`).pipe(
       map(data => SkiMapper.mapDestinations(data)),
       catchError(error => {
         console.error('Error fetching ski destinations:', error);
@@ -22,7 +22,7 @@ export class SkiService {
   }
 
   getResorts(countryCode: string): Observable<MenuOption[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/resorts?countryCode=${countryCode}`).pipe(
+    return this.apiService.get<any[]>(`${this.baseUrl}/resorts?countryCode=${countryCode}`).pipe(
       map(data => SkiMapper.mapResorts(data)),
       catchError(error => {
         console.error('Error fetching ski resorts:', error);

@@ -8,7 +8,7 @@ import { SearchHeaderComponent } from '../../shared/header/search-header/search-
 import { VILLAGE_RESORTS_CONFIG } from '../../../../config/search-engine.config';
 import { BaseEngineComponent } from '../base-engine.component';
 import { BaseEngineService } from '../../../../services/engine.service';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../../../services/api.service';
 import { AppExternalConfig } from '../../../../config/app.external.config';
 import { SharedOptionsService } from '../../../../services/shared-options.service';
 
@@ -27,7 +27,7 @@ export class VillageResortsComponent extends BaseEngineComponent {
 
   constructor(
     engineService: BaseEngineService,
-    private http: HttpClient,
+    private apiService: ApiService,
     private optionsService: SharedOptionsService
   ) {
     super(engineService);
@@ -91,8 +91,8 @@ export class VillageResortsComponent extends BaseEngineComponent {
     const url = `${AppExternalConfig.baseUrl}village-resorts/village-resort-options?destinationCode=${cityCode}&hotelId=&from=${fromDate || 'null'}`;
     console.log('🗓️ Loading village resorts calendar dates:', { cityCode, fromDate, url });
     
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
+    this.apiService.get<any>(url, {
+      onSuccess: (response) => {
         console.log('📡 API response:', response);
         
         // Map the response to suggested dates
@@ -141,7 +141,7 @@ export class VillageResortsComponent extends BaseEngineComponent {
           }
         });
       },
-      error: (err) => {
+      onError: (err) => {
         console.error('❌ Failed to load calendar dates:', err);
         const dateInput = this.inputConfigs.find(c => c.type === ESharedInputType.VILLAGE_RESORTS_DATES);
         if (dateInput) {

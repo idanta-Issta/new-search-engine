@@ -7,7 +7,7 @@ import { SearchHeaderComponent } from '../../shared/header/search-header/search-
 import { CAR_RENTAL_CONFIG } from '../../../../config/search-engine.config';
 import { BaseEngineComponent } from '../base-engine.component';
 import { BaseEngineService } from '../../../../services/engine.service';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../../../services/api.service';
 import { AppExternalConfig } from '../../../../config/app.external.config';
 import { SharedOptionsService } from '../../../../services/shared-options.service';
 
@@ -28,7 +28,7 @@ export class CarComponent extends BaseEngineComponent {
 
   constructor(
     engineService: BaseEngineService,
-    private http: HttpClient,
+    private apiService: ApiService,
     private optionsService: SharedOptionsService
   ) {
     super(engineService);
@@ -91,20 +91,21 @@ export class CarComponent extends BaseEngineComponent {
       return;
     }
 
-    // Set loading state
-    const cityInput = this.inputConfigs.find(c => c.type === ESharedInputType.CAR_PICKUP_CITY);
-    if (cityInput) {
-      cityInput.value = { label: 'טוען ערים...', key: 'loading' };
-      cityInput.isDisabled = true;
-    }
-    this.inputsRow?.updateValues();
-
     // Load cities from API
     const url = `${AppExternalConfig.baseUrl}car/cities?countryCode=${countryCode}`;
     console.log('📡 Loading cities from URL:', url);
     
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
+    const cityInput = this.inputConfigs.find(c => c.type === ESharedInputType.CAR_PICKUP_CITY);
+    
+    this.apiService.get<any>(url, {
+      onLoading: () => {
+        if (cityInput) {
+          cityInput.value = { label: 'טוען ערים...', key: 'loading' };
+          cityInput.isDisabled = true;
+        }
+        this.inputsRow?.updateValues();
+      },
+      onSuccess: (response) => {
         console.log('✅ Cities loaded raw response:', response);
         
         // Use mapper to transform the data
@@ -139,7 +140,7 @@ export class CarComponent extends BaseEngineComponent {
         
         console.log('🔄 UI updated with cities');
       },
-      error: (err) => {
+      onError: (err) => {
         console.error('❌ Failed to load cities:', err);
         if (cityInput) {
           cityInput.value = { label: 'שגיאה בטעינה', key: 'error' };
@@ -147,7 +148,7 @@ export class CarComponent extends BaseEngineComponent {
         }
         this.inputsRow?.updateValues();
       }
-    });
+    }).subscribe();
   }
 
   protected openNextInput(type: ESharedInputType, value: any): void {

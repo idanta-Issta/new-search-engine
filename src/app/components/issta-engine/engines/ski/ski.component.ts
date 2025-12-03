@@ -8,7 +8,7 @@ import { SearchHeaderComponent } from '../../shared/header/search-header/search-
 import { SKI_CONFIG } from '../../../../config/search-engine.config';
 import { BaseEngineComponent } from '../base-engine.component';
 import { BaseEngineService } from '../../../../services/engine.service';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../../../services/api.service';
 import { AppExternalConfig } from '../../../../config/app.external.config';
 import { SharedOptionsService } from '../../../../services/shared-options.service';
 
@@ -28,7 +28,7 @@ export class SkiComponent extends BaseEngineComponent {
 
   constructor(
     engineService: BaseEngineService,
-    private http: HttpClient,
+    private apiService: ApiService,
     private optionsService: SharedOptionsService
   ) {
     super(engineService);
@@ -110,8 +110,8 @@ export class SkiComponent extends BaseEngineComponent {
     const url = `${AppExternalConfig.baseUrl}ski/calendardates?destinationCode=${cityCode}&from=${fromDate || 'null'}`;
     console.log('🗓️ Loading ski calendar dates:', { cityCode, fromDate, url });
     
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
+    this.apiService.get<any>(url, {
+      onSuccess: (response) => {
         console.log('📡 API response:', response);
         
         // Map the response to suggested dates
@@ -160,7 +160,7 @@ export class SkiComponent extends BaseEngineComponent {
           }
         });
       },
-      error: (err) => {
+      onError: (err) => {
         console.error('❌ Failed to load calendar dates:', err);
         const dateInput = this.inputConfigs.find(c => c.type === ESharedInputType.SKI_DEPARTURE_DATE);
         if (dateInput) {
@@ -202,8 +202,8 @@ export class SkiComponent extends BaseEngineComponent {
     const url = `${AppExternalConfig.baseUrl}ski/resorts?countryCode=${countryCode}`;
     console.log('📡 Loading resorts from URL:', url);
     
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
+    this.apiService.get<any>(url, {
+      onSuccess: (response) => {
         console.log('✅ Resorts loaded:', response);
         
         // Clear cache for resorts to force reload
@@ -228,7 +228,7 @@ export class SkiComponent extends BaseEngineComponent {
         this.inputsRow?.updateValues();
         console.log('🔄 UI updated with resorts');
       },
-      error: (err) => {
+      onError: (err) => {
         console.error('❌ Failed to load resorts:', err);
         const resortInput = this.inputConfigs.find(c => c.type === ESharedInputType.SKI_RESORT);
         if (resortInput) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from './api.service';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { MenuOption } from '../models/shared-options-input.models';
@@ -9,10 +9,10 @@ import { CarMapper } from '../mappers/car.mapper';
 export class CarService {
   private readonly baseUrl = '/car';
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   getCountries(): Observable<MenuOption[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/countries`).pipe(
+    return this.apiService.get<any[]>(`${this.baseUrl}/countries`).pipe(
       map(data => CarMapper.mapDestinations(data)),
       catchError(error => {
         console.error('Error fetching car countries:', error);
@@ -22,7 +22,7 @@ export class CarService {
   }
 
   getCities(countryCode: string): Observable<MenuOption[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/cities?countryCode=${countryCode}`).pipe(
+    return this.apiService.get<any[]>(`${this.baseUrl}/cities?countryCode=${countryCode}`).pipe(
       map(data => CarMapper.mapCities(data)),
       catchError(error => {
         console.error('Error fetching car cities:', error);

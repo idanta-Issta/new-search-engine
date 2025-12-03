@@ -1,6 +1,6 @@
 import { Component, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../../services/api.service';
 
 import { FlightsComponent } from '../engines/flights/flights.component';
 import { HotelAbroadComponent } from '../engines/hotel-abroad/hotel-abroad.component';
@@ -39,7 +39,7 @@ export class SearchEngineComponent implements AfterViewInit {
 
   constructor(
     private leadFormService: LeadFormModalService,
-    private http: HttpClient
+    private apiService: ApiService
   ) {
     this.leadFormOpen$ = this.leadFormService.open$;
   }
@@ -130,11 +130,15 @@ export class SearchEngineComponent implements AfterViewInit {
 
   private loadExternalHtml(url: string) {
     console.log('📥 loadExternalHtml called with URL:', url);
-    this.isLoadingHtml = true;
-    console.log('⏳ isLoadingHtml set to true');
+    console.log('📦 Is URL cached?', this.apiService.isCached(url));
     
-    this.http.get(url, { responseType: 'text' }).subscribe({
-      next: (htmlText: string) => {
+    this.apiService.get(url, {
+      responseType: 'text',
+      onLoading: () => {
+        this.isLoadingHtml = true;
+        console.log('⏳ isLoadingHtml set to true');
+      },
+      onSuccess: (htmlText: string) => {
         console.log('✅ HTTP Response received, length:', htmlText.length);
         console.log('📄 HTML Preview (first 200 chars):', htmlText.substring(0, 200));
         
@@ -178,7 +182,7 @@ export class SearchEngineComponent implements AfterViewInit {
         this.isLoadingHtml = false;
         console.log('✅ Loading complete, isLoadingHtml set to false');
       },
-      error: (err) => {
+      onError: (err) => {
         console.error('❌ Failed to load external HTML:', err);
         console.error('❌ Error details:', err.message, err.status);
         if (this.dynamicContainer) {
@@ -187,7 +191,7 @@ export class SearchEngineComponent implements AfterViewInit {
         }
         this.isLoadingHtml = false;
       }
-    });
+    }).subscribe();
   }
 
   private extractStyles(html: string): string[] {

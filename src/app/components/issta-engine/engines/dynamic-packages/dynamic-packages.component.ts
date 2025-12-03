@@ -10,7 +10,7 @@ import { BaseEngineComponent } from '../base-engine.component';
 import { BaseEngineService } from '../../../../services/engine.service';
 import { HotelsManager } from '../../../../managers/hotels.manager';
 import { AppExternalConfig } from '../../../../config/app.external.config';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../../../services/api.service';
 import { DynamicPackagesMapper } from '../../../../mappers/dynamic-packages.mapper';
 import { SharedCalendarInputComponent } from '../../shared/inputs/shared-calendar-input/shared-calendar-input.component';
 
@@ -30,7 +30,7 @@ export class DynamicPackagesComponent extends BaseEngineComponent {
 
   constructor(
     engineService: BaseEngineService,
-    private http: HttpClient
+    private apiService: ApiService
   ) {
     super(engineService);
   }
@@ -85,8 +85,8 @@ export class DynamicPackagesComponent extends BaseEngineComponent {
 
   private loadCalendarDates(destinationCode: string, fromDate: string | null) {
     const url = `${AppExternalConfig.baseUrl}packages/calendardates?destinationCode=${destinationCode}&hotelId=&from=${fromDate || 'null'}&fromDateLimit=null&toDateLimit=null`;
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
+    this.apiService.get<any>(url, {
+      onSuccess: (response) => {
         console.log('API url:', url, 'response:', response);
         // Map the response to suggested dates
         const suggestedDates = DynamicPackagesMapper.mapCalendarDates(response);
@@ -133,7 +133,7 @@ export class DynamicPackagesComponent extends BaseEngineComponent {
           }
         });
       },
-      error: (err) => {
+      onError: (err) => {
         const datesInput = this.inputConfigs.find(c => c.type === ESharedInputType.DYNAMIC_PACKAGES_DATES);
         if (datesInput) {
           // stop loader and enable input

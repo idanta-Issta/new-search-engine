@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from './api.service';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ESharedInputType } from '../enums/ESharedInputType';
@@ -10,7 +10,7 @@ import { MenuOption } from '../models/shared-options-input.models';
 export class SharedOptionsService {
   private cache: Record<string, MenuOption[]> = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
 getOptionsByType(type: ESharedInputType, excludeValues?: string[]): Observable<MenuOption[]> {
   const config = SharedInputRegistry[type];
@@ -26,7 +26,7 @@ getOptionsByType(type: ESharedInputType, excludeValues?: string[]): Observable<M
     return of([]);
   }
 
-return this.http
+return this.apiService
   .get<any[]>(config.requestUrl!)
   .pipe(
     map(config.mapper ?? ((data: any) => data)),
@@ -60,7 +60,7 @@ getOptionsWithCurrentValue(type: ESharedInputType, currentValue?: string): Obser
   }
 
   const excludeList = (config.excludeValues || []).filter(v => v !== currentValue);
-  return this.http
+  return this.apiService
     .get<any[]>(config.requestUrl!)
     .pipe(
       map(config.mapper ?? ((data: any) => data)),
@@ -97,7 +97,7 @@ searchAutocomplete(type: ESharedInputType, term: string): Observable<MenuOption[
   }
 
   // אם אין בכלל cache — נשלח בקשה רגילה
-  return this.http.get<any[]>(url).pipe(
+  return this.apiService.get<any[]>(url).pipe(
     map(data => {
       const mapped = mapper(data || []);
       this.cache[cacheKey] = mapped;
@@ -138,7 +138,7 @@ searchAutocomplete(type: ESharedInputType, term: string): Observable<MenuOption[
     term: string,
     mapper: (data: any[]) => MenuOption[]
   ) {
-    this.http.get<any[]>(url).pipe(
+    this.apiService.get<any[]>(url).pipe(
       map(data => mapper(data || [])),
       tap(newResults => {
         const key = `${type}_${term}`;
