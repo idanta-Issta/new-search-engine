@@ -15,6 +15,7 @@ export interface TabsSearchEngine {
   searchEngine: TypeTabSearchEngine;
   url?: string;
   htmlUrl?: string;
+  partialPath?: string;
 }
 
 export interface SearchEngine {

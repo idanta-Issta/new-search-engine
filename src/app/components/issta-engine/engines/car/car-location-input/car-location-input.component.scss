@@ -10,12 +10,9 @@
   .dropdown-container {
     width: 400px;
     padding: 1.5rem;
+    min-height: 400px;
   }
 
-  // Allow inner dropdowns to overflow the outer dropdown
-  ::ng-deep > app-shared-dropdown .dropdown-wrapper {
-    overflow: visible !important;
-  }
 
   .cities-wrapper {
     display: flex;
@@ -29,7 +26,7 @@
     flex-direction: column;
     gap: 0.5rem;
     position: relative;
-    z-index: 1;
+  
 
     .input-label {
       font-family: Rubik;
@@ -39,10 +36,6 @@
       text-align: right;
     }
 
-    // Override z-index for inner dropdown to appear above outer dropdown
-    ::ng-deep app-shared-dropdown .dropdown-wrapper {
-      z-index: 10000 !important;
-    }
   }
 
   .footer-button {

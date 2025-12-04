@@ -69,8 +69,10 @@ export class SearchEngineComponent implements AfterViewInit {
 
       if (this.activeTab?.htmlUrl) {
         this.loadExternalHtml(this.activeTab.htmlUrl);
+      } else if (this.activeTab?.partialPath) {
+        this.loadPartialHtml(this.activeTab.partialPath);
       } else {
-        console.log('⚠️ No htmlUrl found on active tab');
+        console.log('⚠️ No htmlUrl or partialPath found on active tab');
       }
     });
   }
@@ -84,6 +86,8 @@ export class SearchEngineComponent implements AfterViewInit {
       
       if (tab.htmlUrl) {
         this.loadExternalHtml(tab.htmlUrl);
+      } else if (tab.partialPath) {
+        this.loadPartialHtml(tab.partialPath);
       } else {
         if (this.dynamicContainer) {
           this.dynamicContainer.nativeElement.innerHTML = '';
@@ -110,9 +114,48 @@ export class SearchEngineComponent implements AfterViewInit {
   }
 
   hasExternalHtml(): boolean {
-    const result = !!this.activeTab?.htmlUrl;
+    const result = !!this.activeTab?.htmlUrl || !!this.activeTab?.partialPath;
    
     return result;
+  }
+
+  private loadPartialHtml(partialPath: string) {
+    console.log('[WRAPPER] Loading partial HTML from:', partialPath);
+    
+    fetch(partialPath)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to load partial: ${response.statusText}`);
+        }
+        return response.text();
+      })
+      .then(htmlText => {
+        if (!this.dynamicContainer) {
+          console.error('❌ Dynamic container not found!');
+          return;
+        }
+
+        const styles = this.extractStyles(htmlText);
+        styles.forEach((css) => {
+          this.loadCSS(css);
+        });
+
+        const scripts = this.extractScripts(htmlText);
+        const cleanHtml = this.sanitizeHtml(htmlText);
+    
+        this.dynamicContainer.nativeElement.innerHTML = cleanHtml;
+        
+        setTimeout(() => {
+          scripts.forEach((js) => {
+            this.loadScript(js);
+          });
+        }, 0);
+        
+        console.log('[WRAPPER] Partial HTML loaded successfully');
+      })
+      .catch(error => {
+        console.error('[WRAPPER] Error loading partial HTML:', error);
+      });
   }
 
   private loadExternalHtml(url: string) {

@@ -503,6 +503,7 @@ export const CAR_RENTAL_CONFIG: SearchEngineConfig = {
   ]
 };
 
+
 export const ALL_CONFIGS: SearchEngineConfig[] = [
   FLIGHTS_CONFIG,
   HOTEL_ABROAD_CONFIG,
@@ -515,7 +516,7 @@ export const ALL_CONFIGS: SearchEngineConfig[] = [
   DYNAMIC_PACKAGES_CONFIG,
   SKI_CONFIG,
   VILLAGE_RESORTS_CONFIG,
-  CAR_RENTAL_CONFIG
+  CAR_RENTAL_CONFIG,
 ];
 
 export const ENGINE_REGISTRY: Partial<Record<ETypeSearchEngine, SearchEngineConfig>> = 

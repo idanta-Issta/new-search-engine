@@ -1,0 +1,297 @@
+<div class="cruise-search-engine">
+  <div id="option-eight">
+    <div>
+      <ody-search-form search-form-settings="OVExplore8"></ody-search-form>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Icon in input field */
+#option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .od-form-wrapper .od-input-wrapper .od-icon {
+  padding-bottom: 5px !important;
+  background: none !important;
+  border: none !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  margin-top: 2px !important;
+}
+
+/* Cruise form styling */
+#option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .cruiseform {
+  -webkit-tap-highlight-color: transparent;
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid #000 !important;
+  max-width: 1280px !important;
+  border-radius: 0px !important;
+}
+
+#odysseus #OVExploreContainer .od-tab-form-wrapper {
+  background: none !important;
+}
+
+/* Search button styling */
+#option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .od-form-wrapper .od-button-wrapper.od-search-button .btn-search {
+  background-color: var(--se-btn-background-color) !important;
+  background-image: none !important;
+  width: 151px !important;
+  font-size: 20px !important;
+  border-radius: 3px !important;
+  line-height: 1;
+  font-weight: 700;
+}
+
+/* Advanced search button icon styling */
+#option-eight #odysseus #OVExploreContainer .od-button-wrapper .od-adv-search-btn .od-adv-search-icon {
+  background: #ffffff !important;
+}
+
+#odysseus #OVExploreContainer .od-button-wrapper .od-adv-search-btn .od-adv-search-icon span svg {
+  fill: var(--se-btn-background-color) !important;
+}
+
+#option-eight #odysseus #OVExploreContainer .od-button-wrapper .od-adv-search-btn .od-adv-search-icon {
+  border: 2px solid var(--se-btn-background-color) !important;
+}
+
+/* Multiselect input styling */
+#option-eight #odysseus #OVExploreContainer .vue_multiselect .multiselect_input_wrapper {
+  background-color: var(--se-date-text-color) !important;
+  border: 1px solid #000 !important;
+  color: #717579 !important;
+  border-radius: 0 !important;
+}
+
+/* Multiselect tags alignment */
+.multiselect__tags {
+  text-align: right !important;
+}
+
+/* Multiselect placeholder styling */
+#option-eight #odysseus #OVExploreContainer .od-form-wrapper .multiselect__tags .multiselect__placeholder {
+  color: #000 !important;
+  direction: rtl !important;
+  padding-right: 8% !important;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  font-style: normal;
+  font-family: Rubik, sans-serif;
+}
+
+/* Multiselect tag close icon color */
+#odysseus #OVExploreContainer .od-form-wrapper .multiselect__tags .multiselect__single .multiselect__tag-icon:after {
+  color: #000 !important;
+}
+
+/* Multiselect dropdown arrow */
+#option-eight #odysseus #OVExploreContainer .multiselect__select::before {
+  content: "" !important;
+  display: block !important;
+  margin: auto !important;
+  width: 0;
+  height: 0;
+  border-style: solid !important;
+  border-width: 6px 6px 0 6px !important;
+  border-color: #717579 transparent transparent transparent !important;
+  transition: transform 0.2s ease !important;
+  transform: rotate(0deg) !important;
+}
+
+#option-eight #odysseus #OVExploreContainer .multiselect--active .multiselect__select::before {
+  transform: rotate(180deg) !important;
+}
+
+/* Multiselect content and option styling */
+.multiselect__content-wrapper,
+.multiselect__content,
+.multiselect__option {
+  background-color: #fff !important;
+  color: #222;
+  visibility: visible !important;
+  font-size: 17px !important;
+  line-height: 1.6 !important;
+}
+
+.multiselect__option--highlight {
+  background-color: rgb(215, 244, 216) !important;
+  color: #717579 !important;
+}
+
+#option-eight #odysseus #OVExploreContainer .multiselect__option--selected {
+  color: #000000 !important;
+}
+
+/* Multiselect select button positioning */
+#option-eight #odysseus #OVExploreContainer .vue_multiselect .multiselect__select {
+  padding-bottom: 13px !important;
+  margin-right: 82% !important;
+}
+
+#option-eight #odysseus #OVExploreContainer .vue_multiselect .multiselect__single span {
+  color: #000 !important;
+  -webkit-text-fill-color: #2a3335 !important;
+  padding-right: 6% !important;
+  font-size: 20px !important;
+}
+
+#odysseus #OVExploreContainer .od-form-wrapper .multiselect__tags .multiselect__placeholder,
+#odysseus #OVExploreContainer .od-form-wrapper .multiselect__tags .multiselect__single .multiselect__tag-icon:after {
+  padding-right: 12px;
+}
+
+#option-eight #odysseus #OVExploreContainer .multiselect__select {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+}
+
+/* Icon color variable for OVExploreContainer */
+#OVExploreContainer {
+  --icon-color: #717579;
+}
+
+/* OVExploreContainer icon color styling */
+#OVExploreContainer .od-icon,
+#OVExploreContainer .od-icon * {
+  color: var(--icon-color) !important;
+  fill: var(--icon-color) !important;
+  margin-right: -5px !important;
+  font-weight: 400 !important;
+  font-size: 17px !important;
+}
+
+/* Multiselect dropdown positioned above */
+#option-eight #odysseus #OVExploreContainer .multiselect--above .multiselect__content-wrapper {
+  top: calc(100% + 6px) !important;
+  bottom: auto !important;
+}
+
+/* Input wrapper overflow */
+#option-eight #odysseus #OVExploreContainer .od-input-wrapper {
+  overflow: visible !important;
+}
+
+/* Multiselect content wrapper absolute positioning */
+#option-eight #odysseus #OVExploreContainer .multiselect__content-wrapper {
+  position: absolute !important;
+  z-index: 9999 !important;
+}
+
+/* טקסט בזמן הקלדה */
+#option-eight #odysseus #OVExploreContainer .multiselect__input {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  caret-color: #000 !important;
+  padding-right: 8% !important;
+}
+
+/* הערך הנבחר (single) */
+#option-eight #odysseus #OVExploreContainer .multiselect__single {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+.od-form-wrapper .multiselect_input_wrapper input[type="text"] {
+  font-size: 20px !important;
+}
+
+.od-form-wrapper .multiselect_input_wrapper input[type="text"]::placeholder {
+  font-size: 20px !important;
+}
+
+@media (max-width: 821px) {
+  #option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .cruiseform {
+    background-color: #e9eff5 !important;
+    max-width: 100vw !important;
+  }
+
+  body #option-eight #odysseus #OVExploreContainer .od-form-wrapper .multiselect_input_wrapper input[type="text"] {
+    font-size: 18px !important;
+  }
+
+  body #option-eight #odysseus #OVExploreContainer .od-form-wrapper .multiselect_input_wrapper input[type="text"]::placeholder {
+    font-size: 18px !important;
+  }
+
+  #option-eight #odysseus #OVExploreContainer .vue_multiselect .multiselect_input_wrapper {
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
+  #option-eight #odysseus #OVExploreContainer .cruiseform .od-form-wrapper .od-input-wrapper {
+    padding-bottom: 10px !important;
+  }
+
+  #option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .cruiseform {
+    padding: 18px 4px 12px 3px !important;
+    border-radius: 12px;
+  }
+
+  #option-eight #odysseus #OVExploreContainer .od-form-wrapper .multiselect__tags .multiselect__placeholder {
+    font-size: 16px !important;
+  }
+
+  body #option-eight #odysseus #OVExploreContainer .od-form-wrapper .multiselect__tags .multiselect__placeholder {
+    font-size: 18px !important;
+  }
+
+  #option-eight #odysseus #OVExploreContainer .vue_multiselect .multiselect__single span {
+    padding-right: 4% !important;
+  }
+
+  #option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .od-form-wrapper .od-button-wrapper.od-search-button .btn-search {
+    width: 284px !important;
+  }
+}
+</style>
+
+<link rel="stylesheet" href="https://ui.odysol.com/content/cruise-search-form-option-8.css">
+
+<script>
+console.log('[CRUISE PARTIAL] Initializing Odysseus widget...');
+
+// Define global OVExplore8 object
+window.OVExplore8 = {
+  preferences: {
+    languageId: "9",
+    siteItemId: "1324608",
+    sid1: "",
+    sid2: "",
+    referrer: "",
+    resultWindowType: "_blank",
+    showStateNCountryWithPorts: true,
+    cruiseSearchFields: {
+      basic: ["destination", "sailingdate", "duration"],
+      advance: ["cruiseline", "ship", "departureport"]
+    }
+  },
+  siteSettings: {
+    productType: "cruise",
+    domain: "cruises.issta.co.il",
+    numberOfCols: 3,
+    themeColor: "#232645|#52d489|#fff|#fff"
+  },
+  cruiseWidgetSettings: {
+    widgetType: "single"
+  }
+};
+
+// Load OVExplore JS
+(function() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://contents.odysol.com/Content/WebApps/OdyVExplore/app.min-vODY-1752259320791.js';
+  script.async = true;
+  script.onload = function() {
+    console.log('[CRUISE PARTIAL] Odysseus script loaded successfully');
+  };
+  script.onerror = function() {
+    console.error('[CRUISE PARTIAL] Failed to load Odysseus script');
+  };
+  document.body.appendChild(script);
+})();
+</script>

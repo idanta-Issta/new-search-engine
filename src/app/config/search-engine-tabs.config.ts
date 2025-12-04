@@ -27,7 +27,8 @@ export function getSearchEngineTabsConfig(): SearchEngine {
       {
         title: "שייט",
         icon: 'icon-adult-room',
-        searchEngine: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false }
+        searchEngine: { typeTravel: ETypeSearchEngine.CRUISE, isPartial: true },
+        partialPath: "/partials/cruise-search.partial.html"
       },
       {
         title: "חבילות סקי",
