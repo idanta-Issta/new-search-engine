@@ -39,6 +39,7 @@ export class CarLocationInputComponent implements OnInit {
   
   pickupCity: MenuOption | undefined;
   returnCity: MenuOption | undefined;
+  isPickupDropdownOpen = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -64,6 +65,17 @@ export class CarLocationInputComponent implements OnInit {
       this.returnCity = city;
     }
     
+    this.isPickupDropdownOpen = false;
+    this.cdr.markForCheck();
+  }
+
+  onPickupDropdownOpened() {
+    this.isPickupDropdownOpen = true;
+    this.cdr.markForCheck();
+  }
+
+  onPickupDropdownClosed() {
+    this.isPickupDropdownOpen = false;
     this.cdr.markForCheck();
   }
 

@@ -485,14 +485,14 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       return CarMapper.mapCities(data);
     },
     uiConfig: {
-      title: 'עיר',
-      icon: 'ist-icon-car',
+      title: 'עיר איסוף הרכב',
       placeholder: 'בחר עיר',
       titleMenuOptions: 'ערים',
       allowAutoComplete: false,
     },
     component: () => import('../components/issta-engine/engines/car/car-location-input/car-location-input.component').then(m => m.CarLocationInputComponent),
   },
+
 
   [ESharedInputType.CAR_DATES]: {
     mapper: () => [],

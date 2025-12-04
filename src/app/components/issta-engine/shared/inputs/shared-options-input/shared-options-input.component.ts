@@ -57,6 +57,8 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   @Input() width: string = '100%';
   @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
   @Input() excludeValues?: string[];
+  @Input() title?: string; // Override config title
+  @Input() placeholder?: string; // Override config placeholder
   
   private _isDisabled: boolean = false;
   @Input() 
@@ -70,6 +72,8 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
 
   @Output() valueChange = new EventEmitter<MenuOption>();
   @Output() optionPicked = new EventEmitter<MenuOption>();
+  @Output() opened = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
 
   @ViewChild('customHeaderContainer', { read: ViewContainerRef, static: false }) customHeaderContainer?: ViewContainerRef;
 
@@ -153,6 +157,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
 
   onInputOpened() {
     this.isOpen = true;
+    this.opened.emit();
     // טען מחדש אופציות בכל פתיחה (כדי לתפוס שינויים ב-excludeValues)
     this.reloadOptions();
     this.loadCustomHeaderComponent();
@@ -219,6 +224,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
 
   close() {
     this.isOpen = false;
+    this.closed.emit();
     this.cdr.markForCheck();
   }
 
@@ -253,6 +259,7 @@ selectOption(option: MenuOption) {
   this.optionPicked.emit(option);
   this.searchTerm = option.label;
   this.isOpen = false;
+  this.closed.emit();
   this.cdr.markForCheck();
 }
 

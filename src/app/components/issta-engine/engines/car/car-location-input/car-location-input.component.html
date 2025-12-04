@@ -23,33 +23,46 @@
         <!-- עיר איסוף -->
         <div class="city-input-wrapper">
           <label class="input-label">עיר איסוף הרכב</label>
+
           <app-shared-options-input
             [type]="type"
             [value]="pickupCity"
             [isDisabled]="isDisabled"
             [position]="centerPosition"
+            title="בחירת יעד איסוף"
             size="small"
             width="100%"
             (optionPicked)="onPickupCityPicked($event)"
+            (opened)="onPickupDropdownOpened()"
+            (closed)="onPickupDropdownClosed()"
           ></app-shared-options-input>
         </div>
 
         <!-- עיר החזרה -->
+        <div class="container-city-return" [class.hidden]="isPickupDropdownOpen">
         <div class="city-input-wrapper">
           <label class="input-label">עיר החזרת הרכב</label>
-          <app-shared-options-input
-            [type]="type"
-            [value]="returnCity"
-            [isDisabled]="isDisabled"
-            [position]="centerPosition"
-            size="small"
-            width="100%"
-            (optionPicked)="onReturnCityPicked($event)"
-          ></app-shared-options-input>
+            <app-shared-options-input
+              [type]="type"
+              [value]="returnCity"
+              [isDisabled]="isDisabled"
+              [position]="centerPosition"
+              title="בחירת יעד החזרה"
+              size="small"
+              width="100%"
+              (optionPicked)="onReturnCityPicked($event)"
+            ></app-shared-options-input>
+
+          </div>
         </div>
       </div>
-
-      <!-- Continue button -->
+      <div class="footer-container">
+        <div class="note">
+          <span>
+בחירת תחנת איסוף והחזרה ביעד תתבצע בהמשך התהליך
+          </span>
+        </div>
+      </div>
       <div class="footer-button">
         <button 
           class="btn-continue"
@@ -59,6 +72,7 @@
           המשך
         </button>
       </div>
+      <!-- Continue button -->
     </div>
   </app-shared-dropdown>
 </div>
