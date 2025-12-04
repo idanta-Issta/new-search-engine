@@ -49,14 +49,11 @@ export class SearchEngineComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log('🔵 ngAfterViewInit started');
     setTimeout(() => {
-      // קודם נסה לקבל מ-window אם קיים
       if (!this.options && (window as any).SearchEngineConfig) {
         this.options = (window as any).SearchEngineConfig;
       }
       
-      // אם אין בwindow, השתמש בפונקציה
       if (!this.options) {
         this.options = getSearchEngineTabsConfig();
       }
@@ -70,14 +67,7 @@ export class SearchEngineComponent implements AfterViewInit {
           ) ?? this.options.tabs[0]; 
       }
 
-      console.log('✅ Tabs loaded:', this.options?.tabs);
-      console.log('🎯 Active tab:', this.activeTab);
-      console.log('🔍 Has htmlUrl?', !!this.activeTab?.htmlUrl);
-      console.log('🔍 htmlUrl value:', this.activeTab?.htmlUrl);
-
-      // Load external HTML if the initial active tab has htmlUrl
       if (this.activeTab?.htmlUrl) {
-        console.log('🚀 Loading external HTML from:', this.activeTab.htmlUrl);
         this.loadExternalHtml(this.activeTab.htmlUrl);
       } else {
         console.log('⚠️ No htmlUrl found on active tab');
@@ -92,7 +82,6 @@ export class SearchEngineComponent implements AfterViewInit {
     setTimeout(() => {
       this.activeTab = tab;
       
-      // Load external HTML if htmlUrl is specified
       if (tab.htmlUrl) {
         this.loadExternalHtml(tab.htmlUrl);
       } else {
@@ -108,12 +97,10 @@ export class SearchEngineComponent implements AfterViewInit {
   }
 
   onTabClick(tab: any, event: MouseEvent) {
-    // אם יש URL - תן לקישור לעבוד
     if (tab.url) {
-      return; // הדפדפן יטפל בקישור
+      return; 
     }
     
-    // אחרת - מנע ניווט ובחר טאב
     event.preventDefault();
     this.selectTab(tab);
   }
@@ -124,63 +111,43 @@ export class SearchEngineComponent implements AfterViewInit {
 
   hasExternalHtml(): boolean {
     const result = !!this.activeTab?.htmlUrl;
-    console.log('🔍 hasExternalHtml() called, result:', result, 'activeTab:', this.activeTab?.title);
+   
     return result;
   }
 
   private loadExternalHtml(url: string) {
-    console.log('📥 loadExternalHtml called with URL:', url);
-    console.log('📦 Is URL cached?', this.apiService.isCached(url));
+
     
     this.apiService.get(url, {
       responseType: 'text',
       onLoading: () => {
         this.isLoadingHtml = true;
-        console.log('⏳ isLoadingHtml set to true');
       },
       onSuccess: (htmlText: string) => {
-        console.log('✅ HTTP Response received, length:', htmlText.length);
-        console.log('📄 HTML Preview (first 200 chars):', htmlText.substring(0, 200));
         
         if (!this.dynamicContainer) {
           console.error('❌ Dynamic container not found!');
           this.isLoadingHtml = false;
           return;
         }
-        console.log('✅ Dynamic container exists:', this.dynamicContainer.nativeElement);
+    
 
-        // Extract and inject CSS
         const styles = this.extractStyles(htmlText);
-        console.log('🎨 Extracted', styles.length, 'style tags');
         styles.forEach((css, index) => {
-          console.log(`🎨 Injecting style #${index + 1}, length:`, css.length);
           this.loadCSS(css);
         });
 
-        // Extract scripts
         const scripts = this.extractScripts(htmlText);
-        console.log('📜 Extracted', scripts.length, 'script tags');
-        
-        // Remove <style> and <script> tags from HTML
         const cleanHtml = this.sanitizeHtml(htmlText);
-        console.log('🧹 Clean HTML length:', cleanHtml.length);
-        console.log('🧹 Clean HTML preview:', cleanHtml.substring(0, 200));
-        
-        // Insert clean HTML into container
+    
         this.dynamicContainer.nativeElement.innerHTML = cleanHtml;
-        console.log('✅ HTML inserted into container');
-        
-        // Execute scripts AFTER HTML is inserted
         setTimeout(() => {
           scripts.forEach((js, index) => {
-            console.log(`📜 Executing script #${index + 1}, length:`, js.length);
             this.loadScript(js);
           });
-          console.log('✅ All scripts executed');
         }, 0);
         
         this.isLoadingHtml = false;
-        console.log('✅ Loading complete, isLoadingHtml set to false');
       },
       onError: (err) => {
         console.error('❌ Failed to load external HTML:', err);

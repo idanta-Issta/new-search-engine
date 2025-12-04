@@ -60,7 +60,7 @@ export class ApiService {
       onLoading();
     }
 
-    return this.http.get<T>(url, { responseType: responseType as any }).pipe(
+    const request$ = this.http.get<T>(url, { responseType: responseType as any }).pipe(
       tap((response) => {
         console.log('✅ API Response received for:', url);
         
@@ -84,6 +84,15 @@ export class ApiService {
         throw error;
       })
     );
+
+    // ⭐ Auto-subscribe if callbacks are provided
+    if (onLoading || onSuccess || onError) {
+      request$.subscribe({
+        error: () => {} // Prevent unhandled error
+      });
+    }
+
+    return request$;
   }
 
   /**

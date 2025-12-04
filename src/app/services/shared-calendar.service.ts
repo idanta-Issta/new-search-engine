@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
 import { SuggestedDate } from '../models/shared-calendar-input.models';
+import { HolidaysService } from './holidays.service';
 
 export interface CalendarDay {
   date: Date;
   other: boolean;
   suggested?: SuggestedDate | null;
   disabled?: boolean;
+  holiday?: string | null; // שם החג בעברית
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedCalendarService {
+
+  constructor(private holidaysService: HolidaysService) {}
 
      /** מחזיר תאריך חדש של חודש + offset */
   shiftMonth(base: Date, offset: number): Date {
@@ -82,11 +86,14 @@ if (forcePickOnlySuggested) {
 }
 
 
+      const holiday = this.holidaysService.getHoliday(date);
+      
       days.push({
         date,
         other: false,
         suggested: match,
-        disabled
+        disabled,
+        holiday
       });
     }
 

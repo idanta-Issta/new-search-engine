@@ -16,6 +16,7 @@ import {
 } from '@angular/animations'; // למה: טריגרי אנימציה
 import { SharedCalendarInputConfig } from '../../../../../models/shared-calendar-input.models';
 import { SharedCalendarService, CalendarDay } from '../../../../../services/shared-calendar.service';
+import { HolidaysService } from '../../../../../services/holidays.service';
 import { InputBoxComponent } from '../input-box/input-box.component';
 import { ESharedInputType } from '../../../../../enums/ESharedInputType';
 import { SharedInputRegistry } from '../../../../../config/shared-input.registry';
@@ -66,12 +67,14 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
     new EventEmitter<{ start?: Date | null; end?: Date | null } | null>();
 
   isOpen = false;
+  private preventClose = false; // דגל למניעת סגירה במהלך ניווט
 
   displayedMonthLeft!: Date;
   displayedMonthRight!: Date;
   isSelectingRange = false;
   leftMonthDays: CalendarDay[] = [];
   rightMonthDays: CalendarDay[] = [];
+  hoveredDate: Date | null = null; // תאריך שהעכבר מרחף מעליו
 
   monthsNames = [
     'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
@@ -81,6 +84,7 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
 
   constructor(
     private calendarSrv: SharedCalendarService,
+    private holidaysService: HolidaysService,
     private el: ElementRef<HTMLElement>
   ) {}
 
@@ -197,6 +201,7 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   @HostListener('document:mousedown', ['$event'])
   onOutsideClick(event: MouseEvent) {
     if (!this.el.nativeElement.contains(event.target as Node)) {
+      console.log('[CALENDAR-NAV] Outside click detected, closing dropdown');
       this.isOpen = false;
     }
   }
@@ -257,14 +262,26 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   onInputOpened() { this.isOpen = true; }
 
   onInputClosed() {
+    console.log('[CALENDAR-NAV] onInputClosed called, loadingSuggestions:', this.loadingSuggestions, 'preventClose:', this.preventClose);
+    
+    // אם preventClose מופעל - התעלם מבקשת הסגירה
+    if (this.preventClose) {
+      console.log('[CALENDAR-NAV] Prevented close due to preventClose flag');
+      this.preventClose = false; // איפוס הדגל
+      return;
+    }
+    
     setTimeout(() => { // למה: מונע סגירה לפני קליק פנימי
       // אם אנחנו בטעינת הצעות חזור - אל נסגור את הקלנדר
       if (this.loadingSuggestions) {
+        console.log('[CALENDAR-NAV] Not closing - still loading suggestions');
         return;
       }
       if (!this.value?.start || this.value?.end) {
-        
+        console.log('[CALENDAR-NAV] Closing dropdown');
         this.isOpen = false;
+      } else {
+        console.log('[CALENDAR-NAV] Not closing - waiting for return date');
       }
     }, 0);
   }
@@ -354,6 +371,25 @@ if (!this.value.end) {
     );
   }
 
+  isInHoverRange(date: Date): boolean {
+    // רק אם יש תאריך התחלה אבל אין תאריך סיום, ויש hover
+    if (!this.value?.start || this.value?.end || !this.hoveredDate) {
+      return false;
+    }
+    
+    // בדוק אם התאריך נמצא בין start ל-hovered
+    return this.calendarSrv.isInRange(
+      date, this.value.start, this.hoveredDate
+    );
+  }
+
+  onDateHover(date: Date | null) {
+    // רק אם יש start אבל אין end
+    if (this.value?.start && !this.value?.end) {
+      this.hoveredDate = date;
+    }
+  }
+
   get valueAsString(): string {
     // If disabled, show loading text
     if (this.isDisabled) {
@@ -381,6 +417,8 @@ if (!this.value.end) {
   }
 
   nextMonth() {
+    console.log('[CALENDAR-NAV] nextMonth called, isOpen before:', this.isOpen);
+    this.preventClose = true; // מונע סגירה אוטומטית
     this.displayedMonthLeft = new Date(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth() + 1,
@@ -392,9 +430,12 @@ if (!this.value.end) {
       1
     );
     this.renderCalendars();
+    console.log('[CALENDAR-NAV] nextMonth completed, isOpen after:', this.isOpen);
   }
 
   prevMonth() {
+    console.log('[CALENDAR-NAV] prevMonth called, isOpen before:', this.isOpen);
+    this.preventClose = true; // מונע סגירה אוטומטית
     this.displayedMonthLeft = new Date(
       this.displayedMonthLeft.getFullYear(),
       this.displayedMonthLeft.getMonth() - 1,
@@ -406,5 +447,10 @@ if (!this.value.end) {
       1
     );
     this.renderCalendars();
+    console.log('[CALENDAR-NAV] prevMonth completed, isOpen after:', this.isOpen);
+  }
+
+  getSimplifiedHoliday(holidayName: string): string {
+    return this.holidaysService.getSimplifiedName(holidayName);
   }
 }

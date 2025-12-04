@@ -3,13 +3,12 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { App } from './app/app';
 
-console.log('Running in browser?', typeof window !== 'undefined');
 
 
 bootstrapApplication(App, {
   providers: [
     provideAnimations(),
-    provideHttpClient() // ✅ תוסיף את זה כאן
+    provideHttpClient()
   ]
 });
 

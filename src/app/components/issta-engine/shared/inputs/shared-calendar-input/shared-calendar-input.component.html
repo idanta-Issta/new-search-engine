@@ -13,6 +13,7 @@
     (click)="!isDisabled && onInputOpened()"
   ></app-input-box>
 
+  <!--     [isOpen]="isOpen && !isDisabled"-->
   <!-- שימוש ב-dropdown המשותף -->
   <app-shared-dropdown
     [isOpen]="isOpen && !isDisabled"
@@ -41,7 +42,7 @@
           <!-- חודש שמאל -->
           <div class="calendar-month">
             <div class="month-header">
-              <button class="nav-btn" (click)="prevMonth()">‹</button>
+              <button class="nav-btn" (click)="prevMonth(); $event.stopPropagation()">‹</button>
               <span class="month-name">
                 <span class="month">{{ leftMonthName }}</span>
                 <span class="year">{{ leftYear }}</span>
@@ -59,11 +60,16 @@
                 [class.other-month]="day.other"
                 [class.selected]="isSelected(day.date)"
                 [class.range]="isInRange(day.date)"
+                [class.hover-range]="isInHoverRange(day.date)"
                 [class.disabled]="day.disabled"
+                [class.has-holiday]="day.holiday"
                 (click)="selectDate(day)"
+                (mouseenter)="onDateHover(day.date)"
+                (mouseleave)="onDateHover(null)"
                 (mousedown)="$event.stopPropagation()"
               >
-                <span>{{ day.date.getDate() }}</span>
+                <span *ngIf="day.holiday" class="holiday-label">{{ getSimplifiedHoliday(day.holiday) }}</span>
+                <span class="date-number">{{ day.date.getDate() }}</span>
                 <span *ngIf="day.suggested" class="suggest-badge">
                    {{ day.suggested.currency }}{{ day.suggested.price }}
                 </span>
@@ -74,7 +80,7 @@
           <!-- חודש ימין -->
           <div class="calendar-month">
             <div class="month-header return">
-              <button class="nav-btn" (click)="nextMonth()">›</button>
+              <button class="nav-btn" (click)="nextMonth(); $event.stopPropagation()">›</button>
               <span class="month-name">
                 <span class="month">{{ rightMonthName }}</span>
                 <span class="year">{{ rightYear }}</span>
@@ -92,11 +98,16 @@
                 [class.other-month]="day.other"
                 [class.selected]="isSelected(day.date)"
                 [class.range]="isInRange(day.date)"
+                [class.hover-range]="isInHoverRange(day.date)"
                 [class.disabled]="day.disabled"
+                [class.has-holiday]="day.holiday"
                 (click)="selectDate(day)"
+                (mouseenter)="onDateHover(day.date)"
+                (mouseleave)="onDateHover(null)"
                 (mousedown)="$event.stopPropagation()"
               >
-                <span>{{ day.date.getDate() }}</span>
+              <span *ngIf="day.holiday" class="holiday-label">{{ getSimplifiedHoliday(day.holiday) }}</span>
+              <span class="date-label">{{ day.date.getDate() }}</span>
                 <span *ngIf="day.suggested" class="suggest-badge">
                    {{ day.suggested.currency }}{{ day.suggested.price }}
                 </span>

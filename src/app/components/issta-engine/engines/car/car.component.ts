@@ -107,21 +107,17 @@ export class CarComponent extends BaseEngineComponent {
       },
       onSuccess: (response) => {
         console.log('✅ Cities loaded raw response:', response);
-        
-        // Use mapper to transform the data
+      
         const { CarMapper } = require('../../../../mappers/car.mapper');
         const mappedCities = CarMapper.mapCities(response);
         console.log('🗺️ Mapped cities:', mappedCities);
         
-        // Clear cache for cities to force reload
         this.optionsService.clearCacheForType(ESharedInputType.CAR_PICKUP_CITY);
         
-        // Update registry with mapped cities as listMenuOption
         import('../../../../config/shared-input.registry').then(module => {
           const registry = module.SharedInputRegistry;
           if (registry[ESharedInputType.CAR_PICKUP_CITY]) {
             registry[ESharedInputType.CAR_PICKUP_CITY].listMenuOption = mappedCities;
-            console.log('📝 Updated registry with cities list:', mappedCities);
           }
         });
         

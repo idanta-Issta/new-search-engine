@@ -146,23 +146,29 @@
     &.selected {
       background: #e2f7e8;
 
-      span:first-child {
+      .date-number {
         background: #2aae54;
         color: white;
-        height: 33px;
-        width: 38px;
-        position: absolute;
-        display: flex;
-        border-radius: 23px;
-        right: 6px;
-        bottom: 2px;
+        height: 30px;
+        width: 30px;
+        display: inline-flex;
+        border-radius: 50%;
         align-items: center;
         justify-content: center;
+      }
+
+      .holiday-label {
+        color: #2aae54;
       }
     }
 
     &.range {
       background: #e2f7e8;
+    }
+
+    &.hover-range {
+      background: #f0fdf4;
+      opacity: 0.8;
     }
 
     &:hover:not(.disabled) {
@@ -177,6 +183,26 @@
     white-space: nowrap;
     left: 50%;
     transform: translateX(-50%);
+    }
+
+    .holiday-label {
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 600;
+      color: #b9b9b9;
+      white-space: nowrap;
+      pointer-events: none;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      direction: rtl;
+    }
+
+    &.has-holiday {
+      padding-top: 16px; // Make room for holiday label
     }
   }
 }
