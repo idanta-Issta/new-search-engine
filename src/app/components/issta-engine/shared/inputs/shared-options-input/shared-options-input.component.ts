@@ -99,13 +99,8 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
     const registryEntry = SharedInputRegistry[this.type];
     if (!registryEntry) return;
 
-    console.log('📦 SharedOptionsInput.ngOnInit - type:', this.type);
-    console.log('📦 SharedOptionsInput.ngOnInit - registryEntry.customMenuHeaderComponent:', registryEntry.customMenuHeaderComponent);
-
     this.config = registryEntry.uiConfig;
     this.customHeaderComponent = registryEntry.customMenuHeaderComponent;
-    
-    console.log('📦 SharedOptionsInput.ngOnInit - this.customHeaderComponent:', this.customHeaderComponent);
     
     // Check if disabled from registry
     if (registryEntry.isDisabled !== undefined) {
@@ -154,19 +149,13 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   }
 
   ngAfterViewInit(): void {
-    console.log('📦 SharedOptionsInput.ngAfterViewInit - this.customHeaderComponent:', this.customHeaderComponent);
     // Load custom header component when view is initialized if needed
     if (this.customHeaderComponent) {
-      console.log('✅ SharedOptionsInput.ngAfterViewInit - Loading custom header component');
       setTimeout(() => this.loadCustomHeaderComponent(), 0);
-    } else {
-      console.log('❌ SharedOptionsInput.ngAfterViewInit - NO custom header component');
     }
   }
 
   onInputOpened() {
-    console.log('📦 SharedOptionsInput.onInputOpened - type:', this.type);
-    console.log('📦 SharedOptionsInput.onInputOpened - this.customHeaderComponent:', this.customHeaderComponent);
     this.isOpen = true;
     this.opened.emit();
     // טען מחדש אופציות בכל פתיחה (כדי לתפוס שינויים ב-excludeValues)
@@ -199,25 +188,16 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   }
 
   async loadCustomHeaderComponent() {
-    console.log('📦 loadCustomHeaderComponent - START');
-    console.log('📦 loadCustomHeaderComponent - this.customHeaderContainer:', this.customHeaderContainer);
-    console.log('📦 loadCustomHeaderComponent - this.customHeaderComponent:', this.customHeaderComponent);
-    
     if (!this.customHeaderContainer) {
-      console.log('❌ loadCustomHeaderComponent - Missing container');
       return;
     }
 
-    console.log('✅ loadCustomHeaderComponent - Clearing container...');
     this.customHeaderContainer.clear();
     
     // בדיקה נוספת AFTER clearing - אולי השתנה בינתיים
     if (!this.customHeaderComponent) {
-      console.log('❌ loadCustomHeaderComponent - NO component (after clear check)');
       return;
     }
-
-    console.log('✅ loadCustomHeaderComponent - Loading component...');
 
     let componentType: Type<any>;
     if (typeof this.customHeaderComponent === 'function') {
@@ -228,7 +208,6 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
     }
 
     const componentRef = this.customHeaderContainer.createComponent(componentType);
-    console.log('✅ loadCustomHeaderComponent - Component created!');
     
     // Pass config if exists
     const registryEntry = SharedInputRegistry[this.type];

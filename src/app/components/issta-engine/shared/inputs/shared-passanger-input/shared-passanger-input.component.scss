@@ -135,57 +135,137 @@ text-align: right;
 
     .age-selector {
       display: flex;
+      position: relative;
 
-      select {
+      .custom-select {
         width: 87px;
         height: 42px;
         border-radius: 16px;
-        padding: 8px 12px;
         border: 1px solid #2AAE54;
         background: white;
-        font-size: 16px;
-        font-weight: 400;
-        color: #2A3335;
+        position: relative;
         cursor: pointer;
+        user-select: none;
         transition: all 0.2s;
-        text-align: center;
-        font-family: 'Rubik', sans-serif;
-        
-        /* Custom dropdown with indicator */
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%232AAE54' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: center right 12px;
-        padding-right: 32px;
 
         &:hover {
           border-color: #2AAE54;
           box-shadow: 0 0 0 1px #2AAE54;
+          background-color: #F8FDF9;
         }
 
-        &:focus,
-        &:active {
-          outline: none;
+        &.open {
           border-color: #2AAE54;
           background-color: #ECF8F0;
           box-shadow: 0 0 0 2px rgba(42, 174, 84, 0.2);
+
+          .dropdown-arrow svg {
+            transform: rotate(180deg);
+          }
         }
-        
-        /* Dropdown menu styling */
-        option {
-          padding: 8px;
-          background: white;
+
+        .selected-value {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+              padding: 0px 0px 0px 10px;
+          font-size: 16px;
+          font-weight: 400;
           color: #2A3335;
           font-family: 'Rubik', sans-serif;
-          
-          &:checked {
-            background: #2AAE54;
-            color: white;
+        }
+
+        .dropdown-arrow {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+          transition: transform 0.2s;
+
+          svg {
+            display: block;
+            transition: transform 0.2s;
+          }
+        }
+
+        .options-list {
+          position: absolute;
+          top: calc(100% + 4px);
+          left: 0;
+          right: 0;
+          background: white;
+          border: 1px solid #2AAE54;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          max-height: 200px;
+          overflow-y: auto;
+          z-index: 1000;
+          padding: 4px 0;
+
+          /* Custom scrollbar */
+          &::-webkit-scrollbar {
+            width: 6px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+          }
+
+    
+
+          .option-item {
+            padding: 10px 16px;
+            font-size: 16px;
+            color: #2A3335;
+            font-family: 'Rubik', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s;
+
+            &:hover {
+              background-color: #ECF8F0;
+              color: #2AAE54;
+            }
+
+            &.selected {
+              background: #2AAE54;
+              color: white;
+              font-weight: 500;
+            }
+
+            &:first-child {
+              border-radius: 12px 12px 0 0;
+            }
+
+            &:last-child {
+              border-radius: 0 0 12px 12px;
+            }
           }
         }
       }
     }
   }
+
+  .extra-room-contact-label,
+  .extra-room-contact{
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+    .extra-room-contact{
+font-weight: 400;
+line-height: 100%;
+letter-spacing: 0%;
+text-align: right;
+text-decoration: underline;
+text-decoration-style: solid;
+color: #197CBE;
+text-decoration-thickness: 0%;
+text-decoration-skip-ink: auto;
+
+    }
 
   .footer-section {
   display: flex;
@@ -454,5 +534,5 @@ color: white;
     }
   }
 
-  .add-room-wrapper { align-self: stretch; display: flex; align-items: flex-end; }
+  .add-room-wrapper { align-self: stretch; display: flex; }
 }

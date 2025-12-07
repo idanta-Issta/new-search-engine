@@ -42,6 +42,7 @@ export class SharedPassangerInputComponent implements OnInit {
   isOpen = false;
   totalPassengers = 0;
   selectedRoomIndex = 0;
+  activeDropdown: string | null = null;
 
 
 
@@ -166,6 +167,29 @@ export class SharedPassangerInputComponent implements OnInit {
     if (age.selectedAges) {
       age.selectedAges[index] = selectedAge;
       this.emitChange();
+    }
+  }
+
+  toggleAgeDropdown(dropdownId: string) {
+    this.activeDropdown = this.activeDropdown === dropdownId ? null : dropdownId;
+  }
+
+  selectAge(age: AgeGroup, index: number, selectedAge: number) {
+    if (!age.selectedAges) {
+      age.selectedAges = [];
+    }
+    age.selectedAges[index] = selectedAge;
+    this.activeDropdown = null;
+    this.emitChange();
+    this.cdr.markForCheck();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.custom-select')) {
+      this.activeDropdown = null;
+      this.cdr.markForCheck();
     }
   }
 

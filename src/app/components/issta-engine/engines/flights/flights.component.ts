@@ -39,24 +39,16 @@ export class FlightsComponent extends BaseEngineComponent {
     super.ngOnInit();
     // אתחול ערכי ברירת מחדל מהקונפיג
     const destinationConfig = this.inputConfigs.find(c => c.type === ESharedInputType.DESTINATIONS_FLIGHTS);
-    console.log('🔍 ngOnInit - destinationConfig:', destinationConfig);
-    console.log('🔍 ngOnInit - destinationConfig.value:', destinationConfig?.value);
-    console.log('🔍 ngOnInit - destinationConfig.value.key:', destinationConfig?.value?.key);
     
     if (destinationConfig?.value) {
       this.selectedDestination = destinationConfig.value;
       
       // אתחול Origins input - הצג custom header רק אם Destination הוא TLV
       const originsInput = this.inputConfigs.find(c => c.type === ESharedInputType.ORIGINS_FLIGHTS);
-      console.log('🔍 ngOnInit - originsInput:', originsInput);
-      console.log('🔍 ngOnInit - Should show header?', destinationConfig.value.key === 'TLV');
       
       if (originsInput && destinationConfig.value.key === 'TLV') {
-        console.log('✅ ngOnInit - Setting custom header (TLV detected)');
         originsInput.customMenuHeaderComponent = CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.component;
         originsInput.customMenuHeaderConfig = CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.config;
-      } else {
-        console.log('❌ ngOnInit - NOT setting custom header (not TLV)');
       }
     }
   }
@@ -64,27 +56,21 @@ export class FlightsComponent extends BaseEngineComponent {
   protected updateValue(type: ESharedInputType, value: any): void {
     switch (type) {
       case ESharedInputType.DESTINATIONS_FLIGHTS:
-        console.log('🔄 updateValue - DESTINATIONS_FLIGHTS changed to:', value);
-        console.log('🔄 updateValue - value.key:', value?.key);
         this.selectedDestination = value;
         
+        // עדכון דינמי של Origins input - הצג custom header רק אם Destination הוא TLV
         const originsInput = this.inputConfigs.find(c => c.type === ESharedInputType.ORIGINS_FLIGHTS);
-        console.log('🔄 updateValue - originsInput:', originsInput);
-        console.log('🔄 updateValue - originsInput.customMenuHeaderComponent BEFORE:', originsInput?.customMenuHeaderComponent);
         
         if (originsInput) {
           if (value?.key === 'TLV') {
-            console.log('✅ updateValue - Setting custom header (TLV)');
             // הצג את ה-custom header
             originsInput.customMenuHeaderComponent = CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.component;
             originsInput.customMenuHeaderConfig = CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.config;
           } else {
-            console.log('❌ updateValue - Removing custom header (not TLV)');
             // הסתר את ה-custom header
             originsInput.customMenuHeaderComponent = undefined;
             originsInput.customMenuHeaderConfig = undefined;
           }
-          console.log('🔄 updateValue - originsInput.customMenuHeaderComponent AFTER:', originsInput.customMenuHeaderComponent);
           // עדכן את הקומפוננטה
           this.inputsRow?.updateValues();
         }

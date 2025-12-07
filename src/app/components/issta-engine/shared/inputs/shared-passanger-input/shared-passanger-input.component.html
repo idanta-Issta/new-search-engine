@@ -69,16 +69,28 @@
             </div>
 
             <div *ngIf="age.requiresSpecificAge && (age.count || 0) > 0" class="specific-ages">
-              <label class="ages-label">בחירת גילאים</label>
+              <label class="ages-label">גילאים</label>
               <div class="age-selectors-row">
                 <div *ngFor="let i of getAgeArray(age.count || 0); let idx = index" class="age-selector">
-                  <select 
-                    [value]="age.selectedAges?.[idx]" 
-                    (change)="onSpecificAgeChange(age, idx, +$any($event.target).value)">
-                    <option *ngFor="let ageOption of age.specificAgeOptions" [value]="ageOption">
-                      {{ ageOption }}
-                    </option>
-                  </select>
+                  <div class="custom-select" [class.open]="activeDropdown === age.value + '-' + idx" (click)="toggleAgeDropdown(age.value + '-' + idx)">
+                    <div class="selected-value">
+                      {{ age.selectedAges?.[idx] || (age.specificAgeOptions?.[0]?.label || 'בחר גיל') }}
+                    </div>
+                    <div class="dropdown-arrow">
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="#2AAE54" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <div class="options-list" *ngIf="activeDropdown === age.value + '-' + idx">
+                      <div 
+                        *ngFor="let ageOption of age.specificAgeOptions" 
+                        class="option-item"
+                        [class.selected]="age.selectedAges?.[idx] === +ageOption.key"
+                        (click)="selectAge(age, idx, +ageOption.key); $event.stopPropagation()">
+                        {{ ageOption.label }}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -96,13 +108,19 @@
           (mousedown)="$event.stopPropagation()"
           (click)="addRoom(); $event.stopPropagation()">
     + הוספת חדר
-  </button>
+  </button> 
 
+<div>
+  <div class="extra-room-contact-label"
+       *ngIf="!canAddRoom()">
+   רוצה יותר מחדר אחד?
+  </div>
+  <div class="extra-room-contact"
+       *ngIf="!canAddRoom()"
+       (click)="showExtraRoomModal()">
+ השאירו פרטים וסוכן יחזור אלייך
+  </div>
 
-<div class="extra-room-contact"
-     *ngIf="!canAddRoom()"
-     (click)="showExtraRoomModal()">
-  רוצה יותר מחדר אחד? לחץ כאן
 </div>
 
 

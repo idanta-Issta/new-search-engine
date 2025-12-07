@@ -9,6 +9,8 @@ import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
 import { InputSizeHelper } from '../../../../../utilies/input-size.helper';
 import { EInputSize } from '../../../../../enums/EInputSize';
 import { PassangersInput } from '../../../../../models/shared-passanger-input.models';
+import { FlightsMultiDestinationManager } from '../../../../../managers/flights-multi-destination.manager';
+import { BaseEngineService } from '../../../../../services/engine.service';
 
 
 interface FlightSegment {
@@ -38,11 +40,13 @@ export class FlightsMultiDestinationsComponent {
   @ViewChildren(SharedOptionsInputComponent) optionsInputs!: QueryList<SharedOptionsInputComponent>;
   @ViewChildren(SharedCalendarInputComponent) calendarInputs!: QueryList<SharedCalendarInputComponent>;
 
+  private manager = new FlightsMultiDestinationManager();
+
   // Types
   readonly ORIGINS_FLIGHTS = ESharedInputType.MULTI_DESTINATION_ORIGINS_FLIGHTS;
   readonly DESTINATIONS_FLIGHTS = ESharedInputType.DESTINATIONS_FLIGHTS;
   readonly PICKER_DATES = ESharedInputType.PICKER_DATES;
-  readonly PASSANGERS_FLIGHTS = ESharedInputType.PASSANGERS_FLIGHTS;
+  readonly PASSANGERS_MULTI_FLIGHTS = ESharedInputType.PASSANGERS_MULTI_FLIGHTS;
   readonly DROPDOWN_LEFT = EDropdownPosition.BOTTOM_LEFT;
   readonly DROPDOWN_CENTER = EDropdownPosition.BOTTOM_CENTER;
   readonly SMALL_WIDTH = InputSizeHelper.getWidth(EInputSize.SMALL);
@@ -118,7 +122,7 @@ export class FlightsMultiDestinationsComponent {
   // טיפול בבחירת נוסעים
   onPassengersPicked(value: PassangersInput) {
     this.selectedPassengers = value;
-    this.emitInput(ESharedInputType.PASSANGERS_FLIGHTS, value);
+    this.emitInput(ESharedInputType.PASSANGERS_MULTI_FLIGHTS, value);
   }
 
   private emitInput(type: ESharedInputType, value: any) {
@@ -171,7 +175,10 @@ export class FlightsMultiDestinationsComponent {
 
   // חיפוש
   onSearch() {
-    this.searchClicked.emit();
+    const url = this.buildUrl();
+    if (url) {
+      window.location.href = url;
+    }
   }
 
 
@@ -188,8 +195,6 @@ export class FlightsMultiDestinationsComponent {
       }
     }, 100); // דיליי קטן למניעת קונפליקטים
   }
-
- 
   private openDateInput(segmentIndex: number) {
     setTimeout(() => {
       const inputs = this.calendarInputs.toArray();
@@ -198,6 +203,18 @@ export class FlightsMultiDestinationsComponent {
       if (dateInput && typeof dateInput.toggleDropdown === 'function') {
         dateInput.isOpen = true;
       }
-    }, 100); // דיליי קטן למניעת קונפליקטים
+    }, 100);
+  }
+
+  buildUrl(): string {
+    const params = {
+      segments: this.segments,
+      passengers: this.selectedPassengers
+    };
+    debugger
+    
+    const queryParams = this.manager.buildUrl(params);
+    return BaseEngineService.buildRedirectUrl('flights', queryParams, true);
   }
 }
+

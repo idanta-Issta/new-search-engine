@@ -25,6 +25,8 @@ export class SharedPassengersService {
     switch (type) {
       case ESharedInputType.PASSANGERS_FLIGHTS:
         return of(this.getFlightPassengers());
+        case ESharedInputType.PASSANGERS_MULTI_FLIGHTS:
+                 return of(this.getMultiFlightPassengers());
       case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
         return of(this.getAboardHotelPassengers());
       case ESharedInputType.PASSANGERS_DOMESTIC_VACATION:
@@ -98,6 +100,63 @@ private getFlightPassengers(): PassangersInput {
               { label: '10', key: '10' },
               { label: '11', key: '11' }
             ],
+            selectedAges: []
+          },
+          { 
+            label: 'תינוק', 
+            value: 'infant', 
+            note: '(מתחת ל־2)', 
+            minCount: 0, 
+            maxCount: 9,
+            requiresSpecificAge: false
+          },
+          { 
+            label: 'פנסיונר', 
+            value: 'senior', 
+            note: '(גיל 65+)', 
+            minCount: 0, 
+            maxCount: 9,
+            requiresSpecificAge: false
+          }
+        ]
+      }
+    ]
+  };
+}
+
+
+private getMultiFlightPassengers(): PassangersInput {
+  return {
+    allowPickRoom: false,
+    maxTotalPassengers: 9,
+    optionsAge: [
+      {
+        title: 'קבוצות גיל',
+        options: [
+          { 
+            label: 'מבוגר', 
+            value: 'adult', 
+            note: '(גיל 24–64)', 
+            minCount: 2, 
+            maxCount: 9,
+            requiresSpecificAge: false
+          },
+          { 
+            label: 'צעיר', 
+            value: 'teen', 
+            note: '(גיל 12–23)', 
+            minCount: 0, 
+            maxCount: 9,
+            requiresSpecificAge: false,
+            selectedAges: []
+          },
+          { 
+            label: 'ילד', 
+            value: 'child', 
+            note: '(גיל 2–11)', 
+            minCount: 0, 
+            maxCount: 9,
+            requiresSpecificAge: false,
             selectedAges: []
           },
           { 

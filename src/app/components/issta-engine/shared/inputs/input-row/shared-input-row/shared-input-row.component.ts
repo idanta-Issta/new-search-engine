@@ -177,7 +177,6 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
         // עדכון customHeaderComponent
         if ('customHeaderComponent' in inst) {
           inst['customHeaderComponent'] = config.customMenuHeaderComponent;
-          console.log('applyValuesToInstances: customHeaderComponent for', config.type, '=>', inst['customHeaderComponent']);
         }
         
         ref.changeDetectorRef.detectChanges();

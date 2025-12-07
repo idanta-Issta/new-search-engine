@@ -132,6 +132,18 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
   },
 
+  [ESharedInputType.PASSANGERS_MULTI_FLIGHTS]: {
+    mapper: () => [],
+    uiConfig: {
+      title: TEXTS.PASSENGERS.LABEL,
+      icon: ICONS.PASSENGER,
+      placeholder: TEXTS.SEARCH.PLACEHOLDER.PASSENGERS,
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-passanger-input/shared-passanger-input.component').then(m => m.SharedPassangerInputComponent),
+  },
+
+
   [ESharedInputType.PASSANGERS_ABOARD_HOTEL]: {
     mapper: () => [],
     uiConfig: {
