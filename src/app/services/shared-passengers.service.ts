@@ -26,7 +26,7 @@ export class SharedPassengersService {
       case ESharedInputType.PASSANGERS_FLIGHTS:
         return of(this.getFlightPassengers());
         case ESharedInputType.PASSANGERS_MULTI_FLIGHTS:
-                 return of(this.getMultiFlightPassengers());
+        return of(this.getMultiFlightPassengers());
       case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
         return of(this.getAboardHotelPassengers());
       case ESharedInputType.PASSANGERS_DOMESTIC_VACATION:
@@ -204,18 +204,23 @@ private getAboardHotelPassengers(): PassangersInput {
             maxCount: 5,
             requiresSpecificAge: true,
             specificAgeOptions: [
-              { label: '0-1', key: '1' },
+              { label: '0-1', key: '0-1' },
+              { label: '2', key: '2' },
+              { label: '3', key: '3' },
+              { label: '4', key: '4' },
+              { label: '5', key: '5' },
+              { label: '6', key: '6' },
+              { label: '7', key: '7' },
+              { label: '8', key: '8' },
+              { label: '9', key: '9' },
+              { label: '10', key: '10' },
+              { label: '11', key: '11' },
+              { label: '12', key: '12' },
               { label: '13', key: '13' },
               { label: '14', key: '14' },
               { label: '15', key: '15' },
               { label: '16', key: '16' },
-              { label: '17', key: '17' },
-              { label: '18', key: '18' },
-              { label: '19', key: '19' },
-              { label: '20', key: '20' },
-              { label: '21', key: '21' },
-              { label: '22', key: '22' },
-              { label: '23', key: '23' }
+              { label: '17', key: '17' }
             ],
             selectedAges: []
           },

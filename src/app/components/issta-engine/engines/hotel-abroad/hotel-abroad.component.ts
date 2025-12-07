@@ -36,7 +36,7 @@ export class HotelAbroadComponent extends BaseEngineComponent {
       case ESharedInputType.PICKER_DATES:
         this.selectedDate = value;
         break;
-      case ESharedInputType.PASSANGERS_FLIGHTS:
+      case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
         this.selectedPassengers = value;
         break;
     }

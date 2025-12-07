@@ -3,17 +3,27 @@ import { ESharedInputType } from '../enums/ESharedInputType';
 
 export class HotelsMapper {
   static mapDestinations(data: any): MenuOption[] {
-    // API returns { Hotels: [], Destinations: [] }
-    const destinations = data?.Destinations || [];
-    
-    return destinations.map((item: any) => {
-      const label = `${item.CityNameHe}, ${item.CountryNameHe} (${item.IataCode})`;
 
+    const destinations = data?.Destinations || [];
+    return destinations.map((item: any) => {
+      if (item.PlaceId) {
+        return {
+          label: item.CityNameEn || '',
+          key: item.PlaceId,
+          value: item.PlaceId,
+          icon: 'icon-place',
+          isPromoted: item.IsPopular || false,
+          isPlaceId: true
+        };
+      }
+      
+      const label = `${item.CityNameHe}, ${item.CountryNameHe}`;
       return {
         label,
-        key: item.HotelLocationId || item.IataCode,
+        key: item.CityCode,
+        value: item.HotelLocationId || item.IataCode,
         icon: 'icon-hotel',
-        isPromoted: item.IsPopular || false
+        isPromoted: item.IsPopular || false,
       };
     });
   }

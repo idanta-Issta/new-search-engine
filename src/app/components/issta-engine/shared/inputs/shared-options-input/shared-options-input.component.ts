@@ -272,10 +272,26 @@ selectOption(option: MenuOption) {
 
 isSelected(option: MenuOption): boolean {
   if (!this.value) return false;
-  // Support both 'key' and 'value' properties for backward compatibility
-  const selectedIdentifier = this.value.value || this.value.key;
-  const optionIdentifier = option.value || option.key;
-  return selectedIdentifier === optionIdentifier && selectedIdentifier !== undefined;
+  
+  // קודם נבדוק אם זה אותה אופציה בדיוק (לפי כל השדות)
+  if (this.value === option) return true;
+  
+  // אחר כך נבדוק לפי key/value
+  const selectedKey = this.value.key;
+  const selectedValue = this.value.value;
+  const optionKey = option.key;
+  const optionValue = option.value;
+  
+  // רק אם יש key או value משמעותיים
+  if (selectedKey && optionKey && selectedKey === optionKey) {
+    return true;
+  }
+  
+  if (selectedValue && optionValue && selectedValue === optionValue) {
+    return true;
+  }
+  
+  return false;
 }
 
 

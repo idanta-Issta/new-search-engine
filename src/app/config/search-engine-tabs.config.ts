@@ -5,7 +5,7 @@ import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
 export function getSearchEngineTabsConfig(): SearchEngine {
   return {
     showTabs: true,
-    defaultTab: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false },
+    defaultTab: { typeTravel: ETypeSearchEngine.HOTELS_ABROAD, isPartial: false },
     tabs: [
       {
         title: "מתאים לי",

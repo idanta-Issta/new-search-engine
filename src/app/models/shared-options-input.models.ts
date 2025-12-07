@@ -5,4 +5,7 @@ export interface MenuOption {
   key?: string;
   icon?: string;
   isPromoted?: boolean;
+  isPlaceId?: boolean;
+  dport?: string | number | null;
+  code?: string | null;
 }
