@@ -12,6 +12,7 @@ import { BaseEngineService } from '../../../../services/engine.service';
 import { BaseEngineComponent } from '../base-engine.component';
 import { FlightsManager } from '../../../../managers/flights.manager';
 import { VALUES } from '../../../../constants/app.constants';
+import { CUSTOM_MENU_HEADERS } from '../../../../constants/custom-menu-headers.constants';
 
 
 @Component({
@@ -38,15 +39,55 @@ export class FlightsComponent extends BaseEngineComponent {
     super.ngOnInit();
     // אתחול ערכי ברירת מחדל מהקונפיג
     const destinationConfig = this.inputConfigs.find(c => c.type === ESharedInputType.DESTINATIONS_FLIGHTS);
+    console.log('🔍 ngOnInit - destinationConfig:', destinationConfig);
+    console.log('🔍 ngOnInit - destinationConfig.value:', destinationConfig?.value);
+    console.log('🔍 ngOnInit - destinationConfig.value.key:', destinationConfig?.value?.key);
+    
     if (destinationConfig?.value) {
       this.selectedDestination = destinationConfig.value;
+      
+      // אתחול Origins input - הצג custom header רק אם Destination הוא TLV
+      const originsInput = this.inputConfigs.find(c => c.type === ESharedInputType.ORIGINS_FLIGHTS);
+      console.log('🔍 ngOnInit - originsInput:', originsInput);
+      console.log('🔍 ngOnInit - Should show header?', destinationConfig.value.key === 'TLV');
+      
+      if (originsInput && destinationConfig.value.key === 'TLV') {
+        console.log('✅ ngOnInit - Setting custom header (TLV detected)');
+        originsInput.customMenuHeaderComponent = CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.component;
+        originsInput.customMenuHeaderConfig = CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.config;
+      } else {
+        console.log('❌ ngOnInit - NOT setting custom header (not TLV)');
+      }
     }
   }
 
   protected updateValue(type: ESharedInputType, value: any): void {
     switch (type) {
       case ESharedInputType.DESTINATIONS_FLIGHTS:
+        console.log('🔄 updateValue - DESTINATIONS_FLIGHTS changed to:', value);
+        console.log('🔄 updateValue - value.key:', value?.key);
         this.selectedDestination = value;
+        
+        const originsInput = this.inputConfigs.find(c => c.type === ESharedInputType.ORIGINS_FLIGHTS);
+        console.log('🔄 updateValue - originsInput:', originsInput);
+        console.log('🔄 updateValue - originsInput.customMenuHeaderComponent BEFORE:', originsInput?.customMenuHeaderComponent);
+        
+        if (originsInput) {
+          if (value?.key === 'TLV') {
+            console.log('✅ updateValue - Setting custom header (TLV)');
+            // הצג את ה-custom header
+            originsInput.customMenuHeaderComponent = CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.component;
+            originsInput.customMenuHeaderConfig = CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.config;
+          } else {
+            console.log('❌ updateValue - Removing custom header (not TLV)');
+            // הסתר את ה-custom header
+            originsInput.customMenuHeaderComponent = undefined;
+            originsInput.customMenuHeaderConfig = undefined;
+          }
+          console.log('🔄 updateValue - originsInput.customMenuHeaderComponent AFTER:', originsInput.customMenuHeaderComponent);
+          // עדכן את הקומפוננטה
+          this.inputsRow?.updateValues();
+        }
         break;
       case ESharedInputType.ORIGINS_FLIGHTS:
         this.selectedOrigin = value;
@@ -79,9 +120,7 @@ export class FlightsComponent extends BaseEngineComponent {
   override onHeaderStateChange(state: any): void {
     super.onHeaderStateChange(state);
     
-    // Handle ONE_WAY trip type
     if (state.selectedTripType?.value === VALUES.TRIP_TYPE.ONE_WAY) {
-      // Hide FLEXIBLE option
       if (this.activeFooter?.options) {
         this.activeFooter.options = this.activeFooter.options.map((opt: any) => {
           if (opt.value === VALUES.FOOTER_OPTIONS.FLEXIBLE) {
@@ -91,15 +130,12 @@ export class FlightsComponent extends BaseEngineComponent {
         });
       }
       
-      // Update calendar to single date mode
       const dateInput = this.inputConfigs.find(c => c.type === ESharedInputType.PICKER_DATES);
       if (dateInput) {
         dateInput.isOneWay = true;
-        // Update the row component
         this.inputsRow?.updateValues();
       }
     } else {
-      // Show FLEXIBLE option for other trip types
       if (this.activeFooter?.options) {
         this.activeFooter.options = this.activeFooter.options.map((opt: any) => {
           if (opt.value === VALUES.FOOTER_OPTIONS.FLEXIBLE) {
@@ -113,7 +149,6 @@ export class FlightsComponent extends BaseEngineComponent {
       const dateInput = this.inputConfigs.find(c => c.type === ESharedInputType.PICKER_DATES);
       if (dateInput) {
         dateInput.isOneWay = false;
-        // Update the row component
         this.inputsRow?.updateValues();
       }
     }

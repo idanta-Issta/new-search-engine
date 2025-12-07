@@ -11,6 +11,7 @@ import { AppExternalConfig } from '../config/app.external.config';
 import { SharedInputConfig } from '../models/shared-input-config.models';
 import { SharedCalendarInputConfig } from '../models/shared-calendar-input.models';
 import { TEXTS, ICONS } from '../constants/app.constants';
+import { CUSTOM_MENU_HEADERS } from '../constants/custom-menu-headers.constants';
 import { EILAT_AIRPORTS } from '../constants/destinations.constants';
 
 export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = {
@@ -52,13 +53,8 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       titleMenuOptions: TEXTS.SEARCH.MENU_TITLES.POPULAR_DESTINATIONS,
       allowAutoComplete: false,
     },
-      customMenuHeaderComponent: () => import('../components/issta-engine/shared/buttons/custom-menu-header-button/custom-menu-header-button.component').then(m => m.CustomMenuHeaderButtonComponent),
-    customMenuHeaderConfig: {
-      text: 'כל המלונות באילת',
-      label: 'כל המלונות באילת',
-      value: 'all-hotels-eilat',
-      icon: 'icon-Calender1'
-    },
+    customMenuHeaderComponent: CUSTOM_MENU_HEADERS.EILAT_ALL_HOTELS.component,
+    customMenuHeaderConfig: CUSTOM_MENU_HEADERS.EILAT_ALL_HOTELS.config,
     component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
   },
 
@@ -85,13 +81,8 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       titleMenuOptions: TEXTS.SEARCH.MENU_TITLES.POPULAR_DESTINATIONS,
       allowAutoComplete: true,
     },
-    customMenuHeaderComponent: () => import('../components/issta-engine/shared/buttons/custom-menu-header-button/custom-menu-header-button.component').then(m => m.CustomMenuHeaderButtonComponent),
-    customMenuHeaderConfig: {
-      text: 'חיפוש בעזרת מפת מחירים',
-      label: 'כל היעדים',
-      value: 'search-with-map-price',
-      icon: 'icon-Calender1'
-    },
+    customMenuHeaderComponent: CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.component,
+    customMenuHeaderConfig: CUSTOM_MENU_HEADERS.FLIGHTS_PRICE_MAP.config,
     component: () => import('../components/issta-engine/shared/inputs/shared-options-input/shared-options-input.component').then(m => m.SharedOptionsInputComponent),
   },
 

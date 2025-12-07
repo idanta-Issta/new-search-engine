@@ -14,4 +14,11 @@ export interface InputConfig {
   loadingSuggestions?: boolean;
   dataConfig?: any;
   allowPickHours?: boolean;
+  customMenuHeaderComponent?: () => Promise<any>;
+  customMenuHeaderConfig?: {
+    text: string;
+    label: string;
+    value: string;
+    icon: string;
+  };
 }
