@@ -7,17 +7,6 @@ export class DomesticVacationMapper {
     const hotels = data?.Hotels || [];
     const destinations = data?.Destinations || [];
     
-    console.log('[DomesticVacationMapper] Hotels array:', hotels);
-    console.log('[DomesticVacationMapper] Hotels count:', hotels.length);
-    console.log('[DomesticVacationMapper] Destinations array:', destinations);
-    console.log('[DomesticVacationMapper] Destinations count:', destinations.length);
-    
-    if (hotels.length > 0) {
-      console.log('[DomesticVacationMapper] First hotel sample:', hotels[0]);
-    }
-    if (destinations.length > 0) {
-      console.log('[DomesticVacationMapper] First destination sample:', destinations[0]);
-    }
 
     // Combine both hotels and destinations
     const allItems = [...hotels, ...destinations];
@@ -39,7 +28,7 @@ export class DomesticVacationMapper {
       }
       
       // For hotels use HotelId, for destinations use IataCode - convert to string
-      const key = String(item.HotelId || item.IataCode || item.LocationId || item.HotelLocationId || item.Id || '');
+      const key = String(item.CityCode || '');
       
       const result = {
         label,

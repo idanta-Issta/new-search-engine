@@ -25,7 +25,7 @@ export class HotelsManager {
 
     // יעד - dport
     if (params.destination?.key) {
-      queryParams.push(`dport=${params.destination.key}`);
+      queryParams.push(`${params.destination?.isPlaceId ? 'placeId' : 'dport'}=${params.destination.key}`);
     }
 
     // חדרים ונוסעים - תמיד rooms=1

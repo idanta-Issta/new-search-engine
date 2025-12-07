@@ -1,7 +1,7 @@
 export enum EProductCode {
   FLIGHTS = 'flights',
   HOTELS = 'hotels',
-  DOMESTIC_VACATION = 'domestic-vacation',
+  DOMESTIC_VACATION = 'israel-dynamic-packages',
   SPORT = 'sport',
   CRUISE = 'cruise',
   CARS = 'cars',

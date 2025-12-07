@@ -222,7 +222,6 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   @HostListener('document:mousedown', ['$event'])
   onOutsideClick(event: MouseEvent) {
     if (!this.el.nativeElement.contains(event.target as Node)) {
-      console.log('[CALENDAR-NAV] Outside click detected, closing dropdown');
       this.isOpen = false;
     }
   }
@@ -256,11 +255,8 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
     );
     // Temporary: count how many suggestions match each displayed month
     try {
-      const leftMonthCount = this.leftMonthDays.filter(d => !!d.suggested && !d.other).length;
-      const rightMonthCount = this.rightMonthDays.filter(d => !!d.suggested && !d.other).length;
-      console.log('renderCalendars: matches left/right', leftMonthCount, rightMonthCount);
-      // If we have suggested dates and a departure is already selected,
-      // keep the calendar open so the user sees the suggested return dates.
+
+
       try {
         const hasSuggestions = Array.isArray(this.dataConfig?.suggestedDates) && this.dataConfig.suggestedDates.length > 0;
         if (hasSuggestions && this.value?.start) {

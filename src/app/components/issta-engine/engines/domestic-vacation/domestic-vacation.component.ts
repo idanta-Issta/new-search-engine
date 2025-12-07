@@ -25,7 +25,21 @@ export class DomesticVacationComponent extends BaseEngineComponent {
   selectedDestinationFlightEilat: any = null;
   selectedOriginFlightEilat: any = null;
   selectedDate = { start: null as Date | null, end: null as Date | null };
-  selectedPassengers: PassangersInput | null = null;
+  selectedPassengers: PassangersInput = {
+    allowPickRoom: true,
+    maxRoomsPick: 4,
+    maxTotalPassengers: 9,
+    maxPassengersInRoom: 9,
+    rooms: [
+      {
+        roomNumber: 1,
+        adults: 2,
+        children: 0,
+        infants: 0
+      }
+    ],
+    optionsAge: []
+  };
   addFlightSelected = false;
 
   constructor(engineService: BaseEngineService) {

@@ -23,7 +23,6 @@ export class ApiService {
   private cache = new Map<string, any>();
 
   constructor(private http: HttpClient) {
-    console.log('🔵 ApiService initialized');
   }
 
   /**
@@ -42,7 +41,6 @@ export class ApiService {
 
     // Check cache first (unless forceRefresh is true)
     if (!forceRefresh && this.cache.has(url)) {
-      console.log('📦 Cache hit for:', url);
       const cachedData = this.cache.get(url);
       
       // Call onSuccess immediately with cached data
@@ -53,7 +51,6 @@ export class ApiService {
       return of(cachedData);
     }
 
-    console.log('🚀 Fetching from API:', url);
     
     // Call onLoading callback
     if (onLoading) {
@@ -62,7 +59,7 @@ export class ApiService {
 
     const request$ = this.http.get<T>(url, { responseType: responseType as any }).pipe(
       tap((response) => {
-        console.log('✅ API Response received for:', url);
+
         
         // Save to cache
         this.cache.set(url, response);

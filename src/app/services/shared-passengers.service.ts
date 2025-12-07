@@ -30,7 +30,7 @@ export class SharedPassengersService {
       case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
         return of(this.getAboardHotelPassengers());
       case ESharedInputType.PASSANGERS_DOMESTIC_VACATION:
-        return of(this.getDomesticVacationPassengers(true, 36, 9, 4));
+        return of(this.getDomesticVacationPassengers(true, 36, 9, 2));
       case ESharedInputType.PASSANGERS_FLIGHTS_EILAT:
         return of(this.getDomesticVacationPassengers(false, 9, 0));
       case ESharedInputType.PASSANGERS_FLIGHTS_AND_HOTEL_EILAT:

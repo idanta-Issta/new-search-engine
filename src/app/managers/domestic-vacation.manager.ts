@@ -3,27 +3,63 @@ import { PassangersInput } from '../models/shared-passanger-input.models';
 export interface DomesticVacationSearchParams {
   destination: any;
   dates: { start: Date | null; end: Date | null };
-  passengers: PassangersInput | null;
+  passengers: PassangersInput;
   addFlight?: boolean;
 }
 
 export class DomesticVacationManager {
   buildUrl(params: DomesticVacationSearchParams): string {
-    const urlParams = new URLSearchParams();
+    const queryParams: string[] = [];
     
     if (params.dates.start) {
-      urlParams.append('checkIn', params.dates.start.toISOString().split('T')[0]);
+      const checkin = this.formatDate(params.dates.start);
+      queryParams.push(`fdate=${checkin}`);
     }
     if (params.dates.end) {
-      urlParams.append('checkOut', params.dates.end.toISOString().split('T')[0]);
-    }
-    if (params.passengers) {
-      urlParams.append('passengers', JSON.stringify(params.passengers));
-    }
-    if (params.addFlight) {
-      urlParams.append('addFlight', 'true');
+      const checkout = this.formatDate(params.dates.end);
+      queryParams.push(`tdate=${checkout}`);
     }
 
-    return urlParams.toString();
+    // isdomestic תמיד true
+    queryParams.push('isdomestic=true');
+
+    // יעד - dport
+    if (params.destination?.key) {
+      queryParams.push(`dport=${params.destination.key}`);
+    }
+
+    // חדרים ונוסעים
+    if (params.passengers.rooms && params.passengers.rooms.length > 0) {
+      params.passengers.rooms.forEach((room, index) => {
+        // מבוגרים
+        if (room.adults > 0) {
+          queryParams.push(`hotelrooms[${index}].adults=${room.adults}`);
+        }
+        
+        // ילדים
+        if (room.children > 0) {
+          queryParams.push(`hotelrooms[${index}].children=${room.children}`);
+        }
+        
+        // תינוקות
+        if (room.infants > 0) {
+          queryParams.push(`hotelrooms[${index}].infants=${room.infants}`);
+        }
+      });
+    }
+
+    // הוספת טיסה
+    if (params.addFlight) {
+      queryParams.push('addFlight=true');
+    }
+
+    return queryParams.join('&');
+  }
+
+  private formatDate(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
   }
 }

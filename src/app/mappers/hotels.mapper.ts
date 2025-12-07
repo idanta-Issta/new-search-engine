@@ -5,6 +5,7 @@ export class HotelsMapper {
   static mapDestinations(data: any): MenuOption[] {
 
     const destinations = data?.Destinations || [];
+    console.log("destinations length: " + destinations?.length)
     return destinations.map((item: any) => {
       if (item.PlaceId) {
         return {

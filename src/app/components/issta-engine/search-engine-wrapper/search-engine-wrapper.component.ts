@@ -71,8 +71,6 @@ export class SearchEngineComponent implements AfterViewInit {
         this.loadExternalHtml(this.activeTab.htmlUrl);
       } else if (this.activeTab?.partialPath) {
         this.loadPartialHtml(this.activeTab.partialPath);
-      } else {
-        console.log('⚠️ No htmlUrl or partialPath found on active tab');
       }
     });
   }
