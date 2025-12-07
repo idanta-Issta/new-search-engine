@@ -11,13 +11,13 @@ export function getSearchEngineTabsConfig(): SearchEngine {
         title: "מתאים לי",
         imagePath: 'https://cstorage.zoomengage.com/images/19761202/za_a47e687e015d92d14.jpg',
         htmlUrl: "https://localhost:51565/umbraco/ComponentService/Components/ReloadComponent?componentName=Family",
-        searchEngine: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false } // שנה את הסוג בהתאם
+        searchEngine: { typeTravel: ETypeSearchEngine.FORME, isPartial: false } // שנה את הסוג בהתאם
       },
       {
         title: "Issta Daniel",
            htmlUrl: "https://localhost:51565/umbraco/ComponentService/Components/ReloadComponent?componentName=Daniel",
      imagePath:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn0X7T2SpmQFqAgQL48yHnVomzyNTaiY109w&s",
-        searchEngine: { typeTravel: ETypeSearchEngine.FLIGHTS, isPartial: false }
+        searchEngine: { typeTravel: ETypeSearchEngine.DANIEL, isPartial: false }
       },
       {
         title: "כפרי נופש",

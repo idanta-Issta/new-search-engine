@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuOption } from '../../../../models/shared-options-input.models';
 import { ESharedInputType } from '../../../../enums/ESharedInputType';
@@ -32,6 +32,15 @@ export class FlightsComponent extends BaseEngineComponent {
 
   constructor(engineService: BaseEngineService) {
     super(engineService);
+  }
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    // אתחול ערכי ברירת מחדל מהקונפיג
+    const destinationConfig = this.inputConfigs.find(c => c.type === ESharedInputType.DESTINATIONS_FLIGHTS);
+    if (destinationConfig?.value) {
+      this.selectedDestination = destinationConfig.value;
+    }
   }
 
   protected updateValue(type: ESharedInputType, value: any): void {
@@ -111,14 +120,18 @@ export class FlightsComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    const queryParams = this.manager.buildUrl({
+    const params = {
       origin: this.selectedOrigin,
       destination: this.selectedDestination,
       dates: this.selectedDate,
       passengers: this.selectedPassengers,
       headerState: this.headerState,
       footerState: this.footerState
-    });
-    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
+    };
+    
+    const queryParams = this.manager.buildUrl(params);
+    const productPathObject = this.manager.getProductPath(params);
+    
+    return BaseEngineService.buildRedirectUrl(productPathObject.path, queryParams, productPathObject.addResultLabel);
   }
 }

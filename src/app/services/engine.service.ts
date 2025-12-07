@@ -107,8 +107,8 @@ export class BaseEngineService {
     this.currentEngine = null;
   }
 
-  static buildRedirectUrl(productCode: string, queryParams: string): string {
+  static buildRedirectUrl(productCode: string, queryParams: string, addResultLabel: boolean = true): string {
     const cleanParams = queryParams.startsWith('?') ? queryParams.substring(1) : queryParams;
-    return `${AppExternalConfig.mainSiteUrl}/loader?url=${productCode}/results.aspx?${cleanParams}`;
+    return `${AppExternalConfig.mainSiteUrl}/loader?url=${productCode}${addResultLabel ? '/results.aspx?' : '?'}${cleanParams}`;
   }
 }

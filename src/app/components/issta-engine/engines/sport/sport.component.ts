@@ -46,18 +46,15 @@ export class SportComponent extends BaseEngineComponent {
       case ESharedInputType.SPORT_LEAGUES:
         this.selectedLeague = value;
         
-        // Reset teams selection and show loading state
         const teamsInput = this.inputConfigs.find(c => c.type === ESharedInputType.SPORT_TEAMS);
         if (teamsInput) {
           teamsInput.value = { label: 'טוען קבוצות...', key: 'loading' };
           teamsInput.isDisabled = true;
         }
         this.selectedTeam = { label: 'טוען קבוצות...', key: 'loading' };
-        
-        // Trigger UI update
+      
         this.inputsRow?.updateValues();
         
-        // Load teams
         this.loadTeamsForLeague(value?.key);
         break;
       case ESharedInputType.SPORT_TEAMS:
@@ -71,7 +68,6 @@ export class SportComponent extends BaseEngineComponent {
 
   private loadTeamsForLeague(leagueCode: string) {
     if (!leagueCode || leagueCode === 'all') {
-      // Reset to default teams list - no URL needed
       const teamsInput = this.inputConfigs.find(c => c.type === ESharedInputType.SPORT_TEAMS);
       if (teamsInput) {
         teamsInput.value = { label: 'כל הקבוצות', key: 'all' };
@@ -79,7 +75,6 @@ export class SportComponent extends BaseEngineComponent {
       }
       this.selectedTeam = { label: 'כל הקבוצות', key: 'all' };
       
-      // Remove requestUrl from registry
       import('../../../../config/shared-input.registry').then(module => {
         const registry = module.SharedInputRegistry;
         if (registry[ESharedInputType.SPORT_TEAMS]) {
@@ -91,15 +86,12 @@ export class SportComponent extends BaseEngineComponent {
       return;
     }
 
-    // Load teams from API
     const url = `${AppExternalConfig.baseUrl}sport/teams?leagueCode=${leagueCode}`;
     
     this.http.get<any>(url).subscribe({
       next: (response) => {
-        // Clear cache for teams to force reload
         this.optionsService.clearCacheForType(ESharedInputType.SPORT_TEAMS);
         
-        // Update registry with new URL
         import('../../../../config/shared-input.registry').then(module => {
           const registry = module.SharedInputRegistry;
           if (registry[ESharedInputType.SPORT_TEAMS]) {
@@ -107,7 +99,6 @@ export class SportComponent extends BaseEngineComponent {
           }
         });
         
-        // Re-enable input and reset to default
         const teamsInput = this.inputConfigs.find(c => c.type === ESharedInputType.SPORT_TEAMS);
         if (teamsInput) {
           teamsInput.value = { label: 'כל הקבוצות', key: 'all' };
@@ -118,7 +109,6 @@ export class SportComponent extends BaseEngineComponent {
       },
       error: (err) => {
         console.error('Failed to load teams:', err);
-        // Re-enable even on error
         const teamsInput = this.inputConfigs.find(c => c.type === ESharedInputType.SPORT_TEAMS);
         if (teamsInput) {
           teamsInput.value = { label: 'שגיאה בטעינה', key: 'error' };

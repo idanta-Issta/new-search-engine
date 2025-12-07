@@ -11,5 +11,7 @@ export enum ETypeSearchEngine {
   SKI = 'SKI',
   VILLAGE_RESORTS = 'VILLAGE_RESORTS',
   CAR_RENTAL = 'CAR_RENTAL',
-  CRUISE = 'CRUISE'
+  CRUISE = 'CRUISE',
+  FORME = 'FORME',
+  DANIEL = 'DANIEL',
 }

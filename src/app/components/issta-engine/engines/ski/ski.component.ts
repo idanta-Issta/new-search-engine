@@ -254,13 +254,25 @@ export class SkiComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    // TODO: Implement ski search URL building
-    console.log('Ski search:', {
-      destination: this.selectedDestination,
-      resort: this.selectedResort,
-      date: this.selectedDate,
-      passengers: this.selectedPassengers
-    });
-    return '';
+    const urlParams = new URLSearchParams();
+    
+    if (this.selectedDestination?.key && this.selectedDestination.key !== 'all') {
+      urlParams.append('destination', this.selectedDestination.key);
+    }
+    if (this.selectedResort?.key && this.selectedResort.key !== 'all') {
+      urlParams.append('resort', this.selectedResort.key);
+    }
+    if (this.selectedDate?.start) {
+      urlParams.append('checkIn', this.selectedDate.start.toISOString().split('T')[0]);
+    }
+    if (this.selectedDate?.end) {
+      urlParams.append('checkOut', this.selectedDate.end.toISOString().split('T')[0]);
+    }
+    if (this.selectedPassengers) {
+      urlParams.append('passengers', JSON.stringify(this.selectedPassengers));
+    }
+    
+    const queryParams = urlParams.toString();
+    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
   }
 }

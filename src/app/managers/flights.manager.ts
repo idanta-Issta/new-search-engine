@@ -13,6 +13,14 @@ export interface FlightSearchParams {
 }
 
 export class FlightsManager {
+  getProductPath(params: FlightSearchParams): { path: string; addResultLabel: boolean } {
+
+    if (params.origin?.key === 'search-with-map-price') {
+      return { path: 'flights/master', addResultLabel: false };
+    }
+    return { path: 'flights', addResultLabel: true };
+  }
+
   buildUrl(params: FlightSearchParams): string {
     const queryParams: string[] = [];
 
@@ -24,42 +32,52 @@ export class FlightsManager {
       queryParams.push(`tdate=${this.formatDate(params.dates.end)}`);
     }
 
-    // route תמיד 2
-    queryParams.push('route=2');
+    // route - 1 לכיוון אחד, 2 להלוך חזור
+    const isOneWay = params.headerState.selectedTripType?.value === 'one-way';
+    queryParams.push(`route=${isOneWay ? '1' : '2'}`);
 
-    // יעד ומוצא (משתמשים ב-key שמכיל את קוד שדה התעופה)
+    // יעד ומוצא
+    if (params.origin?.key && params.origin.key !== 'search-with-map-price') {
+      queryParams.push(`aport=${params.origin.key}`);
+    }
+ // יעד ומוצא
+    if (params.origin?.key == 'search-with-map-price') {
+      queryParams.push(`aport=allDes`);
+    }
     if (params.destination?.key) {
       queryParams.push(`dport=${params.destination.key}`);
     }
-    if (params.origin?.key) {
-      queryParams.push(`aport=${params.origin.key}`);
-    }
+
 
     // נוסעים
     if (params.passengers) {
       const passengerParams = this.buildPassengerParams(params.passengers);
       queryParams.push(...passengerParams);
     } else {
-      // אם אין נוסעים, ברירת מחדל
-      const passengerParams = this.buildPassengerParams(null);
-      queryParams.push(...passengerParams);
+      // ברירת מחדל: 2 מבוגרים
+      queryParams.push('padt=2');
     }
 
-    // Class (מדרגה)
+    // Class (מחלקה) - רק אם לא תיירים
     if (params.headerState.selectedClass?.value) {
-      queryParams.push(`class=${params.headerState.selectedClass.value}`);
+      const classValue = params.headerState.selectedClass.value;
+      if (classValue === 'premium') {
+        queryParams.push('cls=5');
+      } else if (classValue === 'business') {
+        queryParams.push('cls=2');
+      } else if (classValue === 'first') {
+        queryParams.push('cls=3');
+      }
+      // תיירים (economy) - אין צורך לציין
     }
 
     // Footer options
     if (params.footerState['direct']) {
-      queryParams.push('direct=1');
+      queryParams.push('fdirect=true');
     }
-    if (params.footerState['flexible']) {
-      queryParams.push('flexible=1');
+    if (params.footerState['flexible'] || params?.origin?.key == 'search-with-map-price')  {
+      queryParams.push('mode=flex');
     }
-
-    // תמיד main_sort=price
-    queryParams.push('main_sort=price');
 
     return queryParams.join('&');
   }
@@ -106,19 +124,20 @@ export class FlightsManager {
       params.push(`psnr=${senior.minCount}`);
     }
 
-    // הוספת גילאי צעירים
+    // הוספת כל הגילאים למערך אחד - chdr1a1, chdr1a2, chdr1a3...
+    const allAges: number[] = [];
+    
     if (teen && teen.selectedAges && teen.selectedAges.length > 0) {
-      teen.selectedAges.forEach((age, index) => {
-        params.push(`chdr1a${index + 1}=${age}`);
-      });
+      allAges.push(...teen.selectedAges);
+    }
+    if (child && child.selectedAges && child.selectedAges.length > 0) {
+      allAges.push(...child.selectedAges);
     }
 
-    // הוספת גילאי ילדים
-    if (child && child.selectedAges && child.selectedAges.length > 0) {
-      child.selectedAges.forEach((age, index) => {
-        params.push(`chdr2a${index + 1}=${age}`);
-      });
-    }
+    // הוספת כל הגילאים עם אינדקס רץ
+    allAges.forEach((age, index) => {
+      params.push(`chdr1a${index + 1}=${age}`);
+    });
 
     return params;
   }

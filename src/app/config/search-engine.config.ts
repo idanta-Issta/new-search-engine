@@ -70,7 +70,7 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
       type: ESharedInputType.DESTINATIONS_FLIGHTS,
       size: EInputSize.LARGE,
       position: EDropdownPosition.BOTTOM_LEFT,
-      value: { label: 'תל אביב, שדה תעופה (TLV)', value: 'TLV' }
+      value: { label: 'תל אביב, שדה תעופה (TLV)', key: 'TLV' }
     },
     {
       type: ESharedInputType.ORIGINS_FLIGHTS,
