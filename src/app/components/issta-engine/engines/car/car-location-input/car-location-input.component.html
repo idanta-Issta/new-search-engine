@@ -1,15 +1,17 @@
 <div class="car-location-input" [class.open]="isOpen" [class.disabled]="isDisabled" #anchor>
-  <app-input-box
-    [icon]="config.uiConfig.icon ?? ''"
-    [title]="config.uiConfig.title"
-    [placeholder]="config.uiConfig.placeholder ?? ''"
-    [isOpen]="isOpen && !isDisabled"
-    [(model)]="displayValue"
-    [width]="width"
-    [allowAutoComplete]="false"
-    (opened)="onInputOpened()"
-    (closed)="isOpen = false"
-  ></app-input-box>
+  <div class="input-wrapper" [class.disabled]="isDisabled">
+    <app-input-box
+      [icon]="config.uiConfig.icon ?? ''"
+      [title]="config.uiConfig.title"
+      [placeholder]="config.uiConfig.placeholder ?? ''"
+      [isOpen]="isOpen && !isDisabled"
+      [(model)]="displayValue"
+      [width]="width"
+      [allowAutoComplete]="false"
+      (opened)="onInputOpened()"
+      (closed)="onInputClosed()"
+    ></app-input-box>
+  </div>
 
   <app-shared-dropdown
     [isOpen]="isOpen"

@@ -13,9 +13,6 @@ export interface FlightSearchParams {
 }
 
 export class FlightsManager {
-  private readonly baseUrl = AppExternalConfig.mainSiteUrl;
-  private readonly loaderPath = AppExternalConfig.endpoints.flights.searchResultsPath;
-
   buildUrl(params: FlightSearchParams): string {
     const queryParams: string[] = [];
 
@@ -64,8 +61,7 @@ export class FlightsManager {
     // תמיד main_sort=price
     queryParams.push('main_sort=price');
 
-    const fullQuery = queryParams.join('&');
-    return `${this.baseUrl}${this.loaderPath}?${fullQuery}`;
+    return queryParams.join('&');
   }
 
   private formatDate(date: Date): string {

@@ -58,10 +58,11 @@ export class HotelAbroadComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    return this.manager.buildUrl({
+    const queryParams = this.manager.buildUrl({
       destination: this.selectedDestination,
       dates: this.selectedDate,
       passengers: this.selectedPassengers
     });
+    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
   }
 }

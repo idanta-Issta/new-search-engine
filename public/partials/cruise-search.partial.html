@@ -1,4 +1,6 @@
 <div class="cruise-search-engine">
+  <h2 class="section-title">חיפוש שייט</h2>
+
   <div id="option-eight">
     <div>
       <ody-search-form search-form-settings="OVExplore8"></ody-search-form>
@@ -7,6 +9,12 @@
 </div>
 
 <style>
+
+  .cruise-search-engine {
+      border-radius: 16px !important;
+  background-color: #f3f8f5!important;
+  font-family: 'Rubik', sans-serif !important;
+  }
 /* Icon in input field */
 #option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .od-form-wrapper .od-input-wrapper .od-icon {
   padding-bottom: 5px !important;
@@ -20,10 +28,10 @@
 /* Cruise form styling */
 #option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .cruiseform {
   -webkit-tap-highlight-color: transparent;
-  background-color: rgba(0, 0, 0, 0.4) !important;
-  border: 1px solid #000 !important;
+    background-color: #f3f8f5!important;
+border: none !important;
   max-width: 1280px !important;
-  border-radius: 0px !important;
+
 }
 
 #odysseus #OVExploreContainer .od-tab-form-wrapper {
@@ -59,12 +67,16 @@
   background-color: var(--se-date-text-color) !important;
   border: 1px solid #000 !important;
   color: #717579 !important;
-  border-radius: 0 !important;
+  border-radius: 16px !important;
 }
 
 /* Multiselect tags alignment */
 .multiselect__tags {
   text-align: right !important;
+}
+
+#option-eight #odysseus #OVExploreContainer .od-tab-form-wrapper .cruiseform{
+  padding: 0px 32px 14px 34px !important
 }
 
 /* Multiselect placeholder styling */
@@ -100,6 +112,20 @@
 #option-eight #odysseus #OVExploreContainer .multiselect--active .multiselect__select::before {
   transform: rotate(180deg) !important;
 }
+
+.section-title {
+  
+direction: rtl;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #2e2e2e;
+    margin-bottom: 1rem;
+    text-align: right;
+    padding: 12px 30px 0px 1px !important;
+    margin-right: 20px;
+}
+
 
 /* Multiselect content and option styling */
 .multiselect__content-wrapper,
@@ -265,8 +291,8 @@ window.OVExplore8 = {
     resultWindowType: "_blank",
     showStateNCountryWithPorts: true,
     cruiseSearchFields: {
-      basic: ["destination", "sailingdate", "duration"],
-      advance: ["cruiseline", "ship", "departureport"]
+      basic: ["destination", "sailingdate", "duration","cruiseline", "ship", "departureport"],
+      advance: []
     }
   },
   siteSettings: {

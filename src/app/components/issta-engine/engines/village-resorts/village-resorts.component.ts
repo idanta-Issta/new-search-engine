@@ -198,11 +198,19 @@ export class VillageResortsComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    console.log('Village Resorts search:', {
-      destination: this.selectedDestination,
-      date: this.selectedDate,
-      passengers: this.selectedPassengers
-    });
-    return '';
+    const urlParams = new URLSearchParams();
+    
+    if (this.selectedDate?.start) {
+      urlParams.append('checkIn', this.selectedDate.start.toISOString().split('T')[0]);
+    }
+    if (this.selectedDate?.end) {
+      urlParams.append('checkOut', this.selectedDate.end.toISOString().split('T')[0]);
+    }
+    if (this.selectedPassengers) {
+      urlParams.append('passengers', JSON.stringify(this.selectedPassengers));
+    }
+    
+    const queryParams = urlParams.toString();
+    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
   }
 }

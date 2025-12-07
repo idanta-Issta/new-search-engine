@@ -147,10 +147,11 @@ export class OrganizedToursComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    return this.manager.buildUrl({
+    const queryParams = this.manager.buildUrl({
       destination: this.selectedCountry,
       dates: { start: null, end: null },
       passengers: null
     });
+    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
   }
 }

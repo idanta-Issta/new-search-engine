@@ -111,7 +111,7 @@ export class FlightsComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    return this.manager.buildUrl({
+    const queryParams = this.manager.buildUrl({
       origin: this.selectedOrigin,
       destination: this.selectedDestination,
       dates: this.selectedDate,
@@ -119,5 +119,6 @@ export class FlightsComponent extends BaseEngineComponent {
       headerState: this.headerState,
       footerState: this.footerState
     });
+    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
   }
 }

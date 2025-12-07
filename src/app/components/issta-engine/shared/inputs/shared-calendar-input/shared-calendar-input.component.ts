@@ -11,6 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   trigger, transition, style, animate
 } from '@angular/animations'; // למה: טריגרי אנימציה
@@ -26,7 +27,7 @@ import { EDropdownPosition } from '../../../../../enums/EDropdownPosition';
 @Component({
   selector: 'app-shared-calendar-input',
   standalone: true,
-  imports: [CommonModule, InputBoxComponent, SharedDropdownComponent  ],
+  imports: [CommonModule, FormsModule, InputBoxComponent, SharedDropdownComponent  ],
   templateUrl: './shared-calendar-input.component.html',
   styleUrls: ['./shared-calendar-input.component.scss'],
 })
@@ -36,6 +37,7 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   @Input() position: EDropdownPosition = EDropdownPosition.BOTTOM_RIGHT;
   @Input() singleDateMode: boolean = false; // מצב בחירת תאריך בודד בלבד
   @Input() minDate?: Date | null; // תאריך מינימום חיצוני
+  @Input() allowPickHours: boolean = false; // אם לאפשר בחירת שעות
   
   // Using setter to detect changes when isDisabled is set directly
   private _isDisabled: boolean = false;
@@ -64,10 +66,15 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   @Input() loadingSuggestions: boolean = false;
 
   @Output() valueChange =
-    new EventEmitter<{ start?: Date | null; end?: Date | null } | null>();
+    new EventEmitter<{ start?: Date | null; end?: Date | null; startTime?: string; endTime?: string } | null>();
 
   isOpen = false;
   private preventClose = false; // דגל למניעת סגירה במהלך ניווט
+  
+  // שעות
+  selectedStartTime: string = '10:00';
+  selectedEndTime: string = '10:00';
+  timeOptions: string[] = [];
 
   displayedMonthLeft!: Date;
   displayedMonthRight!: Date;
@@ -110,7 +117,21 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
       1
     );
 
+    // יצירת רשימת שעות מ-00:00 עד 23:30 בקפיצות של 30 דקות
+    if (this.allowPickHours) {
+      this.generateTimeOptions();
+    }
+
     this.renderCalendars();
+  }
+
+  private generateTimeOptions(): void {
+    this.timeOptions = [];
+    for (let hour = 0; hour < 24; hour++) {
+      const hourStr = hour.toString().padStart(2, '0');
+      this.timeOptions.push(`${hourStr}:00`);
+      this.timeOptions.push(`${hourStr}:30`);
+    }
   }
 
  ngOnChanges(changes: SimpleChanges): void {
@@ -294,7 +315,7 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
   // single date mode
   if (this.singleDateMode) {
     this.value = { start: date, end: null };
-    this.valueChange.emit(this.value);
+    this.emitValue();
     
     this.isOpen = false;
     return;
@@ -303,7 +324,7 @@ export class SharedCalendarInputComponent implements OnInit, OnChanges {
 if (!this.value?.start) {
 
   this.value = { start: date, end: null };
-  this.valueChange.emit(this.value);
+  this.emitValue();
 
   // ⭐ בדיקה אם התאריך שנבחר נמצא ב-suggestedDates
   const isDepartureInSuggestions = this.dataConfig?.suggestedDates?.some(
@@ -341,15 +362,37 @@ if (!this.value.end) {
     }
   }
 
-  this.valueChange.emit(this.value);
+  this.emitValue();
   return;
 }
 
 
   // אם היה טווח שנבחר כבר → התחל מחדש
   this.value = { start: date, end: null };
-  this.valueChange.emit(this.value);
+  this.emitValue();
 }
+
+  private emitValue(): void {
+    if (this.allowPickHours) {
+      this.valueChange.emit({
+        ...this.value,
+        startTime: this.selectedStartTime,
+        endTime: this.selectedEndTime
+      });
+    } else {
+      this.valueChange.emit(this.value);
+    }
+  }
+
+  onStartTimeChange(time: string): void {
+    this.selectedStartTime = time;
+    this.emitValue();
+  }
+
+  onEndTimeChange(time: string): void {
+    this.selectedEndTime = time;
+    this.emitValue();
+  }
 
 
 

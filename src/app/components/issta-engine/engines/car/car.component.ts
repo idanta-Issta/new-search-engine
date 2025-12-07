@@ -42,8 +42,20 @@ export class CarComponent extends BaseEngineComponent {
         this.selectedPickupCountry = value;
         console.log('🌍 Pickup country selected:', value?.label, 'CountryCode:', value?.CountryCode);
         
-        // Reset city selection and show loading state
         const cityInput = this.inputConfigs.find(c => c.type === ESharedInputType.CAR_PICKUP_CITY);
+        
+        // אם אין מדינה נבחרת - נעילה מוחלטת
+        if (!value || !value.CountryCode) {
+          if (cityInput) {
+            cityInput.value = null;
+            cityInput.isDisabled = true;
+          }
+          this.selectedPickupCity = null;
+          this.inputsRow?.updateValues();
+          return;
+        }
+        
+        // יש מדינה - טוען ערים
         if (cityInput) {
           cityInput.value = { label: 'טוען ערים...', key: 'loading' };
           cityInput.isDisabled = true;
@@ -54,7 +66,7 @@ export class CarComponent extends BaseEngineComponent {
         this.inputsRow?.updateValues();
         
         // Load cities for selected country
-        this.loadCitiesForCountry(value?.CountryCode);
+        this.loadCitiesForCountry(value.CountryCode);
         break;
         
       case ESharedInputType.CAR_PICKUP_CITY:
@@ -62,6 +74,13 @@ export class CarComponent extends BaseEngineComponent {
         this.selectedPickupCity = value?._pickupCity;
         this.selectedReturnCity = value?._returnCity;
         console.log('🏙️ Cities selected - Pickup:', this.selectedPickupCity?.label, 'Return:', this.selectedReturnCity?.label);
+        
+        // Update the input config value
+        const cityInputConfig = this.inputConfigs.find(c => c.type === ESharedInputType.CAR_PICKUP_CITY);
+        if (cityInputConfig) {
+          cityInputConfig.value = value;
+        }
+        this.inputsRow?.updateValues();
         break;
         
       case ESharedInputType.CAR_DATES:
@@ -153,9 +172,9 @@ export class CarComponent extends BaseEngineComponent {
         this.inputsRow?.openInputDelayed(ESharedInputType.CAR_PICKUP_CITY);
         break;
       case ESharedInputType.CAR_PICKUP_CITY:
-        if (value) {
-          this.inputsRow?.openInputDelayed(ESharedInputType.CAR_DATES);
-        }
+        // if (value) {
+        //   this.inputsRow?.openInputDelayed(ESharedInputType.CAR_DATES);
+        // }
         break;
       case ESharedInputType.CAR_DATES:
         if (value?.start && value?.end) {

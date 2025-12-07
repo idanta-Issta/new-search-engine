@@ -40,6 +40,7 @@ export class CarLocationInputComponent implements OnInit {
   pickupCity: MenuOption | undefined;
   returnCity: MenuOption | undefined;
   isPickupDropdownOpen = false;
+  preventClose = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -65,22 +66,50 @@ export class CarLocationInputComponent implements OnInit {
       this.returnCity = city;
     }
     
+    // עדכן את התצוגה מיד עם עיר האיסוף בלבד
+    this.displayValue = city.label;
+    
+    // שלח את הערך עם שתי הערים
+    const combinedValue: any = {
+      label: city.label,
+      key: `${city.key}_${this.returnCity.key}`,
+      _pickupCity: city,
+      _returnCity: this.returnCity,
+    };
+    this.optionPicked.emit(combinedValue);
+    
     this.isPickupDropdownOpen = false;
     this.cdr.markForCheck();
   }
 
   onPickupDropdownOpened() {
+    console.log('[CAR-LOCATION] Pickup dropdown opened');
     this.isPickupDropdownOpen = true;
+    this.preventClose = true;
     this.cdr.markForCheck();
   }
 
   onPickupDropdownClosed() {
+    console.log('[CAR-LOCATION] Pickup dropdown closed');
     this.isPickupDropdownOpen = false;
+    this.preventClose = true;
     this.cdr.markForCheck();
   }
 
   onReturnCityPicked(city: MenuOption) {
     this.returnCity = city;
+    
+    // עדכן את הערך המשולב אם יש גם עיר איסוף
+    if (this.pickupCity) {
+      const combinedValue: any = {
+        label: this.pickupCity.label,
+        key: `${this.pickupCity.key}_${city.key}`,
+        _pickupCity: this.pickupCity,
+        _returnCity: city,
+      };
+      this.optionPicked.emit(combinedValue);
+    }
+    
     this.cdr.markForCheck();
   }
 
@@ -89,7 +118,20 @@ export class CarLocationInputComponent implements OnInit {
       this.isOpen = true;
       this.opened.emit();
       this.cdr.markForCheck();
+    } else {
+      console.log('🚫 Cannot open car location input - disabled (no country selected)');
     }
+  }
+
+  onInputClosed() {
+    if (this.preventClose) {
+      console.log('[CAR-LOCATION] Preventing close - internal dropdown interaction');
+      this.preventClose = false;
+      return;
+    }
+    console.log('[CAR-LOCATION] Closing main dropdown');
+    this.isOpen = false;
+    this.cdr.markForCheck();
   }
 
   open() {
@@ -111,16 +153,7 @@ export class CarLocationInputComponent implements OnInit {
   onContinue() {
     if (!this.pickupCity || !this.returnCity) return;
 
-    // Create combined value
-    const combinedValue: any = {
-      label: `${this.pickupCity.label} → ${this.returnCity.label}`,
-      key: `${this.pickupCity.key}_${this.returnCity.key}`,
-      _pickupCity: this.pickupCity,
-      _returnCity: this.returnCity,
-    };
-    
-    this.displayValue = combinedValue.label;
-    this.optionPicked.emit(combinedValue);
+    // סגור את הdropdown - הערך כבר התעדכן ב-onPickupCityPicked
     this.close();
   }
 }

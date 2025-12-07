@@ -1,6 +1,7 @@
 export const AppExternalConfig = {
   baseUrl: 'http://test-external.issta.co.il/products/api/',
   mainSiteUrl: 'https://www.issta.co.il',
+  
   endpoints: {
     flights: {
       origins: 'flights/populardestinations',

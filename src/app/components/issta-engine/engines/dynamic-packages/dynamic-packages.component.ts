@@ -171,10 +171,11 @@ export class DynamicPackagesComponent extends BaseEngineComponent {
       ? { start: this.selectedDates.start ?? null, end: this.selectedDates.end ?? null }
       : { start: null as Date | null, end: null as Date | null };
       
-    return this.manager.buildUrl({
+    const queryParams = this.manager.buildUrl({
       destination: this.selectedDestination,
       dates: dates,
       passengers: this.selectedPassengers
     });
+    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
   }
 }

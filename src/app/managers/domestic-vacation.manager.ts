@@ -24,6 +24,6 @@ export class DomesticVacationManager {
       urlParams.append('addFlight', 'true');
     }
 
-    return `https://www.issta.co.il/domestic-vacation?${urlParams.toString()}`;
+    return urlParams.toString();
   }
 }

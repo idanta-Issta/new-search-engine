@@ -96,6 +96,11 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
         instance.singleDateMode = config.isOneWay;
       }
 
+      // העברת allowPickHours עבור קלנדר
+      if (config.allowPickHours !== undefined && 'allowPickHours' in instance) {
+        instance.allowPickHours = config.allowPickHours;
+      }
+
       // הרשמה לאירוע אחד בלבד כדי למנוע כפילות
       if (instance.optionPicked?.subscribe) {
         instance.optionPicked.subscribe((value: any) =>

@@ -194,11 +194,12 @@ export class DomesticVacationComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    return this.manager.buildUrl({
+    const queryParams = this.manager.buildUrl({
       destination: this.selectedDestination,
       dates: this.selectedDate,
       passengers: this.selectedPassengers,
       addFlight: this.addFlightSelected
     });
+    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
   }
 }

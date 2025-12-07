@@ -13,6 +13,7 @@ import { AppExternalConfig } from '../../../../config/app.external.config';
 import { HttpClient } from '@angular/common/http';
 import { SportMapper } from '../../../../mappers/sport.mapper';
 import { SharedOptionsService } from '../../../../services/shared-options.service';
+import { SportManager } from '../../../../managers/sport.manager';
 
 @Component({
   selector: 'app-sport',
@@ -22,13 +23,12 @@ import { SharedOptionsService } from '../../../../services/shared-options.servic
 })
 export class SportComponent extends BaseEngineComponent {
   protected config = SPORT_CONFIG;
-  private manager = new HotelsManager();
+  private manager = new SportManager();
 
   selectedEventType: any = null;
   selectedLeague: any = null;
   selectedTeam: any = null;
   selectedMonth: any = null;
-  selectedPassengers: PassangersInput | null = null;
 
   constructor(
     engineService: BaseEngineService,
@@ -65,9 +65,6 @@ export class SportComponent extends BaseEngineComponent {
         break;
       case ESharedInputType.DATES_PICKER_MONTHS:
         this.selectedMonth = value;
-        break;
-      case ESharedInputType.PASSANGERS_ABOARD_HOTEL:
-        this.selectedPassengers = value;
         break;
     }
   }
@@ -146,10 +143,12 @@ export class SportComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    return this.manager.buildUrl({
-      destination: this.selectedTeam,
-      dates: { start: null, end: null },
-      passengers: this.selectedPassengers
+    const queryParams = this.manager.buildUrl({
+      eventType: this.selectedEventType,
+      league: this.selectedLeague,
+      team: this.selectedTeam,
+      month: this.selectedMonth
     });
+    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
   }
 }

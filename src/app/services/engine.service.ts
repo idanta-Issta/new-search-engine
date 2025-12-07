@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SearchEngineConfig, ENGINE_REGISTRY } from '../config/search-engine.config';
 import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
 import { InputConfig } from '../models/input-config.model';
+import { AppExternalConfig } from '../config/app.external.config';
 
 
 export interface EngineResult {
@@ -104,5 +105,10 @@ export class BaseEngineService {
   reset(): void {
     this.originalConfig = null;
     this.currentEngine = null;
+  }
+
+  static buildRedirectUrl(productCode: string, queryParams: string): string {
+    const cleanParams = queryParams.startsWith('?') ? queryParams.substring(1) : queryParams;
+    return `${AppExternalConfig.mainSiteUrl}/loader?url=${productCode}/results.aspx?${cleanParams}`;
   }
 }

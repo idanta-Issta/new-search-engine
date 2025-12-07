@@ -13,4 +13,5 @@ export interface InputConfig {
   loadingText?: string;
   loadingSuggestions?: boolean;
   dataConfig?: any;
+  allowPickHours?: boolean;
 }

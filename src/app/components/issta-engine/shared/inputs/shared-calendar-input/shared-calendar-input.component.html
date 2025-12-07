@@ -26,6 +26,9 @@
       <div *ngIf="loadingSuggestions" class="calendar-loading-overlay">
   טוען תאריכים...
       </div>
+      
+
+      
       <div class="calendar-wrapper">
         <div class="calendar-header">
           <div class="calendar-pill">
@@ -38,7 +41,22 @@
           </div>
         </div>
 
+        <div *ngIf="allowPickHours" class="time-selection-header">
+          <div class="time-picker">
+            <label>שעת איסוף</label>
+            <select [(ngModel)]="selectedStartTime" (change)="onStartTimeChange(selectedStartTime)">
+              <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+            </select>
+          </div>
+          <div class="time-picker">
+            <label>שעת החזרה</label>
+            <select [(ngModel)]="selectedEndTime" (change)="onEndTimeChange(selectedEndTime)">
+              <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+            </select>
+          </div>
+        </div>
         <div class="calendar-body">
+                <!-- בחירת שעות -->
           <!-- חודש שמאל -->
           <div class="calendar-month">
             <div class="month-header">

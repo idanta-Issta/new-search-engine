@@ -20,6 +20,6 @@ export class HotelsManager {
       urlParams.append('passengers', JSON.stringify(params.passengers));
     }
 
-    return `https://www.issta.co.il/hotels-abroad?${urlParams.toString()}`;
+    return urlParams.toString();
   }
 }

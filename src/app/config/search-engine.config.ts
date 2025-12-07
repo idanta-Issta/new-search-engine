@@ -7,6 +7,7 @@ import { ESharedInputType } from '../enums/ESharedInputType';
 import { EInputSize } from '../enums/EInputSize';
 import { EDropdownPosition } from '../enums/EDropdownPosition';
 import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
+import { EProductCode } from '../enums/EProductCode';
 
 export interface PopularLink {
   label: string;
@@ -15,6 +16,7 @@ export interface PopularLink {
 
 export interface SearchEngineConfig {
   engineType: ETypeSearchEngine;
+  productCode: string;
   customInputsComponent?: any;
   header: {
     title: string;
@@ -32,6 +34,7 @@ export interface SearchEngineConfig {
 
 export const FLIGHTS_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.FLIGHTS,
+  productCode: EProductCode.FLIGHTS,
   header: {
     title: TEXTS.HEADER.FLIGHTS_TITLE,
     choices: [
@@ -92,6 +95,7 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
 
 export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.HOTELS_ABROAD,
+  productCode: EProductCode.HOTELS,
   header: {
     title: TEXTS.HEADER.HOTEL_ABROAD_TITLE
   },
@@ -126,6 +130,7 @@ export const HOTEL_ABROAD_CONFIG: SearchEngineConfig = {
 
 export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.FLIGHTS_MULTI_DESTINATIONS,
+  productCode: EProductCode.FLIGHTS,
   customInputsComponent: () => import('../components/issta-engine/engines/flights/flights_multi_destinations/flights_multi_destinations.component').then(m => m.FlightsMultiDestinationsComponent),
   header: {
     title: "ריבוי יעדים",
@@ -146,6 +151,7 @@ export const FLIGHTS_MULTI_DESTINATIONS_CONFIG: SearchEngineConfig = {
 
 export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.DOMESTIC_VACATIONS,
+  productCode: EProductCode.DOMESTIC_VACATION,
   
   header: {
     title: TEXTS.HEADER.DOMESTIC_VACATION_TITLE,
@@ -190,6 +196,7 @@ export const DOMESTIC_VACATION_CONFIG: SearchEngineConfig = {
 
 export const FLIGHTS_TO_EILAT_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.FLIGHTS_TO_EILAT,
+  productCode: EProductCode.FLIGHTS,
   header: {
     title: 'טיסות לאילת',
     routeType: [
@@ -234,6 +241,7 @@ export const FLIGHTS_TO_EILAT_CONFIG: SearchEngineConfig = {
 
 export const FLIGHTS_AND_HOTELS_TO_EILAT_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.FLIGHTS_AND_HOTELS_TO_EILAT,
+  productCode: EProductCode.DOMESTIC_VACATION,
   header: {
     title: 'טיסה ומלון לאילת',
   },
@@ -268,6 +276,7 @@ export const FLIGHTS_AND_HOTELS_TO_EILAT_CONFIG: SearchEngineConfig = {
 
 export const SPORT_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.SPORT,
+  productCode: EProductCode.SPORT,
   header: {
     title: "חיפוש חבילות ספורט"
   },
@@ -314,6 +323,7 @@ export const SPORT_CONFIG: SearchEngineConfig = {
 
 export const ORGANIZED_TOURS_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.ORGANIZED_TOURS,
+  productCode: EProductCode.ORGANIZED_TOURS,
   header: {
     title: "חיפוש טיולים מאורגנים"
   },
@@ -359,6 +369,7 @@ export const ORGANIZED_TOURS_CONFIG: SearchEngineConfig = {
 
 export const DYNAMIC_PACKAGES_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.DYNAMIC_PACKAGES,
+  productCode: EProductCode.DYNAMIC_PACKAGES,
   header: {
     title: 'חבילות נופש',
   },
@@ -393,6 +404,7 @@ export const DYNAMIC_PACKAGES_CONFIG: SearchEngineConfig = {
 
 export const SKI_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.SKI,
+  productCode: EProductCode.SKI,
   header: {
     title: 'חיפוש חבילות סקי',
   },
@@ -433,6 +445,7 @@ export const SKI_CONFIG: SearchEngineConfig = {
 
 export const VILLAGE_RESORTS_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.VILLAGE_RESORTS,
+  productCode: EProductCode.VILLAGE_RESORTS,
   header: {
     title: 'כפרי נופש',
   },
@@ -466,6 +479,7 @@ export const VILLAGE_RESORTS_CONFIG: SearchEngineConfig = {
 
 export const CAR_RENTAL_CONFIG: SearchEngineConfig = {
   engineType: ETypeSearchEngine.CAR_RENTAL,
+  productCode: EProductCode.CARS,
   header: {
     title: 'השכרת רכב',
   },
@@ -486,13 +500,15 @@ export const CAR_RENTAL_CONFIG: SearchEngineConfig = {
       type: ESharedInputType.CAR_PICKUP_CITY,
       size: EInputSize.LARGE,
       position: EDropdownPosition.BOTTOM_LEFT,
-      value: null
+      value: null,
+      isDisabled: true
     },
     {
       type: ESharedInputType.CAR_DATES,
       size: EInputSize.MEDIUM,
       position: EDropdownPosition.BOTTOM_CENTER,
-      value: { start: null as Date | null, end: null as Date | null, startTime: '10:00', endTime: '10:00' }
+      value: { start: null as Date | null, end: null as Date | null, startTime: '10:00', endTime: '10:00' },
+      allowPickHours: true
     },
     {
       type: ESharedInputType.CAR_DRIVER_AGE,
