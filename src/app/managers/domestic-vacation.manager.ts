@@ -23,9 +23,18 @@ export class DomesticVacationManager {
     // isdomestic תמיד true
     queryParams.push('isdomestic=true');
 
-    // יעד - dport
-    if (params.destination?.key) {
-      queryParams.push(`dport=${params.destination.key}`);
+    if( params.destination?.key == "all-hotels-eilat") {
+       queryParams.push('dport=16');
+    }else{
+      if (params.destination?.hotelId) {
+        // אם יש hotelId, dport תמיד 12
+        queryParams.push('dport=12');
+        queryParams.push(`hid=${params.destination.hotelId}`);
+      } else if (params.destination?.key) {
+        // אם אין hotelId, השתמש ב-key
+        queryParams.push(`dport=${params.destination.key}`);
+      }
+
     }
 
     // חדרים ונוסעים

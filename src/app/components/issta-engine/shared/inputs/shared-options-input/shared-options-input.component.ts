@@ -271,10 +271,16 @@ selectOption(option: MenuOption) {
 }
 
 isSelected(option: MenuOption): boolean {
-  if (!this.value) return false;
+  if (!this.value) {
+    console.log('No value selected, returning false');
+    return false;
+  }
   
   // קודם נבדוק אם זה אותה אופציה בדיוק (לפי כל השדות)
-  if (this.value === option) return true;
+  if (this.value === option) {
+    console.log('Same reference, returning true');
+    return true;
+  }
   
   // אחר כך נבדוק לפי key/value
   const selectedKey = this.value.key;
@@ -282,15 +288,32 @@ isSelected(option: MenuOption): boolean {
   const optionKey = option.key;
   const optionValue = option.value;
   
-  // רק אם יש key או value משמעותיים
-  if (selectedKey && optionKey && selectedKey === optionKey) {
+  console.log('Comparing:', {
+    selectedKey,
+    selectedValue,
+    optionKey,
+    optionValue,
+    keyMatch: selectedKey === optionKey,
+    valueMatch: selectedValue === optionValue
+  });
+  
+  // בדיקה אם יש key ושהם זהים
+  if (selectedKey !== undefined && selectedKey !== null && 
+      optionKey !== undefined && optionKey !== null && 
+      selectedKey === optionKey) {
+    console.log('Key match! Returning true');
     return true;
   }
   
-  if (selectedValue && optionValue && selectedValue === optionValue) {
+  // בדיקה אם יש value ושהם זהים
+  if (selectedValue !== undefined && selectedValue !== null && 
+      optionValue !== undefined && optionValue !== null && 
+      selectedValue === optionValue) {
+    console.log('Value match! Returning true');
     return true;
   }
   
+  console.log('No match, returning false');
   return false;
 }
 

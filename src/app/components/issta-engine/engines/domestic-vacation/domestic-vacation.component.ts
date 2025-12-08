@@ -9,6 +9,7 @@ import { DOMESTIC_VACATION_CONFIG } from '../../../../config/search-engine.confi
 import { BaseEngineComponent } from '../base-engine.component';
 import { BaseEngineService } from '../../../../services/engine.service';
 import { DomesticVacationManager } from '../../../../managers/domestic-vacation.manager';
+import { FlightsToEilatManager } from '../../../../managers/flights-to-eilat.manager';
 
 @Component({
   selector: 'app-domestic-vacation',
@@ -19,11 +20,13 @@ import { DomesticVacationManager } from '../../../../managers/domestic-vacation.
 })
 export class DomesticVacationComponent extends BaseEngineComponent {
   protected config = DOMESTIC_VACATION_CONFIG;
-  private manager = new DomesticVacationManager();
+  private domesticVacationManager = new DomesticVacationManager();
+  private flightsToEilatManager = new FlightsToEilatManager();
 
   selectedDestination: any = null;
   selectedDestinationFlightEilat: any = null;
   selectedOriginFlightEilat: any = null;
+  selectedDestinationFlightHotelEilat: any = null;
   selectedDate = { start: null as Date | null, end: null as Date | null };
   selectedPassengers: PassangersInput = {
     allowPickRoom: true,
@@ -41,6 +44,8 @@ export class DomesticVacationComponent extends BaseEngineComponent {
     optionsAge: []
   };
   addFlightSelected = false;
+  currentTabType: string = 'hotel_domestic'; // ברירת מחדל
+  selectedRouteType: string = 'round_trip'; // ברירת מחדל לטיסות
 
   constructor(engineService: BaseEngineService) {
     super(engineService);
@@ -86,6 +91,9 @@ export class DomesticVacationComponent extends BaseEngineComponent {
       case ESharedInputType.DOMESTIC_VACATION_DESTINATION:
         this.selectedDestination = value;
         this.evaluateAddFlightVisibility(value);
+        break;
+      case ESharedInputType.DESTINATIONS_FLIGHTS_HOTEL_EILAT:
+        this.selectedDestinationFlightHotelEilat = value;
         break;
       case ESharedInputType.DESTINATIONS_FLIGHTS_EILAT:
         this.selectedDestinationFlightEilat = value;
@@ -197,7 +205,16 @@ export class DomesticVacationComponent extends BaseEngineComponent {
 
   override onHeaderStateChange(state: any): void {
     super.onHeaderStateChange(state);
-    // בחירה דרך header כבר לא מנהלת add_flight
+    
+    // עדכון סוג הטאב הנוכחי
+    if (state.selectedChoice?.value) {
+      this.currentTabType = state.selectedChoice.value;
+    }
+    
+    // עדכון סוג המסלול (הלוך-חזור או כיוון אחד)
+    if (state.selectedRouteType?.value) {
+      this.selectedRouteType = state.selectedRouteType.value;
+    }
   }
 
   override onFooterOptionChange(event: { value: string; checked: boolean }): void {
@@ -208,12 +225,41 @@ export class DomesticVacationComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    const queryParams = this.manager.buildUrl({
-      destination: this.selectedDestination,
-      dates: this.selectedDate,
-      passengers: this.selectedPassengers,
-      addFlight: this.addFlightSelected
-    });
-    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
+    // בדיקה איזה טאב נבחר
+    if (this.currentTabType === 'flight_to_eilat') {
+      // טיסות לאילת
+      const queryParams = this.flightsToEilatManager.buildUrl({
+        origin: this.selectedOriginFlightEilat,
+        destination: this.selectedDestinationFlightEilat,
+        dates: this.selectedDate,
+        passengers: this.selectedPassengers,
+        routeType: this.selectedRouteType
+      });
+      
+      const productInfo = this.flightsToEilatManager.getProductPath();
+      return BaseEngineService.buildRedirectUrl(
+        productInfo.path, 
+        queryParams, 
+        productInfo.addResultLabel
+      );
+    } else if (this.currentTabType === 'flight_hotel_eilat') {
+      // טיסה ומלון לאילת
+      const queryParams = this.domesticVacationManager.buildUrl({
+        destination: this.selectedDestinationFlightHotelEilat,
+        dates: this.selectedDate,
+        passengers: this.selectedPassengers,
+        addFlight: true // תמיד עם טיסה
+      });
+      return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
+    } else {
+      // חופשה בארץ (ברירת מחדל)
+      const queryParams = this.domesticVacationManager.buildUrl({
+        destination: this.selectedDestination,
+        dates: this.selectedDate,
+        passengers: this.selectedPassengers,
+        addFlight: this.addFlightSelected
+      });
+      return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
+    }
   }
 }
