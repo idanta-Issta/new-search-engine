@@ -203,10 +203,10 @@ export class SharedPassangersOptionsInputComponent implements OnInit {
 
     const parts: string[] = [];
     if (totalAdults > 0) {
-      parts.push(`מבוגרים ${totalAdults}`);
+      parts.push(`${totalAdults} מבוגרים`);
     }
     if (totalChildren > 0) {
-      parts.push(`ילדים ${totalChildren}`);
+      parts.push(`${totalChildren} ילדים`);
     }
 
     return parts.join(' + ') || 'בחר הרכב נוסעים';

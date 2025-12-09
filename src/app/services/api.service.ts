@@ -57,7 +57,20 @@ export class ApiService {
       onLoading();
     }
 
-    const request$ = this.http.get<T>(url, { responseType: responseType as any }).pipe(
+    // Build HTTP options based on responseType
+    let request$: Observable<T>;
+    
+    if (responseType === 'text') {
+      request$ = this.http.get(url, { responseType: 'text' }) as unknown as Observable<T>;
+    } else if (responseType === 'blob') {
+      request$ = this.http.get(url, { responseType: 'blob' }) as unknown as Observable<T>;
+    } else if (responseType === 'arraybuffer') {
+      request$ = this.http.get(url, { responseType: 'arraybuffer' }) as unknown as Observable<T>;
+    } else {
+      request$ = this.http.get<T>(url);
+    }
+    
+    request$ = request$.pipe(
       tap((response) => {
 
         

@@ -308,6 +308,12 @@ window.OVExplore8 = {
 
 // Load OVExplore JS
 (function() {
+  // Check if script already loaded
+  if (window.OdyVExplore || document.querySelector('script[src*="OdyVExplore"]')) {
+    console.log('[CRUISE PARTIAL] Odysseus script already loaded, skipping...');
+    return;
+  }
+  
   var script = document.createElement('script');
   script.type = 'text/javascript';
   script.src = 'https://contents.odysol.com/Content/WebApps/OdyVExplore/app.min-vODY-1752259320791.js';

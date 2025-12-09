@@ -449,7 +449,7 @@ export const SKI_CONFIG: SearchEngineConfig = {
       size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_RIGHT,
       value: {
-        maxRoomsPick: 3,
+        maxRoomsPick: 1,
         rooms: [
           { label: '2 מבוגרים', key: '2-0', adults: 2, children: 0 }
         ]
@@ -484,10 +484,15 @@ export const VILLAGE_RESORTS_CONFIG: SearchEngineConfig = {
       value: { start: null as Date | null, end: null as Date | null }
     },
     {
-      type: ESharedInputType.VILLAGE_RESORTS_PASSENGERS,
+     type: ESharedInputType.PASSANGERS_OPTIONS,
       size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_RIGHT,
-      value: null
+      value: {
+        maxRoomsPick: 3,
+        rooms: [
+          { label: '2 מבוגרים', key: '2-0', adults: 2, children: 0 }
+        ]
+      }
     }
   ]
 };

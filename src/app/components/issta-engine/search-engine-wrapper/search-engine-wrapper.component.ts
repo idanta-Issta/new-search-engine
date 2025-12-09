@@ -34,6 +34,7 @@ export class SearchEngineComponent implements AfterViewInit {
   isAnimating = false;
   leadFormOpen$;
   isLoadingHtml = false;
+  private htmlCache = new Map<string, string>();
 
   @ViewChild('dynamicContainer', { static: false }) dynamicContainer?: ElementRef<HTMLDivElement>;
 
@@ -120,6 +121,17 @@ export class SearchEngineComponent implements AfterViewInit {
   private loadPartialHtml(partialPath: string) {
     console.log('[WRAPPER] Loading partial HTML from:', partialPath);
     
+    // Check cache first
+    if (this.htmlCache.has(partialPath)) {
+      console.log('[WRAPPER] ✅ Using cached partial HTML for:', partialPath);
+      const cachedHtml = this.htmlCache.get(partialPath)!;
+      // Use setTimeout to ensure DOM is ready even when using cache
+      setTimeout(() => {
+        this.renderHtml(cachedHtml);
+      }, 0);
+      return;
+    }
+    
     fetch(partialPath)
       .then(response => {
         if (!response.ok) {
@@ -128,33 +140,41 @@ export class SearchEngineComponent implements AfterViewInit {
         return response.text();
       })
       .then(htmlText => {
-        if (!this.dynamicContainer) {
-          console.error('❌ Dynamic container not found!');
-          return;
-        }
-
-        const styles = this.extractStyles(htmlText);
-        styles.forEach((css) => {
-          this.loadCSS(css);
-        });
-
-        const scripts = this.extractScripts(htmlText);
-        const cleanHtml = this.sanitizeHtml(htmlText);
-    
-        this.dynamicContainer.nativeElement.innerHTML = cleanHtml;
+        // Cache the HTML
+        this.htmlCache.set(partialPath, htmlText);
+        console.log('[WRAPPER] 💾 Cached partial HTML for:', partialPath);
         
-        setTimeout(() => {
-          scripts.forEach((js) => {
-            this.loadScript(js);
-          });
-        }, 0);
-        
-        console.log('[WRAPPER] Partial HTML loaded successfully');
+        this.renderHtml(htmlText);
       })
       .catch(error => {
         console.error('[WRAPPER] Error loading partial HTML:', error);
       });
   }
+  
+  private renderHtml(htmlText: string) {
+    if (!this.dynamicContainer) {
+      console.error('❌ Dynamic container not found!');
+      return;
+    }
+
+    const styles = this.extractStyles(htmlText);
+    styles.forEach((css) => {
+      this.loadCSS(css);
+    });
+
+    const scripts = this.extractScripts(htmlText);
+    const cleanHtml = this.sanitizeHtml(htmlText);
+
+    this.dynamicContainer.nativeElement.innerHTML = cleanHtml;
+    
+    setTimeout(() => {
+      scripts.forEach((js) => {
+        this.loadScript(js);
+      });
+    }, 0);
+    
+    console.log('[WRAPPER] Partial HTML loaded successfully');
+  } 
 
   private loadExternalHtml(url: string) {
 
