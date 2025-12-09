@@ -9,4 +9,5 @@ export interface PassengersOption {
 export interface PassengersOptionsInput {
   maxRoomsPick?: number;
   selectedOption?: PassengersOption;
+  rooms?: PassengersOption[];
 }

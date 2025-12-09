@@ -13,7 +13,7 @@
     [isOpen]="isOpen"
     (closed)="isOpen = false"
     [anchor]="anchorEl"
-    [scrollable]="true"
+    [scrollable]="false"
     [position]="position"
   >
     <div class="dropdown passengers-options-dropdown">
@@ -35,7 +35,6 @@
           </div>
           
           <div class="room-composition">
-            <label class="composition-label">הרכב חדר</label>
             <div class="composition-dropdown">
               <div 
                 class="custom-select" 
@@ -43,31 +42,17 @@
                 (click)="toggleRoomDropdown(i); $event.stopPropagation()"
                 #selectTrigger
               >
-                <div class="selected-value">
-                  {{ getRoomOptionLabel(room.selectedOptionKey) }}
-                </div>
+              <div class="input-container-place">
+                  <label class="composition-label">הרכב החדר</label>
+                  <div class="selected-value">
+                    {{ getRoomOptionLabel(room.selectedOptionKey) }}
+                  </div>
+
+              </div>
                 <div class="dropdown-arrow">
                   <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 1L6 6L11 1" stroke="#2AAE54" stroke-width="2" stroke-linecap="round"/>
                   </svg>
-                </div>
-              </div>
-              
-              <!-- Portal dropdown outside -->
-              <div 
-                class="options-list-portal" 
-                *ngIf="activeDropdown === 'room-' + i"
-                [style.top.px]="getDropdownPosition(selectTrigger).top"
-                [style.left.px]="getDropdownPosition(selectTrigger).left"
-                [style.width.px]="getDropdownPosition(selectTrigger).width"
-              >
-                <div 
-                  *ngFor="let option of passengerOptions" 
-                  class="option-item"
-                  [class.selected]="room.selectedOptionKey === option.key"
-                  (click)="selectRoomOption(i, option.key); $event.stopPropagation()"
-                >
-                  {{ option.label }}
                 </div>
               </div>
             </div>
@@ -75,15 +60,35 @@
         </div>
       </div>
 
-      <!-- Add room button -->
-      <button 
-        type="button" 
-        class="add-room-btn" 
-        *ngIf="canAddRoom()"
-        (click)="addRoom(); $event.stopPropagation()"
-      >
-        + הוסף חדר
-      </button>
+ <div class="button-container">
+     <button 
+       type="button" 
+       class="add-room-btn" 
+       *ngIf="canAddRoom()"
+       (click)="addRoom(); $event.stopPropagation()"
+     >
+       + הוספת חדר
+     </button>
+
+ </div>
     </div>
   </app-shared-dropdown>
+
+  <!-- Portal dropdown outside shared-dropdown -->
+  <div 
+    class="options-list-portal" 
+    *ngIf="activeDropdown !== null"
+    [style.top.px]="dropdownPosition.top"
+    [style.left.px]="dropdownPosition.left"
+    [style.width.px]="dropdownPosition.width"
+  >
+    <div 
+      *ngFor="let option of passengerOptions" 
+      class="option-item"
+      [class.selected]="getSelectedRoomKey() === option.key"
+      (click)="selectActiveRoomOption(option.key); $event.stopPropagation()"
+    >
+      {{ option.label }}
+    </div>
+  </div>
 </div>

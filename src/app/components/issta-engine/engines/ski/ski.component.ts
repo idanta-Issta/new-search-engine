@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ESharedInputType } from '../../../../enums/ESharedInputType';
 import { SharedInputRowComponent } from '../../shared/inputs/input-row/shared-input-row/shared-input-row.component';
 import { PassangersInput } from '../../../../models/shared-passanger-input.models';
+import { PassengersOptionsInput } from '../../../../models/shared-passangers-options-input.models';
 import { SearchFooterComponent } from '../../shared/footer/search-footer/search-footer.component';
 import { SearchHeaderComponent } from '../../shared/header/search-header/search-header.component';
 import { SKI_CONFIG } from '../../../../config/search-engine.config';
@@ -24,7 +25,7 @@ export class SkiComponent extends BaseEngineComponent {
   selectedDestination: any = null;
   selectedResort: any = null;
   selectedDate: { start: Date | null; end: Date | null } | null = null;
-  selectedPassengers: PassangersInput | null = null;
+  selectedPassengersOptions: PassengersOptionsInput | null = null;
 
   constructor(
     engineService: BaseEngineService,
@@ -92,9 +93,9 @@ export class SkiComponent extends BaseEngineComponent {
           this.loadCalendarDates(this.selectedResort.CityCode, departureDate);
         }
         break;
-      case ESharedInputType.SKI_PASSENGERS:
-        this.selectedPassengers = value;
-        console.log('👥 Passengers selected:', value);
+      case ESharedInputType.PASSANGERS_OPTIONS:
+        this.selectedPassengersOptions = value;
+        console.log('👥 Passengers options selected:', value);
         break;
     }
   }
@@ -254,25 +255,44 @@ export class SkiComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    const urlParams = new URLSearchParams();
+    const params: string[] = [];
     
-    if (this.selectedDestination?.key && this.selectedDestination.key !== 'all') {
-      urlParams.append('destination', this.selectedDestination.key);
-    }
-    if (this.selectedResort?.key && this.selectedResort.key !== 'all') {
-      urlParams.append('resort', this.selectedResort.key);
-    }
+    // Format dates as dd/MM/yy
     if (this.selectedDate?.start) {
-      urlParams.append('checkIn', this.selectedDate.start.toISOString().split('T')[0]);
+      const fdate = this.formatDateForUrl(this.selectedDate.start);
+      params.push(`fdate=${fdate}`);
     }
     if (this.selectedDate?.end) {
-      urlParams.append('checkOut', this.selectedDate.end.toISOString().split('T')[0]);
-    }
-    if (this.selectedPassengers) {
-      urlParams.append('passengers', JSON.stringify(this.selectedPassengers));
+      const tdate = this.formatDateForUrl(this.selectedDate.end);
+      params.push(`tdate=${tdate}`);
     }
     
-    const queryParams = urlParams.toString();
+    // Add destination code (country code)
+    if (this.selectedDestination?.CountryCode) {
+      params.push(`dcode=${this.selectedDestination.CountryCode}`);
+    }
+    
+    // Add resort code
+    if (this.selectedResort?.CityCode) {
+      params.push(`resortcode=${this.selectedResort.CityCode}`);
+    }
+    
+    // Add room pax information
+    if (this.selectedPassengersOptions?.rooms && this.selectedPassengersOptions.rooms.length > 0) {
+      this.selectedPassengersOptions.rooms.forEach((room, index: number) => {
+        params.push(`roompax[${index}].adt=${room.adults}`);
+        params.push(`roompax[${index}].chd=${room.children}`);
+      });
+    }
+    
+    const queryParams = params.join('&');
     return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
+  }
+  
+  private formatDateForUrl(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
   }
 }

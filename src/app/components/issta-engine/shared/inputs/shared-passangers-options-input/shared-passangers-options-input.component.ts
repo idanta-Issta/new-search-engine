@@ -40,8 +40,8 @@ export class SharedPassangersOptionsInputComponent implements OnInit {
   isOpen = false;
   rooms: RoomComposition[] = [];
   activeDropdown: string | null = null;
+  dropdownPosition = { top: 0, left: 0, width: 0 };
 
-  // Predefined passenger options
   passengerOptions: PassengersOption[] = [
     { label: 'מבוגר', key: '1-0', adults: 1, children: 0 },
     { label: '2 מבוגרים', key: '2-0', adults: 2, children: 0 },
@@ -94,7 +94,26 @@ export class SharedPassangersOptionsInputComponent implements OnInit {
 
   toggleRoomDropdown(roomIndex: number) {
     const dropdownId = 'room-' + roomIndex;
-    this.activeDropdown = this.activeDropdown === dropdownId ? null : dropdownId;
+    
+    if (this.activeDropdown === dropdownId) {
+      this.activeDropdown = null;
+    } else {
+      this.activeDropdown = dropdownId;
+      
+      // Calculate position after a tick to ensure DOM is ready
+      setTimeout(() => {
+        const selectElement = document.querySelectorAll('.custom-select')[roomIndex] as HTMLElement;
+        if (selectElement) {
+          const rect = selectElement.getBoundingClientRect();
+          this.dropdownPosition = {
+            top: rect.bottom + window.scrollY - 115,
+            left: rect.left  - 140,
+            width: rect.width
+          };
+          this.cdr.markForCheck();
+        }
+      });
+    }
     this.cdr.markForCheck();
   }
 
@@ -103,6 +122,18 @@ export class SharedPassangersOptionsInputComponent implements OnInit {
     this.activeDropdown = null;
     this.emitChange();
     this.cdr.markForCheck();
+  }
+
+  selectActiveRoomOption(optionKey: string) {
+    if (!this.activeDropdown) return;
+    const roomIndex = parseInt(this.activeDropdown.replace('room-', ''));
+    this.selectRoomOption(roomIndex, optionKey);
+  }
+
+  getSelectedRoomKey(): string {
+    if (!this.activeDropdown) return '';
+    const roomIndex = parseInt(this.activeDropdown.replace('room-', ''));
+    return this.rooms[roomIndex]?.selectedOptionKey || '';
   }
 
   getDropdownPosition(element: HTMLElement): { top: number; left: number; width: number } {
@@ -172,10 +203,10 @@ export class SharedPassangersOptionsInputComponent implements OnInit {
 
     const parts: string[] = [];
     if (totalAdults > 0) {
-      parts.push(`${totalAdults} מבוגרים`);
+      parts.push(`מבוגרים ${totalAdults}`);
     }
     if (totalChildren > 0) {
-      parts.push(`${totalChildren} ילדים`);
+      parts.push(`ילדים ${totalChildren}`);
     }
 
     return parts.join(' + ') || 'בחר הרכב נוסעים';

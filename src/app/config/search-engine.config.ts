@@ -448,7 +448,12 @@ export const SKI_CONFIG: SearchEngineConfig = {
       type: ESharedInputType.PASSANGERS_OPTIONS,
       size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_RIGHT,
-      value: null
+      value: {
+        maxRoomsPick: 3,
+        rooms: [
+          { label: '2 מבוגרים', key: '2-0', adults: 2, children: 0 }
+        ]
+      }
     }
   ]
 };
