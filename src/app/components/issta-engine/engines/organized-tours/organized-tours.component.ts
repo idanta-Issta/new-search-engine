@@ -8,7 +8,7 @@ import { SearchHeaderComponent } from '../../shared/header/search-header/search-
 import { ORGANIZED_TOURS_CONFIG } from '../../../../config/search-engine.config';
 import { BaseEngineComponent } from '../base-engine.component';
 import { BaseEngineService } from '../../../../services/engine.service';
-import { HotelsManager } from '../../../../managers/hotels.manager';
+import { OrganizedToursManager } from '../../../../managers/organized-tours.manager';
 import { AppExternalConfig } from '../../../../config/app.external.config';
 import { HttpClient } from '@angular/common/http';
 import { OrganizedToursMapper } from '../../../../mappers/organized-tours.mapper';
@@ -22,7 +22,7 @@ import { SharedOptionsService } from '../../../../services/shared-options.servic
 })
 export class OrganizedToursComponent extends BaseEngineComponent {
   protected config = ORGANIZED_TOURS_CONFIG;
-  private manager = new HotelsManager();
+  private manager = new OrganizedToursManager();
 
   selectedRegion: any = null;
   selectedCountry: any = null;
@@ -148,10 +148,17 @@ export class OrganizedToursComponent extends BaseEngineComponent {
 
   buildUrl(): string {
     const queryParams = this.manager.buildUrl({
-      destination: this.selectedCountry,
-      dates: { start: null, end: null },
-      passengers: null
+      region: this.selectedRegion,
+      country: this.selectedCountry,
+      category: this.selectedCategory,
+      month: this.selectedMonth
     });
-    return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
+    
+    const productInfo = this.manager.getProductPath();
+    return BaseEngineService.buildRedirectUrl(
+      productInfo.path,
+      queryParams,
+      productInfo.addResultLabel
+    );
   }
 }

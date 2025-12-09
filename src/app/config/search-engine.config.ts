@@ -315,7 +315,10 @@ export const SPORT_CONFIG: SearchEngineConfig = {
       type: ESharedInputType.DATES_PICKER_MONTHS,
       size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_CENTER,
-      value: { label: 'כל התאריכים', key: 'all' }
+      value: { label: 'כל התאריכים', key: 'all' },
+      dataConfig: {
+        allowPickAllMonths: true
+      }
     },
 
   ]
@@ -342,13 +345,13 @@ export const ORGANIZED_TOURS_CONFIG: SearchEngineConfig = {
   inputs: [
     {
       type: ESharedInputType.ORGANIZED_REGIONS,
-      size: EInputSize.LARGE,
+      size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_LEFT,
       value: { label: 'כל היעדים', key: 'all' }
     },
     {
       type: ESharedInputType.ORGANIZED_COUNTRIES,
-      size: EInputSize.LARGE,
+      size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_LEFT,
       value: { label: 'כל המדינות', key: 'all' }
     },
@@ -362,8 +365,15 @@ export const ORGANIZED_TOURS_CONFIG: SearchEngineConfig = {
       type: ESharedInputType.DATES_PICKER_MONTHS,
       size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_CENTER,
-      value: { label: 'כל התאריכים', key: 'all' }
+      dataConfig: {
+        allowPickAllMonths: false
+      }
     },
+    {
+    type: ESharedInputType.PASSANGERS_DOMESTIC_VACATION,
+    size: EInputSize.MEDIUM,
+    position: EDropdownPosition.BOTTOM_LEFT,
+  },
   ]
 };
 
@@ -435,7 +445,7 @@ export const SKI_CONFIG: SearchEngineConfig = {
       value: { start: null as Date | null, end: null as Date | null }
     },
     {
-      type: ESharedInputType.SKI_PASSENGERS,
+      type: ESharedInputType.PASSANGERS_OPTIONS,
       size: EInputSize.SMALL,
       position: EDropdownPosition.BOTTOM_RIGHT,
       value: null

@@ -291,8 +291,10 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
   },
 
   [ESharedInputType.DATES_PICKER_MONTHS]: {
-    listMenuOption: DatesPickerMapper.mapMonths(),
-    mapper: (data: any) => data,
+    mapper: (data: any, dataConfig?: any) => {
+      const allowPickAllMonths = dataConfig?.allowPickAllMonths ?? true;
+      return DatesPickerMapper.mapMonths(allowPickAllMonths);
+    },
     uiConfig: {
       title: 'חודש',
       icon: ICONS.CALENDAR,
@@ -528,6 +530,18 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
       allowAutoComplete: false,
     },
     component: () => import('../components/issta-engine/engines/car/driver-age-input/driver-age-input.component').then(m => m.DriverAgeInputComponent),
+  },
+
+  [ESharedInputType.PASSANGERS_OPTIONS]: {
+    mapper: () => [],
+    uiConfig: {
+      title: 'נוסעים',
+      icon: 'icon-user',
+      placeholder: 'בחר הרכב נוסעים',
+      titleMenuOptions: 'הרכב נוסעים',
+      allowAutoComplete: false,
+    },
+    component: () => import('../components/issta-engine/shared/inputs/shared-passangers-options-input/shared-passangers-options-input.component').then(m => m.SharedPassangersOptionsInputComponent),
   },
 
 }

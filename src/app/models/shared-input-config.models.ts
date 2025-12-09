@@ -18,7 +18,7 @@ export interface CustomMenuHeaderConfig {
 export interface SharedInputConfig<T = any> {
   requestUrl?: string;
   autocompleteUrl?: string;
-  mapper?: (data: any) => any;
+  mapper?: (data: any, dataConfig?: any) => any;
   listMenuOption?: MenuOption[];
   excludeValues?: string[];
   isDisabled?: boolean;

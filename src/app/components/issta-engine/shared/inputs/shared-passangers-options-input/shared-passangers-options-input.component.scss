@@ -1,0 +1,208 @@
+.passengers-options-input {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 300px;
+  max-width: 400px;
+  overflow: visible;
+
+  .title {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    text-align: right;
+  }
+
+  .rooms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+    overflow: visible;
+
+    .room-block {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fafafa;
+      overflow: visible;
+
+      .room-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+
+        .room-title {
+          font-size: 14px;
+          font-weight: 600;
+          color: #333;
+        }
+
+        .remove-room {
+          background: transparent;
+          border: none;
+          color: #d32f2f;
+          font-size: 12px;
+          cursor: pointer;
+          padding: 4px 8px;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .room-composition {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .composition-label {
+          font-size: 12px;
+          color: #666;
+          text-align: right;
+        }
+
+        .composition-dropdown {
+          position: relative;
+
+          .custom-select {
+            width: 100%;
+            height: 42px;
+            border-radius: 16px;
+            border: 1px solid #2AAE54;
+            background: white;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+
+            &:hover {
+              border-color: #2AAE54;
+              box-shadow: 0 0 0 1px #2AAE54;
+              background-color: #F8FDF9;
+            }
+
+            &.open {
+              border-color: #2AAE54;
+              background-color: #ECF8F0;
+              box-shadow: 0 0 0 2px rgba(42, 174, 84, 0.2);
+
+              .dropdown-arrow svg {
+                transform: rotate(180deg);
+              }
+            }
+
+            .selected-value {
+              display: flex;
+              align-items: center;
+              justify-content: flex-end;
+              height: 100%;
+              padding: 0 40px 0 16px;
+              font-size: 14px;
+              font-weight: 400;
+              color: #2A3335;
+              font-family: 'Rubik', sans-serif;
+              text-align: right;
+            }
+
+            .dropdown-arrow {
+              position: absolute;
+              left: 12px;
+              top: 50%;
+              transform: translateY(-50%);
+              pointer-events: none;
+              transition: transform 0.2s;
+
+              svg {
+                display: block;
+                transition: transform 0.2s;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .add-room-btn {
+    width: 100%;
+    padding: 10px;
+    background: white;
+    border: 1px dashed #1976d2;
+    border-radius: 6px;
+    color: #1976d2;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #e3f2fd;
+      border-style: solid;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Portal dropdown - outside main dropdown
+.options-list-portal {
+  position: fixed;
+  background: white;
+  border: 1px solid #2AAE54;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 100000;
+  padding: 4px 0;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .option-item {
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #2A3335;
+    font-family: 'Rubik', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: right;
+
+    &:hover {
+      background-color: #ECF8F0;
+      color: #2AAE54;
+    }
+
+    &.selected {
+      background: #2AAE54;
+      color: white;
+      font-weight: 500;
+    }
+
+    &:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+  }
+}

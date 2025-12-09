@@ -91,6 +91,11 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
         instance.excludeValues = config.excludeValues;
       }
 
+      // העברת dataConfig
+      if (config.dataConfig !== undefined) {
+        instance.dataConfig = config.dataConfig;
+      }
+
       // העברת singleDateMode עבור קלנדר
       if (config.isOneWay !== undefined && 'singleDateMode' in instance) {
         instance.singleDateMode = config.isOneWay;

@@ -5,7 +5,7 @@ import { ETypeSearchEngine } from '../enums/ETypeSearchEngine';
 export function getSearchEngineTabsConfig(): SearchEngine {
   return {
     showTabs: true,
-    defaultTab: { typeTravel: ETypeSearchEngine.HOTELS_ABROAD, isPartial: false },
+    defaultTab: { typeTravel: ETypeSearchEngine.ORGANIZED_TOURS, isPartial: false },
     tabs: [
       {
         title: "מתאים לי",
@@ -16,7 +16,7 @@ export function getSearchEngineTabsConfig(): SearchEngine {
       {
         title: "Issta Daniel",
            htmlUrl: "https://localhost:51565/umbraco/ComponentService/Components/ReloadComponent?componentName=Daniel",
-     imagePath:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn0X7T2SpmQFqAgQL48yHnVomzyNTaiY109w&s",
+        imagePath:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn0X7T2SpmQFqAgQL48yHnVomzyNTaiY109w&s",
         searchEngine: { typeTravel: ETypeSearchEngine.DANIEL, isPartial: false }
       },
       {

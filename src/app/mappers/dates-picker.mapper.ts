@@ -1,18 +1,20 @@
 import { MenuOption } from '../models/shared-options-input.models';
 
 export class DatesPickerMapper {
-  static mapMonths(): MenuOption[] {
+  static mapMonths(allowPickAllMonths: boolean = true): MenuOption[] {
     const months = [];
     const monthNames = [
       'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
       'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'
     ];
     
-    // Add 'all dates' option first
-    months.push({
-      label: 'כל התאריכים',
-      key: 'all'
-    });
+    // Add 'all dates' option only if allowed
+    if (allowPickAllMonths) {
+      months.push({
+        label: 'כל התאריכים',
+        key: 'all'
+      });
+    }
     
     const currentDate = new Date();
     

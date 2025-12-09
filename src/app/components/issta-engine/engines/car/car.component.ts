@@ -7,6 +7,7 @@ import { SearchHeaderComponent } from '../../shared/header/search-header/search-
 import { CAR_RENTAL_CONFIG } from '../../../../config/search-engine.config';
 import { BaseEngineComponent } from '../base-engine.component';
 import { BaseEngineService } from '../../../../services/engine.service';
+import { CarManager } from '../../../../managers/car.manager';
 import { ApiService } from '../../../../services/api.service';
 import { AppExternalConfig } from '../../../../config/app.external.config';
 import { SharedOptionsService } from '../../../../services/shared-options.service';
@@ -19,12 +20,13 @@ import { SharedOptionsService } from '../../../../services/shared-options.servic
 })
 export class CarComponent extends BaseEngineComponent {
   protected config = CAR_RENTAL_CONFIG;
+  private manager = new CarManager();
 
   selectedPickupCountry: any = null;
   selectedPickupCity: any = null;
   selectedReturnCity: any = null;
   selectedDates: { start: Date | null; end: Date | null; startTime?: string; endTime?: string } | null = null;
-  selectedDriverAge: number | null = null;
+  selectedDriverAge: number | null = 30;
 
   constructor(
     engineService: BaseEngineService,
@@ -178,7 +180,6 @@ export class CarComponent extends BaseEngineComponent {
         break;
       case ESharedInputType.CAR_DATES:
         if (value?.start && value?.end) {
-          // Only open driver age if it exists in config
           const driverAgeInput = this.inputConfigs.find(c => c.type === ESharedInputType.CAR_DRIVER_AGE);
           if (driverAgeInput) {
             this.inputsRow?.openInputDelayed(ESharedInputType.CAR_DRIVER_AGE);
@@ -189,7 +190,7 @@ export class CarComponent extends BaseEngineComponent {
   }
 
   buildUrl(): string {
-    console.log('🚗 Car search:', {
+    const queryParams = this.manager.buildUrl({
       pickupCountry: this.selectedPickupCountry,
       pickupCity: this.selectedPickupCity,
       returnCity: this.selectedReturnCity,
@@ -197,43 +198,11 @@ export class CarComponent extends BaseEngineComponent {
       driverAge: this.selectedDriverAge
     });
     
-    // Build car rental search URL
-    const params: string[] = [];
-    
-    if (this.selectedPickupCity?.key) {
-      params.push(`pickupCity=${this.selectedPickupCity.key}`);
-    }
-    
-    if (this.selectedReturnCity?.key) {
-      params.push(`returnCity=${this.selectedReturnCity.key}`);
-    }
-    
-    if (this.selectedDates?.start) {
-      const pickupDate = this.formatDateForURL(this.selectedDates.start);
-      const pickupTime = this.selectedDates.startTime || '10:00';
-      params.push(`pickupDate=${pickupDate}`);
-      params.push(`pickupTime=${pickupTime}`);
-    }
-    
-    if (this.selectedDates?.end) {
-      const returnDate = this.formatDateForURL(this.selectedDates.end);
-      const returnTime = this.selectedDates.endTime || '10:00';
-      params.push(`returnDate=${returnDate}`);
-      params.push(`returnTime=${returnTime}`);
-    }
-    
-    if (this.selectedDriverAge) {
-      params.push(`driverAge=${this.selectedDriverAge}`);
-    }
-    
-    const queryString = params.length > 0 ? `?${params.join('&')}` : '';
-    return `/car/search${queryString}`;
-  }
-
-  private formatDateForURL(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const productInfo = this.manager.getProductPath();
+    return BaseEngineService.buildRedirectUrl(
+      productInfo.path,
+      queryParams,
+      productInfo.addResultLabel
+    );
   }
 }

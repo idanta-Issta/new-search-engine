@@ -26,7 +26,8 @@ export class CarMapper {
         key: item.CityCode || '',
         CityCode: item.CityCode,
         CityId: item.CityId || undefined,
-        CountryCode: item.CountryCode || undefined
+        CountryCode: item.CountryCode || undefined,
+        DestinationCode: item.DestinationCode || item.CityCode
       }));
     
     return cities;

@@ -248,11 +248,10 @@ export class DomesticVacationComponent extends BaseEngineComponent {
         destination: this.selectedDestinationFlightHotelEilat,
         dates: this.selectedDate,
         passengers: this.selectedPassengers,
-        addFlight: true // תמיד עם טיסה
       });
       return BaseEngineService.buildRedirectUrl(this.config.productCode, queryParams);
     } else {
-      // חופשה בארץ (ברירת מחדל)
+
       const queryParams = this.domesticVacationManager.buildUrl({
         destination: this.selectedDestination,
         dates: this.selectedDate,

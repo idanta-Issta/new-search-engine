@@ -12,7 +12,7 @@ export class SharedOptionsService {
 
   constructor(private apiService: ApiService) {}
 
-getOptionsByType(type: ESharedInputType, excludeValues?: string[]): Observable<MenuOption[]> {
+getOptionsByType(type: ESharedInputType, excludeValues?: string[], dataConfig?: any): Observable<MenuOption[]> {
   const config = SharedInputRegistry[type];
   
   // אם יש listMenuOption מוגדר - נחזיר אותו ישירות ללא בקשת HTTP
@@ -21,18 +21,24 @@ getOptionsByType(type: ESharedInputType, excludeValues?: string[]): Observable<M
     return of(filtered);
   }
   
-  if (!config?.requestUrl) {
-    console.warn(`⚠️ Missing requestUrl for input type: ${type}`);
+  if (!config?.mapper && !config?.requestUrl) {
+    console.warn(`⚠️ Missing mapper or requestUrl for input type: ${type}`);
     return of([]);
   }
 
-return this.apiService
-  .get<any[]>(config.requestUrl!)
-  .pipe(
-    map(config.mapper ?? ((data: any) => data)),
-    map(options => this.filterExcludedValues(options, excludeValues))
-  );
+  // אם אין requestUrl אבל יש mapper - קורא למapper ישירות
+  if (!config?.requestUrl && config?.mapper) {
+    const options = config.mapper(null, dataConfig);
+    const filtered = this.filterExcludedValues(options, excludeValues);
+    return of(filtered);
+  }
 
+  return this.apiService
+    .get<any[]>(config.requestUrl!)
+    .pipe(
+      map(data => config.mapper ? config.mapper(data, dataConfig) : data),
+      map(options => this.filterExcludedValues(options, excludeValues))
+    );
 }
 
 private filterExcludedValues(options: MenuOption[], excludeValues?: string[]): MenuOption[] {
@@ -43,7 +49,7 @@ private filterExcludedValues(options: MenuOption[], excludeValues?: string[]): M
   });
 }
 
-getOptionsWithCurrentValue(type: ESharedInputType, currentValue?: string): Observable<MenuOption[]> {
+getOptionsWithCurrentValue(type: ESharedInputType, currentValue?: string, dataConfig?: any): Observable<MenuOption[]> {
   const config = SharedInputRegistry[type];
   
   // אם יש listMenuOption מוגדר
@@ -51,6 +57,14 @@ getOptionsWithCurrentValue(type: ESharedInputType, currentValue?: string): Obser
     // סנן את excludeValues אבל השאר את הערך הנוכחי
     const excludeList = (config.excludeValues || []).filter(v => v !== currentValue);
     const filtered = this.filterExcludedValues(config.listMenuOption, excludeList);
+    return of(filtered);
+  }
+  
+  // אם אין requestUrl אבל יש mapper - קורא למapper ישירות
+  if (!config?.requestUrl && config?.mapper) {
+    const options = config.mapper(null, dataConfig);
+    const excludeList = (config.excludeValues || []).filter(v => v !== currentValue);
+    const filtered = this.filterExcludedValues(options, excludeList);
     return of(filtered);
   }
   
@@ -63,7 +77,7 @@ getOptionsWithCurrentValue(type: ESharedInputType, currentValue?: string): Obser
   return this.apiService
     .get<any[]>(config.requestUrl!)
     .pipe(
-      map(config.mapper ?? ((data: any) => data)),
+      map(data => config.mapper ? config.mapper(data, dataConfig) : data),
       map(options => this.filterExcludedValues(options, excludeList))
     );
 }

@@ -59,6 +59,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   @Input() excludeValues?: string[];
   @Input() title?: string; // Override config title
   @Input() placeholder?: string; // Override config placeholder
+  @Input() dataConfig?: any; // Configuration data from InputConfig
   
   private _isDisabled: boolean = false;
   @Input() 
@@ -116,7 +117,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
 
     // טען אופציות תוך שמירה על הערך הנוכחי
     const currentValue = this.value?.value || this.value?.key;
-    this.sharedService.getOptionsWithCurrentValue(this.type, currentValue).subscribe({
+    this.sharedService.getOptionsWithCurrentValue(this.type, currentValue, this.dataConfig).subscribe({
       next: (data) => {
         this.options = data;
         this.filteredOptions = data;
@@ -177,7 +178,7 @@ export class SharedOptionsInputComponent implements OnInit, OnChanges, AfterView
   }
 
   private reloadOptions() {
-    this.sharedService.getOptionsByType(this.type, this.excludeValues).subscribe({
+    this.sharedService.getOptionsByType(this.type, this.excludeValues, this.dataConfig).subscribe({
       next: (data) => {
         this.options = data;
         this.filteredOptions = data;
@@ -272,13 +273,11 @@ selectOption(option: MenuOption) {
 
 isSelected(option: MenuOption): boolean {
   if (!this.value) {
-    console.log('No value selected, returning false');
     return false;
   }
   
   // קודם נבדוק אם זה אותה אופציה בדיוק (לפי כל השדות)
   if (this.value === option) {
-    console.log('Same reference, returning true');
     return true;
   }
   
@@ -288,20 +287,11 @@ isSelected(option: MenuOption): boolean {
   const optionKey = option.key;
   const optionValue = option.value;
   
-  console.log('Comparing:', {
-    selectedKey,
-    selectedValue,
-    optionKey,
-    optionValue,
-    keyMatch: selectedKey === optionKey,
-    valueMatch: selectedValue === optionValue
-  });
-  
+
   // בדיקה אם יש key ושהם זהים
   if (selectedKey !== undefined && selectedKey !== null && 
       optionKey !== undefined && optionKey !== null && 
       selectedKey === optionKey) {
-    console.log('Key match! Returning true');
     return true;
   }
   
@@ -309,11 +299,9 @@ isSelected(option: MenuOption): boolean {
   if (selectedValue !== undefined && selectedValue !== null && 
       optionValue !== undefined && optionValue !== null && 
       selectedValue === optionValue) {
-    console.log('Value match! Returning true');
     return true;
   }
-  
-  console.log('No match, returning false');
+
   return false;
 }
 
