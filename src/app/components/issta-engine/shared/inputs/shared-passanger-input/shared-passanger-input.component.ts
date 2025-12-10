@@ -75,11 +75,11 @@ export class SharedPassangerInputComponent implements OnInit {
     this.passengersSrv.getPassengersByType(this.type).subscribe({
       next: (data) => {
         if (!this.value) {
-          // Initialize count from defaultValue or minCount
+
           data.optionsAge.forEach(group => {
             group.options.forEach(option => {
               option.count = option.defaultValue ?? option.minCount;
-              // Initialize selectedAges array if needed
+  
               if (option.requiresSpecificAge && option.count && option.count > 0) {
                 option.selectedAges = Array(option.count).fill(0).map(() => {
                   const firstOption = option.specificAgeOptions?.[0];
