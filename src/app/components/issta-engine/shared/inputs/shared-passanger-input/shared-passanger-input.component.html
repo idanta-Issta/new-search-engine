@@ -52,15 +52,23 @@
         </div>
       </ng-container>
 
-      <!-- Regular age-based selection (for flights and hotels) -->
+    
       <div *ngIf="!value?.allowPickRoom" class="age-group-container">
+
+        <div *ngIf="temporaryError" class="validation-error-banner">
+          ⚠️ {{ temporaryError }}
+        </div>
         <div *ngFor="let group of value?.optionsAge" class="age-group">
           <div *ngFor="let age of group.options" class="age-item">
             <div class="age-row">
               <div class="buttons">
-                <button (click)="decrement(age)" [disabled]="(age.count || 0) <= age.minCount">−</button>
+                <button 
+                  (click)="decrement(age)" 
+                  [class.disabled-btn]="(age.count || 0) <= age.minCount">−</button>
                 <span class="count">{{ age.count || 0 }}</span>
-                <button (click)="increment(age)" [disabled]="!canIncrement(age)">+</button>
+                <button 
+                  (click)="increment(age)" 
+                  [class.disabled-btn]="!canIncrement(age)">+</button>
               </div>
               <div class="label">
                 {{ age.label }}
@@ -100,7 +108,14 @@
 
       <!-- Footer section -->
       <div class="footer-section">
-             <div class="add-room-wrapper">
+        <!-- Validation Errors Banner -->
+        <div class="validation-errors" *ngIf="validationErrors.length > 0">
+          <div class="error-item" *ngFor="let error of validationErrors">
+            ⚠️ {{ error }}
+          </div>
+        </div>
+
+        <div class="add-room-wrapper">
   
   <!-- כפתור רגיל אם אפשר להוסיף חדר -->
   <button *ngIf="canAddRoom()"

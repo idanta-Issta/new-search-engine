@@ -43,6 +43,9 @@ export class SharedPassangerInputComponent implements OnInit {
   totalPassengers = 0;
   selectedRoomIndex = 0;
   activeDropdown: string | null = null;
+  validationErrors: string[] = [];
+  temporaryError: string | null = null;
+  
 
 
 
@@ -123,22 +126,68 @@ export class SharedPassangerInputComponent implements OnInit {
   }
 
   canIncrement(age: AgeGroup): boolean {
+    console.log('canIncrement called for:', age.value, 'current count:', age.count);
     const currentCount = age.count || 0;
     if (currentCount >= age.maxCount) {
+      console.log('Max count reached:', age.maxCount);
       return false;
     }
     // בדוק אם הגענו למקסימום כללי
     if (this.isMaxTotalReached()) {
+      console.log('Max total passengers reached');
       return false;
     }
+
+    // בדוק אם הוספת נוסע נוספת תפר את חוקי הולידציה
+    if (this.value && this.value.rules && this.value.rules.length > 0) {
+      console.log('Checking validation rules, rules count:', this.value.rules.length);
+      const countsByType = this.passengersSrv.getCountsByType(this.value);
+      const countsByAge = this.passengersSrv.getCountsByAge(this.value);
+      console.log('countsByType:', countsByType);
+      console.log('countsByAge:', countsByAge);
+      const result = this.passengersSrv.canIncrease(this.value, age.value, countsByType, countsByAge);
+      console.log('canIncrease result:', result);
+      return result.allowed;
+    }
+
+    console.log('No validation issues, returning true');
     return true;
   }
 
+  showTemporaryError(message: string) {
+    console.log('showTemporaryError called with message:', message);
+    this.temporaryError = message;
+    console.log('temporaryError set to:', this.temporaryError);
+    this.cdr.markForCheck();
+  }
+
+  clearError() {
+    this.temporaryError = null;
+    this.cdr.markForCheck();
+  }
+
   increment(age: AgeGroup) {
+    console.log('increment called for:', age.value);
+    
+    // נקה שגיאה קודמת
+    this.clearError();
+    
     if (!this.canIncrement(age)) {
+      console.log('canIncrement returned false, showing error');
+      // הצג שגיאה למשתמש
+      if (this.value && this.value.rules && this.value.rules.length > 0) {
+        const countsByType = this.passengersSrv.getCountsByType(this.value);
+        const countsByAge = this.passengersSrv.getCountsByAge(this.value);
+        const result = this.passengersSrv.canIncrease(this.value, age.value, countsByType, countsByAge);
+        console.log('Result from canIncrease in increment:', result);
+        if (result.errorMessage) {
+          this.showTemporaryError(result.errorMessage);
+        }
+      }
       return;
     }
     
+    console.log('Incrementing passenger');
     const currentCount = age.count || 0;
     age.count = currentCount + 1;
     // אם דורש גיל ספציפי, אתחל את המערך אם צריך
@@ -151,8 +200,33 @@ export class SharedPassangerInputComponent implements OnInit {
   }
 
   decrement(age: AgeGroup) {
+    console.log('decrement called for:', age.value);
+    
+    // נקה שגיאה קודמת
+    this.clearError();
+    
     const currentCount = age.count || 0;
     if (currentCount > age.minCount) {
+      // בדוק אם ההורדה תגרום לשגיאת ולידציה
+      if (this.value && this.value.rules && this.value.rules.length > 0) {
+        console.log('Checking validation before decrement');
+        const countsByType = this.passengersSrv.getCountsByType(this.value);
+        const countsByAge = this.passengersSrv.getCountsByAge(this.value);
+        
+        // צור סימולציה של ההורדה
+        const simulatedCounts = { ...countsByType };
+        simulatedCounts[age.value] = (simulatedCounts[age.value] || 0) - 1;
+        console.log('Simulated counts after decrement:', simulatedCounts);
+        
+        const errors = this.passengersSrv.validatePassengers(this.value, simulatedCounts, countsByAge);
+        console.log('Validation errors:', errors);
+        if (errors.length > 0) {
+          this.showTemporaryError(errors[0]);
+          return;
+        }
+      }
+      
+      console.log('Decrementing passenger');
       age.count = currentCount - 1;
       // אם דורש גיל ספציפי, הסר את האחרון
       if (age.requiresSpecificAge && age.selectedAges) {
@@ -160,6 +234,9 @@ export class SharedPassangerInputComponent implements OnInit {
       }
       this.emitChange();
       this.cdr.markForCheck();
+    } else {
+      // הגענו למינימום
+      this.showTemporaryError(`חייב לפחות מבוגר אחד`);
     }
   }
 
@@ -199,7 +276,19 @@ export class SharedPassangerInputComponent implements OnInit {
 
   emitChange() {
     this.updateTotal();
+    this.validatePassengers();
     this.valueChange.emit(this.value);
+  }
+
+  private validatePassengers() {
+    if (!this.value || !this.value.rules || this.value.rules.length === 0) {
+      this.validationErrors = [];
+      return;
+    }
+
+    const countsByType = this.passengersSrv.getCountsByType(this.value);
+    const countsByAge = this.passengersSrv.getCountsByAge(this.value);
+    this.validationErrors = this.passengersSrv.validatePassengers(this.value, countsByType, countsByAge);
   }
 
   toggleDropdown() {

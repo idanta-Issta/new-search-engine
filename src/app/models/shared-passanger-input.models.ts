@@ -1,5 +1,17 @@
 // 📁 shared-passanger-input.models.ts
 
+export interface PassengersValidationContext {
+  countsByType: Record<string, number>;
+  countsByAge?: Record<string, number>;
+  totalPassengers: number;
+}
+
+export interface PassengersRule {
+  name: string;
+  errorMessage: string;
+  validate(context: PassengersValidationContext): boolean;
+}
+
 export interface PassangersInput {
   optionsAge: OptionAge[];
   allowPickRoom: boolean;
@@ -7,6 +19,7 @@ export interface PassangersInput {
   maxTotalPassengers?: number;
   maxPassengersInRoom?: number;
   rooms?: RoomPassengers[];
+  rules?: PassengersRule[];
 }
 
 export interface RoomPassengers {

@@ -3,7 +3,13 @@
 import { Injectable } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { ESharedInputType } from '../enums/ESharedInputType';
-import { PassangersInput } from '../models/shared-passanger-input.models';
+import { EPassengerType } from '../enums/EPassengerType';
+import { 
+  PassangersInput, 
+  PassengersRule, 
+  PassengersValidationContext 
+} from '../models/shared-passanger-input.models';
+import { PASSENGERS_VALIDATION_RULES } from '../config/passengers-validation-rules';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +25,127 @@ export class SharedPassengersService {
       return - (roomsCount - 1) * this.ROOMS_MARGIN_SHIFT; // negative to push left
     }
     return 0;
+  }
+
+  /**
+   * בדיקת חוקי ולידציה על נוסעים
+   * @returns מערך של הודעות שגיאה (ריק אם הכל תקין)
+   */
+  validatePassengers(
+    input: PassangersInput,
+    countsByType: Record<string, number>,
+    countsByAge?: Record<string, number>
+  ): string[] {
+    console.log('validatePassengers called');
+    console.log('input.rules:', input.rules);
+    console.log('countsByType:', countsByType);
+    console.log('countsByAge:', countsByAge);
+    
+    if (!input.rules || input.rules.length === 0) {
+      console.log('No rules found, returning empty errors');
+      return [];
+    }
+
+    const totalPassengers = Object.values(countsByType).reduce((sum, count) => sum + count, 0);
+    const context: PassengersValidationContext = {
+      countsByType,
+      countsByAge,
+      totalPassengers
+    };
+    console.log('Validation context:', context);
+
+    const errors: string[] = [];
+    for (const rule of input.rules) {
+      console.log('Checking rule:', rule.name);
+      const isValid = rule.validate(context);
+      console.log('Rule', rule.name, 'result:', isValid);
+      if (!isValid) {
+        console.log('Rule failed, adding error:', rule.errorMessage);
+        errors.push(rule.errorMessage);
+      }
+    }
+
+    console.log('Final errors:', errors);
+    return errors;
+  }
+
+  /**
+   * בדיקה האם ניתן להוסיף נוסע מסוג מסוים
+   * @returns אובייקט עם allowed (true/false) והודעת שגיאה אם יש
+   */
+  canIncrease(
+    input: PassangersInput,
+    passengerType: string,
+    countsByType: Record<string, number>,
+    countsByAge?: Record<string, number>
+  ): { allowed: boolean; errorMessage?: string } {
+    console.log('canIncrease called for type:', passengerType);
+    console.log('Current countsByType:', countsByType);
+    
+    // צור עותק עם הנוסע הנוסף
+    const simulatedCounts = { ...countsByType };
+    simulatedCounts[passengerType] = (simulatedCounts[passengerType] || 0) + 1;
+    console.log('Simulated countsByType:', simulatedCounts);
+
+    // הרץ ולידציה על המצב המדומה
+    const errors = this.validatePassengers(input, simulatedCounts, countsByAge);
+
+    if (errors.length > 0) {
+      console.log('canIncrease returning false with error:', errors[0]);
+      return { allowed: false, errorMessage: errors[0] };
+    }
+
+    console.log('canIncrease returning true');
+    return { allowed: true };
+  }
+
+  /**
+   * בניית countsByType מתוך PassangersInput
+   */
+  getCountsByType(input: PassangersInput): Record<string, number> {
+    const counts: Record<string, number> = {};
+
+    if (input.allowPickRoom && input.rooms) {
+      // מצב חדרים - ספור מתוך rooms
+      input.rooms.forEach(room => {
+        counts[EPassengerType.ADULT] = (counts[EPassengerType.ADULT] || 0) + room.adults;
+        counts[EPassengerType.CHILD] = (counts[EPassengerType.CHILD] || 0) + room.children;
+        counts[EPassengerType.INFANT] = (counts[EPassengerType.INFANT] || 0) + room.infants;
+      });
+    } else {
+      // מצב רגיל - ספור מתוך optionsAge
+      input.optionsAge.forEach(group => {
+        group.options.forEach(option => {
+          if (option.count && option.count > 0) {
+            counts[option.value] = (counts[option.value] || 0) + option.count;
+          }
+        });
+      });
+    }
+
+    return counts;
+  }
+
+  /**
+   * בניית countsByAge מתוך PassangersInput (רק אם יש selectedAges)
+   */
+  getCountsByAge(input: PassangersInput): Record<string, number> | undefined {
+    const counts: Record<string, number> = {};
+    let hasAges = false;
+
+    input.optionsAge.forEach(group => {
+      group.options.forEach(option => {
+        if (option.selectedAges && option.selectedAges.length > 0) {
+          hasAges = true;
+          option.selectedAges.forEach(age => {
+            const ageKey = age.toString();
+            counts[ageKey] = (counts[ageKey] || 0) + 1;
+          });
+        }
+      });
+    });
+
+    return hasAges ? counts : undefined;
   }
 
   getPassengersByType(type: ESharedInputType): Observable<PassangersInput> {
@@ -46,21 +173,26 @@ private getFlightPassengers(): PassangersInput {
   return {
     allowPickRoom: false,
     maxTotalPassengers: 9,
+    rules: [
+      PASSENGERS_VALIDATION_RULES.infantsNotExceedAdults,
+      PASSENGERS_VALIDATION_RULES.atLeastOneAdult
+    ],
     optionsAge: [
       {
         title: 'קבוצות גיל',
         options: [
           { 
             label: 'מבוגר', 
-            value: 'adult', 
+            value: EPassengerType.ADULT, 
             note: '(גיל 24–64)', 
-            minCount: 2, 
+            minCount: 0,
+            defaultValue: 2,
             maxCount: 9,
             requiresSpecificAge: false
           },
           { 
             label: 'צעיר', 
-            value: 'teen', 
+            value: EPassengerType.TEEN, 
             note: '(גיל 12–23)', 
             minCount: 0, 
             maxCount: 9,
@@ -83,7 +215,7 @@ private getFlightPassengers(): PassangersInput {
           },
           { 
             label: 'ילד', 
-            value: 'child', 
+            value: EPassengerType.CHILD, 
             note: '(גיל 2–11)', 
             minCount: 0, 
             maxCount: 9,
@@ -104,7 +236,7 @@ private getFlightPassengers(): PassangersInput {
           },
           { 
             label: 'תינוק', 
-            value: 'infant', 
+            value: EPassengerType.INFANT, 
             note: '(מתחת ל־2)', 
             minCount: 0, 
             maxCount: 9,
@@ -112,7 +244,7 @@ private getFlightPassengers(): PassangersInput {
           },
           { 
             label: 'פנסיונר', 
-            value: 'senior', 
+            value: EPassengerType.SENIOR, 
             note: '(גיל 65+)', 
             minCount: 0, 
             maxCount: 9,

@@ -17,6 +17,31 @@ padding: 20px;
     margin: 0 0 10px;
   }
 
+  .validation-error-banner {
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    color: #DC2626;
+    font-size: 14px;
+    font-weight: 500;
+    direction: rtl;
+    text-align: right;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .age-group {
     display: flex;
     flex-direction: column;
@@ -61,14 +86,14 @@ padding: 20px;
     background: white;
     font-weight: 100;
 
-        &:disabled {
+        &.disabled-btn {
          background: #ffffff;
-    cursor: not-allowed;
     color: #BFCACD;
     border: 1px solid #BFCACD;
+    cursor: not-allowed;
         }
 
-        &:hover:not(:disabled) {
+        &:hover:not(.disabled-btn) {
           background: #009247;
         }
       }
@@ -535,4 +560,25 @@ color: white;
   }
 
   .add-room-wrapper { align-self: stretch; display: flex; }
+
+  .validation-errors {
+    background-color: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    direction: rtl;
+    
+    .error-item {
+      color: #DC2626;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
+      
+      &:not(:last-child) {
+        margin-bottom: 8px;
+      }
+    }
+  }
 }
+
