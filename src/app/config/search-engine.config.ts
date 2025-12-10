@@ -70,18 +70,21 @@ export const FLIGHTS_CONFIG: SearchEngineConfig = {
       type: ESharedInputType.DESTINATIONS_FLIGHTS,
       size: EInputSize.LARGE,
       position: EDropdownPosition.BOTTOM_LEFT,
+      mandatoryMessage: 'יש לבחור יעד הלוך',
       value: { label: 'תל אביב, שדה תעופה (TLV)', key: 'TLV' }
     },
     {
       type: ESharedInputType.ORIGINS_FLIGHTS,
       size: EInputSize.LARGE,
       position: EDropdownPosition.BOTTOM_LEFT,
+      mandatoryMessage: 'יש לבחור יעד חזור',
       value: null
     },
     {
       type: ESharedInputType.PICKER_DATES,
       size: EInputSize.MEDIUM,
       position: EDropdownPosition.BOTTOM_CENTER,
+      mandatoryMessage: 'יש לבחור תאריכים',
       value: { start: null as Date | null, end: null as Date | null }
     },
     {

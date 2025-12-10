@@ -143,6 +143,11 @@ export abstract class BaseEngineComponent implements ISearchEngine, OnInit, Afte
 
 
   onSearch(): void {
+    // Validate inputs using the input row component
+    if (this.inputsRow && !this.inputsRow.validateInputs()) {
+      return;
+    }
+
     const url = this.buildUrl();
     if (url) {
       window.open(url, '_blank');

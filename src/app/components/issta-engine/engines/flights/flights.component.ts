@@ -31,7 +31,9 @@ export class FlightsComponent extends BaseEngineComponent {
   selectedDate = { start: null as Date | null, end: null as Date | null };
   selectedPassengers: PassangersInput | null = null;
 
-  constructor(engineService: BaseEngineService) {
+  constructor(
+    engineService: BaseEngineService
+  ) {
     super(engineService);
   }
 

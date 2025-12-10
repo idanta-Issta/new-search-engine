@@ -22,6 +22,7 @@ export interface SharedInputConfig<T = any> {
   listMenuOption?: MenuOption[];
   excludeValues?: string[];
   isDisabled?: boolean;
+  mandatoryMessage?: string;
   uiConfig: {
     title: string;
     placeholder?: string;

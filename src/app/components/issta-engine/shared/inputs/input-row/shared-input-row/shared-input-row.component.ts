@@ -17,6 +17,7 @@ import { SharedInputRegistry } from '../../../../../../config/shared-input.regis
 import { EDropdownPosition } from '../../../../../../enums/EDropdownPosition';
 import { InputConfig } from '../../../../../../models/input-config.model';
 import { InputSizeHelper } from '../../../../../../utilies/input-size.helper';
+import { ValidationModalService, ValidationError } from '../../../../../../services/validation-modal.service';
 
 type ValuesMap = Partial<Record<ESharedInputType, any>>;
 
@@ -38,6 +39,8 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
 
   private componentRefs = new Map<ESharedInputType, ComponentRef<any>>();
   private didInit = false;
+
+  constructor(private validationService: ValidationModalService) {}
 
   ngAfterViewInit(): void {
     this.renderInputs(); // פעם אחת
@@ -259,5 +262,46 @@ export class SharedInputRowComponent implements AfterViewInit, OnChanges {
   /** פתיחה מתוכנתית עם דיליי - למנוע קונפליקט עם אירועי קליק */
   openInputDelayed(type: ESharedInputType, delay: number = 0) {
     setTimeout(() => this.openInput(type), delay);
+  }
+
+  /** Validate all inputs and show modal if there are errors */
+  validateInputs(): boolean {
+    const errors: ValidationError[] = [];
+
+    for (const config of this.configs) {
+      if (!config.mandatoryMessage) continue;
+
+      const isEmpty = this.isInputEmpty(config);
+      if (isEmpty) {
+        errors.push({ message: config.mandatoryMessage });
+      }
+    }
+
+    if (errors.length > 0) {
+      this.validationService.showErrors(errors);
+      return false;
+    }
+
+    return true;
+  }
+
+  private isInputEmpty(config: InputConfig): boolean {
+    const value = config.value;
+
+    if (value === null || value === undefined) {
+      return true;
+    }
+
+    // Check for date inputs
+    if (typeof value === 'object' && ('start' in value || 'end' in value)) {
+      return !value.start || !value.end;
+    }
+
+    // Check for object with key property (MenuOption)
+    if (typeof value === 'object' && 'key' in value) {
+      return !value.key;
+    }
+
+    return false;
   }
 }

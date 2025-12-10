@@ -14,6 +14,7 @@ export interface InputConfig {
   loadingSuggestions?: boolean;
   dataConfig?: any;
   allowPickHours?: boolean;
+  mandatoryMessage?: string;
   customMenuHeaderComponent?: () => Promise<any>;
   customMenuHeaderConfig?: {
     text: string;

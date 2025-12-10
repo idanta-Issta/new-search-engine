@@ -1,0 +1,45 @@
+.validation-errors {
+  direction: rtl;
+  text-align: right;
+
+  .error-intro {
+    margin: 0 0 16px 0;
+    font-size: 15px;
+    color: #374151;
+    font-weight: 500;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px 0;
+    
+    li {
+      padding: 8px 0;
+      color: #DC2626;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  }
+
+  .dismiss-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: #374151;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #1f2937;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}

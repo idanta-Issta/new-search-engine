@@ -1,0 +1,9 @@
+<div class="validation-errors">
+  <p class="error-intro">אנא מלא את השדות הבאים:</p>
+  <ul>
+    <li *ngFor="let error of errors$ | async; let i = index">
+      {{ i + 1 }}. {{ error.message }}
+    </li>
+  </ul>
+  <button class="dismiss-btn" (click)="onDismiss()">ביטול</button>
+</div>

@@ -75,6 +75,7 @@ export const SharedInputRegistry: Record<ESharedInputType, SharedInputConfig> = 
     requestUrl: `${AppExternalConfig.baseUrl}${AppExternalConfig.endpoints.flights.destinations}`,
     autocompleteUrl: `${AppExternalConfig.baseUrl}flights/autocomplete`,
     mapper: FlightsMapper.mapDestinations,
+  
     uiConfig: {
       title: "יעד",
       placeholder: TEXTS.SEARCH.PLACEHOLDER.ORIGIN,

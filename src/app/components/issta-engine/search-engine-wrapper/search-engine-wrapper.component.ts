@@ -13,6 +13,8 @@ import { DynamicPackagesComponent } from '../engines/dynamic-packages/dynamic-pa
 
 import { LeadFormExtraRoomsComponent } from '../shared/modals/lead-form-extra-rooms/lead-form-extra-rooms.component';
 import { LeadFormModalService } from '../../../services/lead-form-modal.service';
+import { ValidationModalComponent } from '../shared/modals/validation-modal/validation-modal.component';
+import { ValidationModalService } from '../../../services/validation-modal.service';
 import { SkiComponent } from '../engines/ski/ski.component';
 import { VillageResortsComponent } from '../engines/village-resorts/village-resorts.component';
 import { CarComponent } from '../engines/car/car.component';
@@ -23,7 +25,7 @@ import { CarComponent } from '../engines/car/car.component';
   standalone: true,
   imports: [CommonModule, FlightsComponent, HotelAbroadComponent
     , DomesticVacationComponent, SportComponent, OrganizedToursComponent,
-     DynamicPackagesComponent, SkiComponent, VillageResortsComponent, CarComponent, LeadFormExtraRoomsComponent],
+     DynamicPackagesComponent, SkiComponent, VillageResortsComponent, CarComponent, LeadFormExtraRoomsComponent, ValidationModalComponent],
   templateUrl: './search-engine-wrapper.component.html',
   styleUrls: ['./search-engine-wrapper.component.scss']
 })
@@ -33,6 +35,7 @@ export class SearchEngineComponent implements AfterViewInit {
   ETypeSearchEngine = ETypeSearchEngine;
   isAnimating = false;
   leadFormOpen$;
+  validationModalOpen$;
   isLoadingHtml = false;
   private htmlCache = new Map<string, string>();
 
@@ -40,13 +43,19 @@ export class SearchEngineComponent implements AfterViewInit {
 
   constructor(
     private leadFormService: LeadFormModalService,
+    private validationModalService: ValidationModalService,
     private apiService: ApiService
   ) {
     this.leadFormOpen$ = this.leadFormService.open$;
+    this.validationModalOpen$ = this.validationModalService.open$;
   }
 
   closeLeadForm() {
     this.leadFormService.close();
+  }
+
+  closeValidationModal() {
+    this.validationModalService.close();
   }
 
   ngAfterViewInit() {
